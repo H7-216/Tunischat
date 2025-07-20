@@ -1034,8 +1034,7 @@
     <!-- MediaElement.js for advanced media handling -->
     <script src="https://cdn.jsdelivr.net/npm/mediaelement@5.1.1/build/mediaelement-and-player.min.js"></script>
     
-    <!-- Load streaming data -->
-    <script src="streaming_data.js"></script>
+    <!-- Streaming data intégrée directement -->
     
     <script>
         // Global variables
@@ -1043,69 +1042,332 @@
         let favorites = JSON.parse(localStorage.getItem('streamflix_favorites') || '[]');
         let currentPlayer = null;
 
-        // Données réelles de streaming (chargées depuis streaming_data.js)
-        let allStreamingData = [];
+        // Base de données StreamFlix complète intégrée
+        const streamingData = [
+            {
+                "id": 1,
+                "title": "Sous écrous",
+                "category": "movie",
+                "description": null,
+                "genre": "Action",
+                "image": null,
+                "language": "Français",
+                "quality": "HD",
+                "rating": 7.5,
+                "server_name": "ShareCloudy",
+                "url": "https://sharecloudy.com/iframe/tHt61YaPJR",
+                "year": 2024
+            },
+            {
+                "id": 2,
+                "title": "Novocaine",
+                "category": "movie", 
+                "description": null,
+                "genre": "Thriller",
+                "image": "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                "language": "Français",
+                "quality": "HD",
+                "rating": 7.5,
+                "server_name": "Lecteur6",
+                "url": "https://lecteur6.com/video/beb22abb9ec56c0cf7ec7d811dd91a56",
+                "year": 2024
+            },
+            {
+                "id": 3,
+                "title": "Les Évadés (1994)",
+                "category": "movie",
+                "description": "Un homme innocent condamné à vie trouve l'espoir et la rédemption à travers des actes de décence commune dans une prison corrompue.",
+                "genre": "Drame",
+                "image": "https://media.themoviedb.org/t/p/original/t30GjttOdb5At1sYy8b3TOwFgWV.jpg",
+                "language": "Français",
+                "quality": "HD",
+                "rating": 9.3,
+                "server_name": "ShareCloudy",
+                "url": "https://sharecloudy.com/iframe/KjIA0SVIli",
+                "year": 1994
+            },
+            {
+                "id": 4,
+                "title": "Le Parrain (1972)",
+                "category": "movie",
+                "description": "L'histoire épique d'une famille de la mafia italienne-américaine dirigée par Vito Corleone.",
+                "genre": "Drame",
+                "image": "https://media.themoviedb.org/t/p/original/hj3vwgFZP0b9HxclXFW5wJL0UtD.jpg",
+                "language": "Français",
+                "quality": "HD",
+                "rating": 9.2,
+                "server_name": "ShareCloudy",
+                "url": "https://sharecloudy.com/iframe/illpTjRGtV",
+                "year": 1972
+            },
+            {
+                "id": 5,
+                "title": "Selena Gomez: My Mind & Me",
+                "category": "documentary",
+                "description": "Un documentaire intime sur la chanteuse et actrice Selena Gomez.",
+                "genre": "Documentaire",
+                "image": "https://french-stream.gratis/uploads/thumb/300x450-0-80/2024-01/1704380229-839267880.jpg",
+                "language": "Français",
+                "quality": "HD",
+                "rating": 7.5,
+                "server_name": "DropLoad",
+                "url": "https://dropload.io/e/o8hxqc70xiy1",
+                "year": 2022
+            },
+            {
+                "id": 6,
+                "title": "Le Parrain 2",
+                "category": "movie",
+                "description": "La suite du chef-d'œuvre de Francis Ford Coppola, explorant les origines et l'évolution de la famille Corleone.",
+                "genre": "Drame",
+                "image": "https://image.tmdb.org/t/p/w342/chMfGLOf5EMz0o10Duukmb9oj0P.jpg",
+                "language": "Français",
+                "quality": "HD",
+                "rating": 9.0,
+                "server_name": "Lecteur6",
+                "url": "https://lecteur6.com/video/08425b881bcde94a383cd258cea331be",
+                "year": 1974
+            },
+            {
+                "id": 7,
+                "title": "La Liste de Schindler",
+                "category": "movie",
+                "description": "L'histoire vraie d'Oskar Schindler qui sauva plus d'un millier de Juifs pendant l'Holocauste.",
+                "genre": "Drame",
+                "image": "https://image.tmdb.org/t/p/w342/9XT4MY53XburznftTsyg9JYc47N.jpg",
+                "language": "Français",
+                "quality": "HD",
+                "rating": 9.0,
+                "server_name": "Lecteur6",
+                "url": "https://lecteur6.com/video/4b2944dfea61be814911110c21ddd974",
+                "year": 1993
+            },
+            {
+                "id": 8,
+                "title": "12 Hommes en colère",
+                "category": "movie",
+                "description": "Un jury doit délibérer dans une affaire de meurtre apparemment évidente.",
+                "genre": "Drame",
+                "image": "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/fFXrCl7nBFFaQU3IgTlinvk6vTi.jpg",
+                "language": "Français",
+                "quality": "HD",
+                "rating": 9.0,
+                "server_name": "Lecteur6",
+                "url": "https://lecteur6.com/video/9b8b50fb590c590ffbf1295ce92258dc",
+                "year": 1957
+            },
+            {
+                "id": 9,
+                "title": "Le Voyage de Chihiro",
+                "category": "movie",
+                "description": "Une jeune fille découvre un monde magique peuplé d'esprits et de créatures fantastiques.",
+                "genre": "Animation",
+                "image": "https://www.themoviedb.org/t/p/original/12TAqK0AUgdcYE9ZYZ9r7ASbH5Q.jpg",
+                "language": "Français",
+                "quality": "HD",
+                "rating": 9.3,
+                "server_name": "ShareCloudy",
+                "url": "https://sharecloudy.com/iframe/KptnxWYWbq",
+                "year": 2001
+            },
+            {
+                "id": 10,
+                "title": "The Dark Knight : Le Chevalier noir",
+                "category": "movie",
+                "description": "Batman affronte le Joker dans cette suite sombre et épique.",
+                "genre": "Action",
+                "image": "https://www.themoviedb.org/t/p/original/pyNXnq8QBWoK3b37RS6C3axwUOy.jpg",
+                "language": "Français",
+                "quality": "HD",
+                "rating": 9.0,
+                "server_name": "ShareCloudy",
+                "url": "https://sharecloudy.com/iframe/103D76H7D2",
+                "year": 2008
+            },
+            {
+                "id": 11,
+                "title": "Interstellar",
+                "category": "movie",
+                "description": "Un groupe d'explorateurs voyage à travers un trou de ver dans l'espace pour sauver l'humanité.",
+                "genre": "Science-Fiction",
+                "image": "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/1pnigkWWy8W032o9TKDneBa3eVK.jpg",
+                "language": "Français",
+                "quality": "4K",
+                "rating": 8.7,
+                "server_name": "Streaming",
+                "url": "https://f003.backblazeb2.com/file/streameo2/Interstellar.mp4",
+                "year": 2014
+            },
+            {
+                "id": 12,
+                "title": "Fight Club",
+                "category": "movie",
+                "description": "Un employé de bureau insomniaque forme un club de combat clandestin.",
+                "genre": "Drame",
+                "image": "https://www.themoviedb.org/t/p/original/iqR0M1ln7Kobjp9liUj2Q7mtQZG.jpg",
+                "language": "Français",
+                "quality": "HD",
+                "rating": 8.8,
+                "server_name": "Lecteur6",
+                "url": "https://lecteur6.com/video/84c2d4860a0fc27bcf854c444fb8b400",
+                "year": 1999
+            },
+            {
+                "id": 13,
+                "title": "Your Name",
+                "category": "movie",
+                "description": "Deux adolescents échangent mystérieusement leurs corps dans ce chef-d'œuvre d'animation japonaise.",
+                "genre": "Animation",
+                "image": "https://www.themoviedb.org/t/p/original/zyHjvVRgKOt9wgVx4ikp2kGArGF.jpg",
+                "language": "Français",
+                "quality": "HD",
+                "rating": 8.4,
+                "server_name": "ShareCloudy",
+                "url": "https://sharecloudy.com/iframe/PiYNXZmZ77",
+                "year": 2016
+            },
+            {
+                "id": 14,
+                "title": "Avatar: La Voie de l'Eau",
+                "category": "movie",
+                "description": "Jake Sully et sa famille sont contraints de quitter leur foyer et d'explorer les régions de Pandora.",
+                "genre": "Science-Fiction",
+                "image": "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                "language": "Français",
+                "quality": "4K",
+                "rating": 8.7,
+                "server_name": "ShareCloudy",
+                "url": "https://sharecloudy.com/iframe/avatar2024",
+                "year": 2022
+            },
+            {
+                "id": 15,
+                "title": "Top Gun: Maverick",
+                "category": "movie",
+                "description": "Après plus de trente ans de service, Pete 'Maverick' Mitchell est de retour.",
+                "genre": "Action",
+                "image": "https://images.unsplash.com/photo-1509281373149-e957c6296406?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                "language": "Français",
+                "quality": "4K",
+                "rating": 9.1,
+                "server_name": "ShareCloudy",
+                "url": "https://sharecloudy.com/iframe/topgun2022",
+                "year": 2022
+            },
+            {
+                "id": 16,
+                "title": "Spider-Man: No Way Home",
+                "category": "movie",
+                "description": "Peter Parker fait appel au Docteur Strange pour réparer les dégâts causés par la révélation de son identité.",
+                "genre": "Action",
+                "image": "https://images.unsplash.com/photo-1594909122845-11baa439b7bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                "language": "Français",
+                "quality": "4K",
+                "rating": 9.2,
+                "server_name": "ShareCloudy",
+                "url": "https://sharecloudy.com/iframe/spiderman2021",
+                "year": 2021
+            },
+            {
+                "id": 17,
+                "title": "The Batman",
+                "category": "movie",
+                "description": "Une nouvelle vision sombre et réaliste du chevalier noir de Gotham.",
+                "genre": "Action",
+                "image": "https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                "language": "Français",
+                "quality": "4K",
+                "rating": 8.9,
+                "server_name": "ShareCloudy",
+                "url": "https://sharecloudy.com/iframe/batman2022",
+                "year": 2022
+            },
+            {
+                "id": 18,
+                "title": "Dune",
+                "category": "movie",
+                "description": "L'adaptation épique du roman de science-fiction de Frank Herbert.",
+                "genre": "Science-Fiction",
+                "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                "language": "Français",
+                "quality": "4K",
+                "rating": 8.8,
+                "server_name": "ShareCloudy",
+                "url": "https://sharecloudy.com/iframe/dune2021",
+                "year": 2021
+            },
+            {
+                "id": 19,
+                "title": "Stranger Things",
+                "category": "series",
+                "description": "Dans les années 80, des événements surnaturels frappent la petite ville de Hawkins.",
+                "genre": "Thriller",
+                "image": "https://images.unsplash.com/photo-1478720568477-b0ed2e5c9ac8?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                "language": "Français",
+                "quality": "4K",
+                "rating": 9.3,
+                "server_name": "ShareCloudy",
+                "url": "https://sharecloudy.com/iframe/strangerthings",
+                "year": 2022
+            },
+            {
+                "id": 20,
+                "title": "The Crown",
+                "category": "series",
+                "description": "La saga de la famille royale britannique à travers les décennies.",
+                "genre": "Drame",
+                "image": "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                "language": "Français",
+                "quality": "4K",
+                "rating": 9.0,
+                "server_name": "ShareCloudy",
+                "url": "https://sharecloudy.com/iframe/thecrown",
+                "year": 2023
+            }
+        ];
+
+        // Données de streaming organisées
+        let allStreamingData = streamingData;
         let moviesData = [];
         let seriesData = [];
         
-        // Fonction pour initialiser les données une fois chargées
+        // Fonction pour initialiser les données
         function initializeData() {
-            if (typeof streamingData !== 'undefined') {
-                allStreamingData = streamingData;
-                
-                // Séparer les films des séries
-                moviesData = allStreamingData.filter(item => item.category === 'movie').map(item => ({
-                    id: item.id,
-                    title: item.title,
-                    year: item.year.toString(),
-                    rating: item.rating,
-                    genre: item.genre,
-                    quality: item.quality,
-                    poster: item.image || 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-                    videoUrl: item.url,
-                    server_name: item.server_name,
-                    language: item.language
-                }));
-                
-                seriesData = allStreamingData.filter(item => item.category === 'series' || item.category === 'documentary').map(item => ({
-                    id: item.id,
-                    title: item.title,
-                    year: item.year.toString(),
-                    rating: item.rating,
-                    genre: item.genre,
-                    quality: item.quality,
-                    poster: item.image || 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-                    videoUrl: item.url,
-                    server_name: item.server_name,
-                    language: item.language
-                }));
-                
-                // Recharger l'affichage avec les nouvelles données
-                displayMovies(moviesData.slice(0, 12)); // Afficher les premiers films
-                console.log(`StreamFlix chargé avec ${allStreamingData.length} contenus !`);
-                console.log(`Films: ${moviesData.length} | Séries/Docs: ${seriesData.length}`);
-            }
+            // Séparer les films des séries
+            moviesData = allStreamingData.filter(item => item.category === 'movie').map(item => ({
+                id: item.id,
+                title: item.title,
+                year: item.year.toString(),
+                rating: item.rating,
+                genre: item.genre,
+                quality: item.quality,
+                poster: item.image || 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+                videoUrl: item.url,
+                server_name: item.server_name,
+                language: item.language,
+                description: item.description
+            }));
+            
+            seriesData = allStreamingData.filter(item => item.category === 'series' || item.category === 'documentary').map(item => ({
+                id: item.id,
+                title: item.title,
+                year: item.year.toString(),
+                rating: item.rating,
+                genre: item.genre,
+                quality: item.quality,
+                poster: item.image || 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+                videoUrl: item.url,
+                server_name: item.server_name,
+                language: item.language,
+                description: item.description
+            }));
+            
+            console.log(`StreamFlix chargé avec ${allStreamingData.length} contenus !`);
+            console.log(`Films: ${moviesData.length} | Séries/Docs: ${seriesData.length}`);
+            
+            // Recharger l'affichage avec les nouvelles données
+            displayMovies(moviesData);
         }
-        
-        // Initialiser les données par défaut en attendant le chargement
-        if (typeof streamingData === 'undefined') {
-            // Données de fallback minimales pendant le chargement
-            moviesData = [
-                {
-                    id: 1,
-                    title: "Chargement des films...",
-                    year: "2024",
-                    rating: 0,
-                    genre: "Loading",
-                    quality: "HD",
-                    poster: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-                    videoUrl: "#",
-                    server_name: "Loading"
-                }
-            ];
-        }
-
-        // seriesData sera initialisé dans initializeData()
 
         // Navigation functions
         function showSection(sectionName) {
@@ -1496,13 +1758,11 @@
                 }
             });
             
+            // Initialize data immediately since it's embedded
+            initializeData();
+            
             // Load initial content
             displayMovies(moviesData);
-            
-            // Initialize data from streaming_data.js when available
-            setTimeout(() => {
-                initializeData();
-            }, 100);
         });
 
         // Server setup for local development
