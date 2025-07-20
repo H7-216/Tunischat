@@ -13,6 +13,12 @@
     <!-- Plyr CSS for modern video player -->
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
     
+    <!-- Video.js CSS for additional video support -->
+    <link href="https://vjs.zencdn.net/8.6.1/video-js.css" rel="stylesheet">
+    
+    <!-- Additional modern video player libraries -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mediaelement@5.1.1/build/mediaelementplayer.min.css">
+    
     <style>
         :root {
             --primary-bg: #0f0f23;
@@ -598,6 +604,8 @@
             font-weight: 600;
             display: flex;
             align-items: center;
+            text-decoration: none;
+            justify-content: center;
             justify-content: center;
             gap: 0.5rem;
             text-decoration: none;
@@ -610,11 +618,13 @@
 
         .support-btn.secondary {
             background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 2px solid var(--accent-color);
+            color: var(--accent-color);
         }
 
         .support-btn.secondary:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: var(--accent-color);
+            color: white;
         }
 
         .footer-bottom {
@@ -1018,108 +1028,84 @@
     <!-- Plyr JS for modern video player -->
     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     
+    <!-- Video.js for additional video support -->
+    <script src="https://vjs.zencdn.net/8.6.1/video.min.js"></script>
+    
+    <!-- MediaElement.js for advanced media handling -->
+    <script src="https://cdn.jsdelivr.net/npm/mediaelement@5.1.1/build/mediaelement-and-player.min.js"></script>
+    
+    <!-- Load streaming data -->
+    <script src="streaming_data.js"></script>
+    
     <script>
         // Global variables
         let currentView = 'grid';
         let favorites = JSON.parse(localStorage.getItem('streamflix_favorites') || '[]');
         let currentPlayer = null;
 
-        // Sample data for movies and series
-        const moviesData = [
-            {
-                id: 1,
-                title: "Avatar: La Voie de l'Eau",
-                year: "2022",
-                rating: 8.7,
-                genre: "Action",
-                quality: "4K",
-                poster: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-                videoUrl: "https://sharecloudy.com/embed/sample1"
-            },
-            {
-                id: 2,
-                title: "Top Gun: Maverick",
-                year: "2022",
-                rating: 9.1,
-                genre: "Action",
-                quality: "4K",
-                poster: "https://images.unsplash.com/photo-1509281373149-e957c6296406?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-                videoUrl: "https://sharecloudy.com/embed/sample2"
-            },
-            {
-                id: 3,
-                title: "Black Panther: Wakanda Forever",
-                year: "2022",
-                rating: 8.3,
-                genre: "Action",
-                quality: "HD",
-                poster: "https://images.unsplash.com/photo-1478720568477-b0ed2e5c9ac8?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-                videoUrl: "https://sharecloudy.com/embed/sample3"
-            },
-            {
-                id: 4,
-                title: "The Batman",
-                year: "2022",
-                rating: 8.9,
-                genre: "Action",
-                quality: "4K",
-                poster: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-                videoUrl: "https://sharecloudy.com/embed/sample4"
-            },
-            {
-                id: 5,
-                title: "Spider-Man: No Way Home",
-                year: "2021",
-                rating: 9.2,
-                genre: "Action",
-                quality: "4K",
-                poster: "https://images.unsplash.com/photo-1594909122845-11baa439b7bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-                videoUrl: "https://sharecloudy.com/embed/sample5"
-            },
-            {
-                id: 6,
-                title: "Dune",
-                year: "2021",
-                rating: 8.8,
-                genre: "Sci-Fi",
-                quality: "4K",
-                poster: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-                videoUrl: "https://sharecloudy.com/embed/sample6"
+        // Données réelles de streaming (chargées depuis streaming_data.js)
+        let allStreamingData = [];
+        let moviesData = [];
+        let seriesData = [];
+        
+        // Fonction pour initialiser les données une fois chargées
+        function initializeData() {
+            if (typeof streamingData !== 'undefined') {
+                allStreamingData = streamingData;
+                
+                // Séparer les films des séries
+                moviesData = allStreamingData.filter(item => item.category === 'movie').map(item => ({
+                    id: item.id,
+                    title: item.title,
+                    year: item.year.toString(),
+                    rating: item.rating,
+                    genre: item.genre,
+                    quality: item.quality,
+                    poster: item.image || 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+                    videoUrl: item.url,
+                    server_name: item.server_name,
+                    language: item.language
+                }));
+                
+                seriesData = allStreamingData.filter(item => item.category === 'series' || item.category === 'documentary').map(item => ({
+                    id: item.id,
+                    title: item.title,
+                    year: item.year.toString(),
+                    rating: item.rating,
+                    genre: item.genre,
+                    quality: item.quality,
+                    poster: item.image || 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+                    videoUrl: item.url,
+                    server_name: item.server_name,
+                    language: item.language
+                }));
+                
+                // Recharger l'affichage avec les nouvelles données
+                displayMovies(moviesData.slice(0, 12)); // Afficher les premiers films
+                console.log(`StreamFlix chargé avec ${allStreamingData.length} contenus !`);
+                console.log(`Films: ${moviesData.length} | Séries/Docs: ${seriesData.length}`);
             }
-        ];
+        }
+        
+        // Initialiser les données par défaut en attendant le chargement
+        if (typeof streamingData === 'undefined') {
+            // Données de fallback minimales pendant le chargement
+            moviesData = [
+                {
+                    id: 1,
+                    title: "Chargement des films...",
+                    year: "2024",
+                    rating: 0,
+                    genre: "Loading",
+                    quality: "HD",
+                    poster: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                    videoUrl: "#",
+                    server_name: "Loading"
+                }
+            ];
+        }
 
-        const seriesData = [
-            {
-                id: 101,
-                title: "The Crown",
-                year: "2023",
-                rating: 9.0,
-                genre: "Drame",
-                quality: "4K",
-                poster: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-                videoUrl: "https://sharecloudy.com/embed/series1"
-            },
-            {
-                id: 102,
-                title: "Stranger Things",
-                year: "2022",
-                rating: 9.3,
-                genre: "Thriller",
-                quality: "4K",
-                poster: "https://images.unsplash.com/photo-1478720568477-b0ed2e5c9ac8?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-                videoUrl: "https://sharecloudy.com/embed/series2"
-            },
-            {
-                id: 103,
-                title: "The Mandalorian",
-                year: "2023",
-                rating: 8.9,
-                genre: "Sci-Fi",
-                quality: "4K",
-                poster: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-                videoUrl: "https://sharecloudy.com/embed/series3"
-            }
-        ];
+        // seriesData sera initialisé dans initializeData()
 
         // Navigation functions
         function showSection(sectionName) {
@@ -1291,16 +1277,44 @@
                     });
                     
                 } else {
-                    // Fallback for other URLs - try iframe first
-                    const iframe = document.createElement('iframe');
-                    iframe.src = url;
-                    iframe.width = '100%';
-                    iframe.height = '100%';
-                    iframe.frameBorder = '0';
-                    iframe.allowFullscreen = true;
-                    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+                    // Handle other video sources (lecteur6, dropload, etc.)
+                    let embedUrl = url;
                     
-                    player.appendChild(iframe);
+                    // Convert different server URLs to proper embed format
+                    if (url.includes('lecteur6.com')) {
+                        // lecteur6 URLs are usually direct video links
+                        const iframe = document.createElement('iframe');
+                        iframe.src = url;
+                        iframe.width = '100%';
+                        iframe.height = '100%';
+                        iframe.frameBorder = '0';
+                        iframe.allowFullscreen = true;
+                        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+                        iframe.style.border = 'none';
+                        player.appendChild(iframe);
+                    } else if (url.includes('dropload.io')) {
+                        // DropLoad embed format
+                        const iframe = document.createElement('iframe');
+                        iframe.src = url;
+                        iframe.width = '100%';
+                        iframe.height = '100%';
+                        iframe.frameBorder = '0';
+                        iframe.allowFullscreen = true;
+                        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+                        iframe.style.border = 'none';
+                        player.appendChild(iframe);
+                    } else {
+                        // Generic iframe for other sources
+                        const iframe = document.createElement('iframe');
+                        iframe.src = url;
+                        iframe.width = '100%';
+                        iframe.height = '100%';
+                        iframe.frameBorder = '0';
+                        iframe.allowFullscreen = true;
+                        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+                        iframe.style.border = 'none';
+                        player.appendChild(iframe);
+                    }
                 }
                 
             } catch (error) {
@@ -1484,6 +1498,11 @@
             
             // Load initial content
             displayMovies(moviesData);
+            
+            // Initialize data from streaming_data.js when available
+            setTimeout(() => {
+                initializeData();
+            }, 100);
         });
 
         // Server setup for local development
