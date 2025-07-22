@@ -222,6 +222,93 @@
             margin-bottom: 20px;
         }
 
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 70vh;
+            border-radius: 15px;
+            overflow: hidden;
+            background: #000;
+            margin-bottom: 20px;
+        }
+
+        .fallback-player {
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(45deg, #1a1a2e, #16213e);
+            color: white;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .fallback-player i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+
+        .fallback-player h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .fallback-player p {
+            color: #b0b0b0;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .external-link-btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .external-link-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
+        }
+
+        .method-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .method-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 8px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .method-btn.active {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-color: transparent;
+        }
+
+        .method-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
         .modal-title {
             font-size: 2rem;
             margin-bottom: 15px;
@@ -328,7 +415,26 @@
     <div class="modal" id="videoModal">
         <div class="modal-content">
             <span class="close-btn" id="closeModal">&times;</span>
-            <iframe class="video-player" id="videoPlayer" src="" allowfullscreen></iframe>
+            
+            <div class="method-selector">
+                <button class="method-btn active" data-method="iframe">iFrame Direct</button>
+                <button class="method-btn" data-method="proxy">Proxy CORS</button>
+                <button class="method-btn" data-method="external">Lien Externe</button>
+            </div>
+
+            <div class="video-container">
+                <iframe class="video-player" id="videoPlayer" src="" allowfullscreen sandbox="allow-scripts allow-same-origin allow-presentation"></iframe>
+                
+                <div class="fallback-player" id="fallbackPlayer">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>Lecture bloquée</h3>
+                    <p>Cette vidéo ne peut pas être affichée dans l'iframe en raison des restrictions du serveur.</p>
+                    <a href="" target="_blank" class="external-link-btn" id="externalLink">
+                        <i class="fas fa-external-link-alt"></i> Regarder sur le site original
+                    </a>
+                </div>
+            </div>
+
             <h2 class="modal-title" id="modalTitle"></h2>
             <p class="modal-description" id="modalDescription"></p>
         </div>
@@ -342,12 +448,24 @@
             constructor() {
                 this.videos = [];
                 this.filteredVideos = [];
+                this.currentVideo = null;
+                this.currentMethod = 'iframe';
                 this.modal = document.getElementById('videoModal');
                 this.videoPlayer = document.getElementById('videoPlayer');
+                this.fallbackPlayer = document.getElementById('fallbackPlayer');
+                this.externalLink = document.getElementById('externalLink');
                 this.searchInput = document.getElementById('searchInput');
                 this.videoGrid = document.getElementById('videoGrid');
                 this.loading = document.getElementById('loading');
                 this.noResults = document.getElementById('noResults');
+                
+                // Proxies CORS disponibles
+                this.corsProxies = [
+                    'https://cors-anywhere.herokuapp.com/',
+                    'https://thingproxy.freeboard.io/fetch/',
+                    'https://api.allorigins.win/raw?url=',
+                    'https://corsproxy.io/?'
+                ];
                 
                 this.init();
             }
@@ -362,7 +480,6 @@
 
             async loadData() {
                 try {
-                    // Attendre un petit délai pour simuler le chargement
                     await new Promise(resolve => setTimeout(resolve, 500));
                     
                     if (typeof window.streamingData !== 'undefined') {
@@ -383,32 +500,35 @@
                 this.videos = [
                     {
                         id: 1,
-                        title: "Film d'Action Épique",
-                        description: "Un film d'action palpitant avec des cascades incroyables et une intrigue captivante.",
-                        url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                        title: "Big Buck Bunny - Film Open Source",
+                        description: "Film d'animation open source en haute qualité, parfait pour tester le streaming.",
+                        url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+                        embedUrl: "https://www.youtube.com/embed/YE7VzlLtp-4",
                         thumbnail: "https://images.unsplash.com/photo-1489599807310-1f8bfe12a82b?w=400&h=200&fit=crop",
-                        genre: "Action",
-                        duration: "2h 15min",
+                        genre: "Animation",
+                        duration: "10min",
                         year: "2024"
                     },
                     {
                         id: 2,
-                        title: "Documentaire Nature",
-                        description: "Explorez les merveilles de la nature avec ce documentaire fascinant sur la faune sauvage.",
-                        url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                        title: "Elephant Dream - Court Métrage",
+                        description: "Premier film open source créé avec Blender, une prouesse technique remarquable.",
+                        url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+                        embedUrl: "https://www.youtube.com/embed/TLkA0RELQ1g",
                         thumbnail: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=200&fit=crop",
-                        genre: "Documentaire",
-                        duration: "1h 45min",
+                        genre: "Animation",
+                        duration: "11min",
                         year: "2024"
                     },
                     {
                         id: 3,
-                        title: "Comédie Romantique",
-                        description: "Une histoire d'amour drôle et touchante qui vous fera rire et pleurer.",
-                        url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                        title: "Sintel - Court Métrage Fantasy",
+                        description: "Une aventure fantasy émouvante avec des graphismes époustouflants créés avec Blender.",
+                        url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+                        embedUrl: "https://www.youtube.com/embed/eRsGyueVLvQ",
                         thumbnail: "https://images.unsplash.com/photo-1518722415886-12cbf8eca03c?w=400&h=200&fit=crop",
-                        genre: "Comédie",
-                        duration: "1h 58min",
+                        genre: "Fantasy",
+                        duration: "15min",
                         year: "2024"
                     }
                 ];
@@ -421,23 +541,42 @@
                     this.filterVideos(e.target.value);
                 });
 
+                // Sélection de méthode de lecture
+                document.querySelectorAll('.method-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.method-btn').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        this.currentMethod = e.target.dataset.method;
+                        if (this.currentVideo) {
+                            this.playVideo(this.currentVideo, this.currentMethod);
+                        }
+                    });
+                });
+
                 // Fermeture du modal
                 document.getElementById('closeModal').addEventListener('click', () => {
                     this.closeModal();
                 });
 
-                // Fermeture du modal en cliquant à l'extérieur
                 this.modal.addEventListener('click', (e) => {
                     if (e.target === this.modal) {
                         this.closeModal();
                     }
                 });
 
-                // Fermeture avec la touche Échap
                 document.addEventListener('keydown', (e) => {
                     if (e.key === 'Escape' && this.modal.style.display === 'flex') {
                         this.closeModal();
                     }
+                });
+
+                // Gestion des erreurs d'iframe
+                this.videoPlayer.addEventListener('error', () => {
+                    this.handleIframeError();
+                });
+
+                this.videoPlayer.addEventListener('load', () => {
+                    console.log('✅ Iframe chargée avec succès');
                 });
             }
 
@@ -494,23 +633,99 @@
                     return;
                 }
 
+                this.currentVideo = video;
+
                 // Mise à jour du contenu du modal
                 document.getElementById('modalTitle').textContent = video.title;
                 document.getElementById('modalDescription').textContent = video.description;
                 
-                // Configuration de l'iframe
-                this.videoPlayer.src = video.url;
+                // Tentative de lecture avec la méthode actuelle
+                this.playVideo(video, this.currentMethod);
                 
                 // Affichage du modal
                 this.modal.style.display = 'flex';
                 document.body.style.overflow = 'hidden';
 
-                console.log('🎬 Lecture de:', video.title);
+                console.log('🎬 Tentative de lecture:', video.title);
+            }
+
+            playVideo(video, method) {
+                this.hideAllPlayers();
+
+                switch (method) {
+                    case 'iframe':
+                        this.tryDirectIframe(video);
+                        break;
+                    case 'proxy':
+                        this.tryProxyMethod(video);
+                        break;
+                    case 'external':
+                        this.showExternalLink(video);
+                        break;
+                }
+            }
+
+            tryDirectIframe(video) {
+                const url = video.embedUrl || video.url;
+                this.videoPlayer.style.display = 'block';
+                this.videoPlayer.src = url;
+                
+                // Vérification après un délai
+                setTimeout(() => {
+                    this.checkIframeStatus();
+                }, 3000);
+            }
+
+            tryProxyMethod(video) {
+                const url = video.url || video.embedUrl;
+                const proxyUrl = this.corsProxies[0] + encodeURIComponent(url);
+                
+                this.videoPlayer.style.display = 'block';
+                this.videoPlayer.src = proxyUrl;
+                
+                setTimeout(() => {
+                    this.checkIframeStatus();
+                }, 3000);
+                
+                console.log('🔄 Tentative avec proxy CORS:', proxyUrl);
+            }
+
+            showExternalLink(video) {
+                this.fallbackPlayer.style.display = 'flex';
+                const url = video.url || video.embedUrl;
+                this.externalLink.href = url;
+                
+                console.log('🔗 Redirection vers lien externe:', url);
+            }
+
+            checkIframeStatus() {
+                try {
+                    // Tentative d'accès au contenu de l'iframe
+                    const iframeDoc = this.videoPlayer.contentDocument || this.videoPlayer.contentWindow.document;
+                    if (!iframeDoc) {
+                        throw new Error('Accès bloqué');
+                    }
+                    console.log('✅ Iframe accessible');
+                } catch (error) {
+                    console.warn('⚠️ Iframe probablement bloquée, passage au fallback');
+                    this.handleIframeError();
+                }
+            }
+
+            handleIframeError() {
+                this.videoPlayer.style.display = 'none';
+                this.showExternalLink(this.currentVideo);
+            }
+
+            hideAllPlayers() {
+                this.videoPlayer.style.display = 'none';
+                this.fallbackPlayer.style.display = 'none';
             }
 
             closeModal() {
                 this.modal.style.display = 'none';
                 this.videoPlayer.src = '';
+                this.hideAllPlayers();
                 document.body.style.overflow = 'auto';
                 console.log('⏹️ Lecteur fermé');
             }
