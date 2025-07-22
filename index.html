@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StreamFlix - Plateforme de Streaming</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>StreamFlix - Votre plateforme de streaming</title>
     <style>
         * {
             margin: 0;
@@ -13,99 +12,186 @@
         }
 
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
-            color: #ffffff;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding: 20px 0;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .header h1 {
-            font-size: 3rem;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-        }
-
-        .header p {
-            font-size: 1.2rem;
-            color: #b0b0b0;
-        }
-
-        .search-container {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .search-box {
-            width: 100%;
-            max-width: 500px;
-            padding: 15px 20px;
-            border: none;
-            border-radius: 50px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 50%, #16213e 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: white;
-            font-size: 1rem;
-            outline: none;
-            border: 2px solid transparent;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 2rem;
             transition: all 0.3s ease;
         }
 
-        .search-box:focus {
-            border-color: #4ecdc4;
-            box-shadow: 0 0 20px rgba(78, 205, 196, 0.3);
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .search-box::placeholder {
-            color: #888;
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #e50914, #ff6b6b);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
 
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #e50914;
+            transform: translateY(-2px);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(45deg, #e50914, #ff6b6b);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><defs><linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%230f0f0f"/><stop offset="50%" stop-color="%231a1a2e"/><stop offset="100%" stop-color="%2316213e"/></linearGradient></defs><rect width="1200" height="600" fill="url(%23bg)"/><circle cx="200" cy="150" r="3" fill="%23ffffff" opacity="0.3"/><circle cx="800" cy="100" r="2" fill="%23ffffff" opacity="0.2"/><circle cx="1000" cy="200" r="4" fill="%23ffffff" opacity="0.1"/></svg>');
+            background-size: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ffffff, #ff6b6b, #e50914);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #e50914, #ff6b6b);
+            color: white;
+            padding: 1rem 3rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 1px;
+            box-shadow: 0 10px 30px rgba(229, 9, 20, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(229, 9, 20, 0.5);
+        }
+
+        /* Content Sections */
+        .content {
+            padding: 4rem 2rem;
+            margin-top: 2rem;
+        }
+
+        .section {
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, #ffffff, #ff6b6b);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(45deg, #e50914, #ff6b6b);
+            border-radius: 2px;
+        }
+
+        /* Video Grid */
         .video-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 25px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
         }
 
         .video-card {
             background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(10px);
             border-radius: 20px;
             overflow: hidden;
             transition: all 0.3s ease;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            cursor: pointer;
             position: relative;
+            cursor: pointer;
         }
 
         .video-card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-10px) scale(1.02);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            border-color: #4ecdc4;
+            border-color: rgba(229, 9, 20, 0.5);
         }
 
         .video-thumbnail {
             width: 100%;
             height: 200px;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            background: linear-gradient(45deg, #1a1a2e, #16213e);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -113,639 +199,620 @@
             overflow: hidden;
         }
 
-        .video-thumbnail img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .play-icon {
-            position: absolute;
-            font-size: 3rem;
-            color: rgba(255, 255, 255, 0.9);
-            background: rgba(0, 0, 0, 0.5);
+        .play-button {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #e50914, #ff6b6b);
             border-radius: 50%;
-            width: 80px;
-            height: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
             transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(229, 9, 20, 0.3);
         }
 
-        .video-card:hover .play-icon {
-            transform: scale(1.1);
-            background: rgba(78, 205, 196, 0.8);
+        .play-button:hover {
+            transform: scale(1.2);
+            box-shadow: 0 15px 40px rgba(229, 9, 20, 0.5);
+        }
+
+        .play-button::after {
+            content: '▶';
+            color: white;
+            font-size: 1.5rem;
+            margin-left: 3px;
         }
 
         .video-info {
-            padding: 20px;
+            padding: 1.5rem;
         }
 
         .video-title {
             font-size: 1.3rem;
             font-weight: bold;
-            margin-bottom: 8px;
-            color: #ffffff;
+            margin-bottom: 0.5rem;
+            color: white;
         }
 
         .video-description {
-            color: #b0b0b0;
+            opacity: 0.8;
             font-size: 0.9rem;
             line-height: 1.4;
-            margin-bottom: 10px;
+            margin-bottom: 1rem;
         }
 
         .video-meta {
             display: flex;
             justify-content: space-between;
-            align-items: center;
             font-size: 0.8rem;
-            color: #888;
+            opacity: 0.7;
         }
 
-        .video-genre {
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-            padding: 4px 12px;
-            border-radius: 15px;
-            font-size: 0.7rem;
-            font-weight: bold;
-        }
-
+        /* Video Player Modal */
         .modal {
             display: none;
             position: fixed;
-            top: 0;
+            z-index: 2000;
             left: 0;
+            top: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(5px);
         }
 
         .modal-content {
-            background: rgba(15, 15, 35, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 90vw;
-            max-height: 90vh;
-            margin: auto;
             position: relative;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            overflow-y: auto;
+            margin: 5% auto;
+            width: 90%;
+            max-width: 1200px;
+            background: rgba(0, 0, 0, 0.9);
+            border-radius: 20px;
+            overflow: hidden;
+            animation: modalSlideIn 0.3s ease-out;
         }
 
-        .close-btn {
+        .close {
             position: absolute;
             top: 15px;
-            right: 20px;
-            font-size: 2rem;
-            color: #ffffff;
+            right: 25px;
+            color: white;
+            font-size: 35px;
+            font-weight: bold;
             cursor: pointer;
+            z-index: 2001;
             transition: all 0.3s ease;
-            z-index: 1001;
         }
 
-        .close-btn:hover {
-            color: #ff6b6b;
-            transform: scale(1.1);
+        .close:hover {
+            color: #e50914;
+            transform: scale(1.2);
         }
 
         .video-player {
             width: 100%;
-            height: 70vh;
-            border: none;
-            border-radius: 15px;
-            margin-bottom: 20px;
-        }
-
-        .video-container {
-            position: relative;
-            width: 100%;
-            height: 70vh;
-            border-radius: 15px;
-            overflow: hidden;
+            height: 60vh;
             background: #000;
-            margin-bottom: 20px;
         }
 
-        .fallback-player {
-            width: 100%;
-            height: 100%;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(45deg, #1a1a2e, #16213e);
-            color: white;
-            text-align: center;
-            padding: 40px;
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .fallback-player i {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            opacity: 0.7;
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .fallback-player h3 {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-        }
-
-        .fallback-player p {
-            color: #b0b0b0;
-            margin-bottom: 25px;
-            line-height: 1.5;
-        }
-
-        .external-link-btn {
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 25px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .external-link-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
-        }
-
-        .method-selector {
+        /* Categories */
+        .categories {
             display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 20px;
+            gap: 1rem;
+            margin-bottom: 2rem;
             flex-wrap: wrap;
         }
 
-        .method-btn {
+        .category-btn {
             background: rgba(255, 255, 255, 0.1);
-            color: white;
-            padding: 8px 16px;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            font-size: 0.9rem;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            background: linear-gradient(45deg, #e50914, #ff6b6b);
+            border-color: transparent;
+            transform: translateY(-2px);
+        }
+
+        /* Search */
+        .search-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 1rem;
+            border-radius: 15px;
+            font-size: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .search-btn {
+            background: linear-gradient(45deg, #e50914, #ff6b6b);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 15px;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .method-btn.active {
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-            border-color: transparent;
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(229, 9, 20, 0.3);
         }
 
-        .method-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+            
+            .video-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 1rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .content {
+                padding: 2rem 1rem;
+            }
         }
 
-        .modal-title {
-            font-size: 2rem;
-            margin-bottom: 15px;
-            color: #ffffff;
-            text-align: center;
-        }
-
-        .modal-description {
-            color: #b0b0b0;
-            text-align: center;
-            font-size: 1.1rem;
-            line-height: 1.5;
-        }
-
+        /* Loading Animation */
         .loading {
             display: none;
             text-align: center;
-            padding: 50px;
-            font-size: 1.2rem;
-            color: #4ecdc4;
+            padding: 2rem;
         }
 
         .spinner {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            border: 4px solid rgba(78, 205, 196, 0.3);
-            border-top: 4px solid #4ecdc4;
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid #e50914;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin-bottom: 20px;
+            margin: 0 auto 1rem;
         }
 
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-
-        .no-results {
-            text-align: center;
-            padding: 50px;
-            color: #888;
-            font-size: 1.2rem;
-            display: none;
-        }
-
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2rem;
-            }
-            
-            .video-grid {
-                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-                gap: 15px;
-            }
-            
-            .video-player {
-                height: 50vh;
-            }
-            
-            .modal-content {
-                padding: 20px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .video-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .video-player {
-                height: 40vh;
-            }
-        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header class="header">
-            <h1><i class="fas fa-play-circle"></i> StreamFlix</h1>
-            <p>Découvrez et regardez vos vidéos préférées en streaming</p>
-        </header>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">StreamFlix</div>
+            <ul class="nav-links">
+                <li><a href="#accueil">Accueil</a></li>
+                <li><a href="#films">Films</a></li>
+                <li><a href="#series">Séries</a></li>
+                <li><a href="#documentaires">Documentaires</a></li>
+            </ul>
+        </nav>
+    </header>
 
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Bienvenue sur StreamFlix</h1>
+            <p>Découvrez des milliers de films, séries et documentaires en streaming</p>
+            <button class="cta-button" onclick="scrollToContent()">Commencer à regarder</button>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="content" id="content">
+        <!-- Search Section -->
         <div class="search-container">
-            <input type="text" class="search-box" placeholder="Rechercher une vidéo..." id="searchInput">
+            <input type="text" class="search-input" id="searchInput" placeholder="Rechercher un film, série ou documentaire...">
+            <button class="search-btn" onclick="searchContent()">🔍</button>
         </div>
 
+        <!-- Categories -->
+        <div class="categories">
+            <button class="category-btn active" data-category="all">Tout</button>
+            <button class="category-btn" data-category="films">Films</button>
+            <button class="category-btn" data-category="series">Séries</button>
+            <button class="category-btn" data-category="documentaires">Documentaires</button>
+            <button class="category-btn" data-category="action">Action</button>
+            <button class="category-btn" data-category="comedie">Comédie</button>
+            <button class="category-btn" data-category="drame">Drame</button>
+        </div>
+
+        <!-- Loading -->
         <div class="loading" id="loading">
             <div class="spinner"></div>
-            <p>Chargement des vidéos...</p>
+            <p>Chargement du contenu...</p>
         </div>
 
-        <div class="no-results" id="noResults">
-            <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
-            <p>Aucune vidéo trouvée pour votre recherche.</p>
-        </div>
+        <!-- Featured Section -->
+        <section class="section">
+            <h2 class="section-title" id="sectionTitle">Contenu à la une</h2>
+            <div class="video-grid" id="videoGrid">
+                <!-- Les vidéos seront chargées ici par JavaScript -->
+            </div>
+        </section>
+    </main>
 
-        <div class="video-grid" id="videoGrid">
-            <!-- Les vidéos seront injectées ici par JavaScript -->
-        </div>
-    </div>
-
-    <!-- Modal pour la lecture vidéo -->
-    <div class="modal" id="videoModal">
+    <!-- Video Player Modal -->
+    <div id="videoModal" class="modal">
         <div class="modal-content">
-            <span class="close-btn" id="closeModal">&times;</span>
-            
-            <div class="method-selector">
-                <button class="method-btn active" data-method="iframe">iFrame Direct</button>
-                <button class="method-btn" data-method="proxy">Proxy CORS</button>
-                <button class="method-btn" data-method="external">Lien Externe</button>
+            <span class="close">&times;</span>
+            <div class="video-player" id="videoPlayer">
+                <video controls width="100%" height="100%" id="mainVideo">
+                    <source src="" type="video/mp4">
+                    Votre navigateur ne supporte pas la lecture vidéo.
+                </video>
             </div>
-
-            <div class="video-container">
-                <iframe class="video-player" id="videoPlayer" src="" allowfullscreen sandbox="allow-scripts allow-same-origin allow-presentation"></iframe>
-                
-                <div class="fallback-player" id="fallbackPlayer">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <h3>Lecture bloquée</h3>
-                    <p>Cette vidéo ne peut pas être affichée dans l'iframe en raison des restrictions du serveur.</p>
-                    <a href="" target="_blank" class="external-link-btn" id="externalLink">
-                        <i class="fas fa-external-link-alt"></i> Regarder sur le site original
-                    </a>
-                </div>
-            </div>
-
-            <h2 class="modal-title" id="modalTitle"></h2>
-            <p class="modal-description" id="modalDescription"></p>
         </div>
     </div>
 
-    <!-- Chargement du fichier de données externes -->
+    <!-- Scripts externes -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="StreamingData.js"></script>
-
+    
     <script>
-        class StreamingApp {
-            constructor() {
-                this.videos = [];
-                this.filteredVideos = [];
-                this.currentVideo = null;
-                this.currentMethod = 'iframe';
-                this.modal = document.getElementById('videoModal');
-                this.videoPlayer = document.getElementById('videoPlayer');
-                this.fallbackPlayer = document.getElementById('fallbackPlayer');
-                this.externalLink = document.getElementById('externalLink');
-                this.searchInput = document.getElementById('searchInput');
-                this.videoGrid = document.getElementById('videoGrid');
-                this.loading = document.getElementById('loading');
-                this.noResults = document.getElementById('noResults');
-                
-                // Proxies CORS disponibles
-                this.corsProxies = [
-                    'https://cors-anywhere.herokuapp.com/',
-                    'https://thingproxy.freeboard.io/fetch/',
-                    'https://api.allorigins.win/raw?url=',
-                    'https://corsproxy.io/?'
-                ];
-                
-                this.init();
-            }
+        // Variables globales
+        let currentCategory = 'all';
+        let currentData = [];
 
-            async init() {
-                this.showLoading(true);
-                await this.loadData();
-                this.setupEventListeners();
-                this.renderVideos();
-                this.showLoading(false);
-            }
+        // Initialisation au chargement de la page
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+            setupEventListeners();
+            setupScrollAnimations();
+        });
 
-            async loadData() {
-                try {
-                    await new Promise(resolve => setTimeout(resolve, 500));
-                    
-                    if (typeof window.streamingData !== 'undefined') {
-                        this.videos = window.streamingData;
-                        this.filteredVideos = [...this.videos];
-                        console.log(`✅ ${this.videos.length} vidéos chargées avec succès`);
-                    } else {
-                        console.warn('⚠️ StreamingData.js non trouvé, utilisation des données de démonstration');
-                        this.loadDemoData();
-                    }
-                } catch (error) {
-                    console.error('❌ Erreur lors du chargement des données:', error);
-                    this.loadDemoData();
+        // Initialisation de l'application
+        function initializeApp() {
+            showLoading();
+            setTimeout(() => {
+                loadContent();
+                hideLoading();
+            }, 1000);
+        }
+
+        // Configuration des écouteurs d'événements
+        function setupEventListeners() {
+            // Catégories
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    setActiveCategory(this);
+                    currentCategory = this.dataset.category;
+                    filterContent();
+                });
+            });
+
+            // Modal
+            const modal = document.getElementById('videoModal');
+            const closeBtn = document.querySelector('.close');
+            
+            closeBtn.addEventListener('click', closeModal);
+            window.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    closeModal();
                 }
-            }
+            });
 
-            loadDemoData() {
-                this.videos = [
-                    {
-                        id: 1,
-                        title: "Big Buck Bunny - Film Open Source",
-                        description: "Film d'animation open source en haute qualité, parfait pour tester le streaming.",
-                        url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-                        embedUrl: "https://www.youtube.com/embed/YE7VzlLtp-4",
-                        thumbnail: "https://images.unsplash.com/photo-1489599807310-1f8bfe12a82b?w=400&h=200&fit=crop",
-                        genre: "Animation",
-                        duration: "10min",
-                        year: "2024"
-                    },
-                    {
-                        id: 2,
-                        title: "Elephant Dream - Court Métrage",
-                        description: "Premier film open source créé avec Blender, une prouesse technique remarquable.",
-                        url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-                        embedUrl: "https://www.youtube.com/embed/TLkA0RELQ1g",
-                        thumbnail: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=200&fit=crop",
-                        genre: "Animation",
-                        duration: "11min",
-                        year: "2024"
-                    },
-                    {
-                        id: 3,
-                        title: "Sintel - Court Métrage Fantasy",
-                        description: "Une aventure fantasy émouvante avec des graphismes époustouflants créés avec Blender.",
-                        url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
-                        embedUrl: "https://www.youtube.com/embed/eRsGyueVLvQ",
-                        thumbnail: "https://images.unsplash.com/photo-1518722415886-12cbf8eca03c?w=400&h=200&fit=crop",
-                        genre: "Fantasy",
-                        duration: "15min",
-                        year: "2024"
-                    }
-                ];
-                this.filteredVideos = [...this.videos];
-            }
+            // Recherche en temps réel
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', debounce(searchContent, 300));
 
-            setupEventListeners() {
-                // Recherche en temps réel
-                this.searchInput.addEventListener('input', (e) => {
-                    this.filterVideos(e.target.value);
-                });
-
-                // Sélection de méthode de lecture
-                document.querySelectorAll('.method-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        document.querySelectorAll('.method-btn').forEach(b => b.classList.remove('active'));
-                        e.target.classList.add('active');
-                        this.currentMethod = e.target.dataset.method;
-                        if (this.currentVideo) {
-                            this.playVideo(this.currentVideo, this.currentMethod);
-                        }
-                    });
-                });
-
-                // Fermeture du modal
-                document.getElementById('closeModal').addEventListener('click', () => {
-                    this.closeModal();
-                });
-
-                this.modal.addEventListener('click', (e) => {
-                    if (e.target === this.modal) {
-                        this.closeModal();
-                    }
-                });
-
-                document.addEventListener('keydown', (e) => {
-                    if (e.key === 'Escape' && this.modal.style.display === 'flex') {
-                        this.closeModal();
-                    }
-                });
-
-                // Gestion des erreurs d'iframe
-                this.videoPlayer.addEventListener('error', () => {
-                    this.handleIframeError();
-                });
-
-                this.videoPlayer.addEventListener('load', () => {
-                    console.log('✅ Iframe chargée avec succès');
-                });
-            }
-
-            filterVideos(searchTerm) {
-                const term = searchTerm.toLowerCase().trim();
-                
-                if (!term) {
-                    this.filteredVideos = [...this.videos];
+            // Header au scroll
+            window.addEventListener('scroll', function() {
+                const header = document.querySelector('.header');
+                if (window.scrollY > 100) {
+                    header.style.background = 'rgba(0, 0, 0, 0.95)';
                 } else {
-                    this.filteredVideos = this.videos.filter(video => 
-                        video.title.toLowerCase().includes(term) ||
-                        video.description.toLowerCase().includes(term) ||
-                        video.genre.toLowerCase().includes(term)
-                    );
+                    header.style.background = 'rgba(0, 0, 0, 0.9)';
                 }
-                
-                this.renderVideos();
+            });
+        }
+
+        // Animations GSAP
+        function setupScrollAnimations() {
+            gsap.registerPlugin(ScrollTrigger);
+            
+            gsap.from('.video-card', {
+                duration: 0.8,
+                y: 50,
+                opacity: 0,
+                stagger: 0.1,
+                scrollTrigger: {
+                    trigger: '.video-grid',
+                    start: 'top 80%'
+                }
+            });
+        }
+
+        // Chargement du contenu
+        function loadContent() {
+            if (typeof window.streamingData === 'undefined') {
+                console.error('StreamingData.js non trouvé!');
+                displayError();
+                return;
+            }
+            
+            currentData = window.streamingData;
+            renderContent(currentData);
+        }
+
+        // Rendu du contenu
+        function renderContent(data) {
+            const videoGrid = document.getElementById('videoGrid');
+            
+            if (!data || data.length === 0) {
+                videoGrid.innerHTML = `
+                    <div style="text-align: center; grid-column: 1/-1; padding: 3rem;">
+                        <h3>Aucun contenu trouvé</h3>
+                        <p>Essayez de modifier vos critères de recherche.</p>
+                    </div>
+                `;
+                return;
             }
 
-            renderVideos() {
-                if (this.filteredVideos.length === 0) {
-                    this.videoGrid.style.display = 'none';
-                    this.noResults.style.display = 'block';
-                    return;
-                }
-
-                this.noResults.style.display = 'none';
-                this.videoGrid.style.display = 'grid';
-
-                this.videoGrid.innerHTML = this.filteredVideos.map(video => `
-                    <div class="video-card" onclick="app.openVideo(${video.id})">
-                        <div class="video-thumbnail">
-                            <img src="${video.thumbnail || 'https://images.unsplash.com/photo-1489599807310-1f8bfe12a82b?w=400&h=200&fit=crop'}" alt="${video.title}" onerror="this.src='https://images.unsplash.com/photo-1489599807310-1f8bfe12a82b?w=400&h=200&fit=crop'">
-                            <div class="play-icon">
-                                <i class="fas fa-play"></i>
-                            </div>
-                        </div>
-                        <div class="video-info">
-                            <h3 class="video-title">${video.title}</h3>
-                            <p class="video-description">${video.description}</p>
-                            <div class="video-meta">
-                                <span>${video.duration || 'N/A'} • ${video.year || 'N/A'}</span>
-                                <span class="video-genre">${video.genre || 'Général'}</span>
-                            </div>
+            videoGrid.innerHTML = data.map(video => `
+                <div class="video-card" onclick="openVideo('${video.id}')">
+                    <div class="video-thumbnail">
+                        <div class="play-button"></div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">${video.title}</h3>
+                        <p class="video-description">${video.description}</p>
+                        <div class="video-meta">
+                            <span>${video.category}</span>
+                            <span>${video.duration || 'Durée inconnue'}</span>
                         </div>
                     </div>
-                `).join('');
-            }
+                </div>
+            `).join('');
 
-            openVideo(videoId) {
-                const video = this.videos.find(v => v.id === videoId);
-                if (!video) {
-                    console.error('Vidéo non trouvée:', videoId);
-                    return;
-                }
-
-                this.currentVideo = video;
-
-                // Mise à jour du contenu du modal
-                document.getElementById('modalTitle').textContent = video.title;
-                document.getElementById('modalDescription').textContent = video.description;
-                
-                // Tentative de lecture avec la méthode actuelle
-                this.playVideo(video, this.currentMethod);
-                
-                // Affichage du modal
-                this.modal.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-
-                console.log('🎬 Tentative de lecture:', video.title);
-            }
-
-            playVideo(video, method) {
-                this.hideAllPlayers();
-
-                switch (method) {
-                    case 'iframe':
-                        this.tryDirectIframe(video);
-                        break;
-                    case 'proxy':
-                        this.tryProxyMethod(video);
-                        break;
-                    case 'external':
-                        this.showExternalLink(video);
-                        break;
-                }
-            }
-
-            tryDirectIframe(video) {
-                const url = video.embedUrl || video.url;
-                this.videoPlayer.style.display = 'block';
-                this.videoPlayer.src = url;
-                
-                // Vérification après un délai
-                setTimeout(() => {
-                    this.checkIframeStatus();
-                }, 3000);
-            }
-
-            tryProxyMethod(video) {
-                const url = video.url || video.embedUrl;
-                const proxyUrl = this.corsProxies[0] + encodeURIComponent(url);
-                
-                this.videoPlayer.style.display = 'block';
-                this.videoPlayer.src = proxyUrl;
-                
-                setTimeout(() => {
-                    this.checkIframeStatus();
-                }, 3000);
-                
-                console.log('🔄 Tentative avec proxy CORS:', proxyUrl);
-            }
-
-            showExternalLink(video) {
-                this.fallbackPlayer.style.display = 'flex';
-                const url = video.url || video.embedUrl;
-                this.externalLink.href = url;
-                
-                console.log('🔗 Redirection vers lien externe:', url);
-            }
-
-            checkIframeStatus() {
-                try {
-                    // Tentative d'accès au contenu de l'iframe
-                    const iframeDoc = this.videoPlayer.contentDocument || this.videoPlayer.contentWindow.document;
-                    if (!iframeDoc) {
-                        throw new Error('Accès bloqué');
-                    }
-                    console.log('✅ Iframe accessible');
-                } catch (error) {
-                    console.warn('⚠️ Iframe probablement bloquée, passage au fallback');
-                    this.handleIframeError();
-                }
-            }
-
-            handleIframeError() {
-                this.videoPlayer.style.display = 'none';
-                this.showExternalLink(this.currentVideo);
-            }
-
-            hideAllPlayers() {
-                this.videoPlayer.style.display = 'none';
-                this.fallbackPlayer.style.display = 'none';
-            }
-
-            closeModal() {
-                this.modal.style.display = 'none';
-                this.videoPlayer.src = '';
-                this.hideAllPlayers();
-                document.body.style.overflow = 'auto';
-                console.log('⏹️ Lecteur fermé');
-            }
-
-            showLoading(show) {
-                this.loading.style.display = show ? 'block' : 'none';
-                this.videoGrid.style.display = show ? 'none' : 'grid';
+            // Réinitialiser les animations
+            if (typeof gsap !== 'undefined') {
+                gsap.from('.video-card', {
+                    duration: 0.6,
+                    y: 30,
+                    opacity: 0,
+                    stagger: 0.1
+                });
             }
         }
 
-        // Initialisation de l'application
-        let app;
-        document.addEventListener('DOMContentLoaded', () => {
-            app = new StreamingApp();
+        // Filtrage du contenu
+        function filterContent() {
+            showLoading();
+            
+            setTimeout(() => {
+                let filteredData = currentData;
+                
+                if (currentCategory !== 'all') {
+                    filteredData = currentData.filter(video => 
+                        video.category.toLowerCase().includes(currentCategory.toLowerCase())
+                    );
+                }
+
+                const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+                if (searchTerm) {
+                    filteredData = filteredData.filter(video =>
+                        video.title.toLowerCase().includes(searchTerm) ||
+                        video.description.toLowerCase().includes(searchTerm) ||
+                        video.category.toLowerCase().includes(searchTerm)
+                    );
+                }
+
+                renderContent(filteredData);
+                updateSectionTitle();
+                hideLoading();
+            }, 500);
+        }
+
+        // Mise à jour du titre de section
+        function updateSectionTitle() {
+            const sectionTitle = document.getElementById('sectionTitle');
+            const searchTerm = document.getElementById('searchInput').value;
+            
+            if (searchTerm) {
+                sectionTitle.textContent = `Résultats pour "${searchTerm}"`;
+            } else if (currentCategory === 'all') {
+                sectionTitle.textContent = 'Contenu à la une';
+            } else {
+                sectionTitle.textContent = `${currentCategory.charAt(0).toUpperCase() + currentCategory.slice(1)}`;
+            }
+        }
+
+        // Ouverture de la vidéo
+        function openVideo(videoId) {
+            const video = currentData.find(v => v.id === videoId);
+            if (!video) return;
+
+            const modal = document.getElementById('videoModal');
+            const videoElement = document.getElementById('mainVideo');
+            
+            if (video.url) {
+                videoElement.src = video.url;
+                modal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+                
+                // Animation d'ouverture
+                if (typeof gsap !== 'undefined') {
+                    gsap.fromTo('.modal-content', 
+                        { scale: 0.8, opacity: 0 },
+                        { scale: 1, opacity: 1, duration: 0.3, ease: 'back.out(1.7)' }
+                    );
+                }
+            } else {
+                alert('URL de la vidéo non disponible');
+            }
+        }
+
+        // Fermeture de la modal
+        function closeModal() {
+            const modal = document.getElementById('videoModal');
+            const videoElement = document.getElementById('mainVideo');
+            
+            videoElement.pause();
+            videoElement.src = '';
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Recherche
+        function searchContent() {
+            filterContent();
+        }
+
+        // Définir la catégorie active
+        function setActiveCategory(button) {
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            button.classList.add('active');
+        }
+
+        // Scroll vers le contenu
+        function scrollToContent() {
+            document.getElementById('content').scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+
+        // Utilitaires
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('videoGrid').style.opacity = '0.5';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('videoGrid').style.opacity = '1';
+        }
+
+        function displayError() {
+            const videoGrid = document.getElementById('videoGrid');
+            videoGrid.innerHTML = `
+                <div style="text-align: center; grid-column: 1/-1; padding: 3rem;">
+                    <h3 style="color: #e50914;">Erreur de chargement</h3>
+                    <p>Impossible de charger le fichier StreamingData.js</p>
+                    <button class="cta-button" onclick="location.reload()" style="margin-top: 1rem;">
+                        Réessayer
+                    </button>
+                </div>
+            `;
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Gestion des erreurs
+        window.addEventListener('error', function(e) {
+            console.error('Erreur détectée:', e.error);
+            if (e.filename && e.filename.includes('StreamingData.js')) {
+                displayError();
+            }
         });
 
-        // Gestion des erreurs globales
-        window.addEventListener('error', (e) => {
-            console.error('❌ Erreur globale:', e.error);
-        });
+        // Animation de particules en arrière-plan (optionnel)
+        function createParticles() {
+            const particles = document.createElement('div');
+            particles.style.position = 'fixed';
+            particles.style.top = '0';
+            particles.style.left = '0';
+            particles.style.width = '100%';
+            particles.style.height = '100%';
+            particles.style.pointerEvents = 'none';
+            particles.style.zIndex = '-1';
+            
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.style.position = 'absolute';
+                particle.style.width = Math.random() * 4 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.background = 'rgba(255, 255, 255, 0.1)';
+                particle.style.borderRadius = '50%';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animation = `float ${Math.random() * 10 + 10}s linear infinite`;
+                particles.appendChild(particle);
+            }
+            
+            document.body.appendChild(particles);
+        }
+
+        // CSS pour l'animation des particules
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+                10% { opacity: 1; }
+                90% { opacity: 1; }
+                100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialiser les particules
+        setTimeout(createParticles, 2000);
     </script>
 </body>
 </html>
