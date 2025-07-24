@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EliteShop - Boutique E-commerce Premium</title>
-    <meta name="description" content="EliteShop - Votre boutique e-commerce premium. Découvrez nos produits tech, mode, beauté et plus encore avec livraison gratuite.">
+    <meta name="description" content="EliteShop - Boutique e-commerce premium avec produits tech, mode, beauté et plus encore">
     
-    <!-- CSS Framework et Styles -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -48,93 +48,61 @@
         }
     </script>
     
-    <!-- Icons -->
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     
     <style>
+        /* Animations */
         .animate-spin { animation: spin 1s linear infinite; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
         
+        /* Component Classes */
         .btn {
-            @apply inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+            @apply inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2;
         }
+        .btn-primary { @apply bg-primary text-primary-foreground hover:bg-primary/90; }
+        .btn-secondary { @apply bg-secondary text-secondary-foreground hover:bg-secondary/80; }
+        .btn-outline { @apply border border-input bg-background hover:bg-accent hover:text-accent-foreground; }
+        .btn-ghost { @apply hover:bg-accent hover:text-accent-foreground; }
+        .btn-destructive { @apply bg-destructive text-destructive-foreground hover:bg-destructive/90; }
         
-        .btn-primary {
-            @apply bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2;
-        }
+        .card { @apply rounded-lg border bg-card text-card-foreground shadow-sm; }
+        .card-header { @apply flex flex-col space-y-1.5 p-6; }
+        .card-title { @apply text-2xl font-semibold leading-none tracking-tight; }
+        .card-content { @apply p-6 pt-0; }
         
-        .btn-secondary {
-            @apply bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2;
-        }
+        .input { @apply flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50; }
         
-        .btn-outline {
-            @apply border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2;
-        }
+        .badge { @apply inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2; }
+        .badge-default { @apply border-transparent bg-primary text-primary-foreground hover:bg-primary/80; }
+        .badge-secondary { @apply border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80; }
+        .badge-destructive { @apply border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80; }
+        .badge-outline { @apply text-foreground; }
         
-        .card {
-            @apply rounded-lg border bg-card text-card-foreground shadow-sm;
-        }
+        /* Page visibility */
+        .page { display: none; }
+        .page.active { display: block; }
         
-        .badge {
-            @apply inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2;
-        }
+        /* Table styles */
+        .table { @apply w-full caption-bottom text-sm; }
+        .table thead { @apply [&_tr]:border-b; }
+        .table tbody { @apply [&_tr:last-child]:border-0; }
+        .table tr { @apply border-b transition-colors hover:bg-muted/50; }
+        .table th { @apply h-12 px-4 text-left align-middle font-medium text-muted-foreground; }
+        .table td { @apply p-4 align-middle; }
         
-        .badge-default {
-            @apply border-transparent bg-primary text-primary-foreground hover:bg-primary/80;
-        }
-        
-        .badge-secondary {
-            @apply border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80;
-        }
-        
-        .badge-outline {
-            @apply text-foreground;
-        }
-        
-        .input {
-            @apply flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
-        }
-        
-        .table-container {
-            @apply relative w-full overflow-auto;
-        }
-        
-        .table {
-            @apply w-full caption-bottom text-sm;
-        }
-        
-        .table thead {
-            @apply [&_tr]:border-b;
-        }
-        
-        .table tbody {
-            @apply [&_tr:last-child]:border-0;
-        }
-        
-        .table tr {
-            @apply border-b transition-colors hover:bg-muted/50;
-        }
-        
-        .table th {
-            @apply h-12 px-4 text-left align-middle font-medium text-muted-foreground;
-        }
-        
-        .table td {
-            @apply p-4 align-middle;
-        }
-        
-        .hidden { display: none !important; }
-        .block { display: block !important; }
-        .flex { display: flex !important; }
-        .grid { display: grid !important; }
+        /* Tabs */
+        .tabs-list { @apply inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground; }
+        .tabs-trigger { @apply inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm; }
+        .tabs-content { @apply mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2; }
     </style>
 </head>
 
 <body class="min-h-screen bg-background font-sans antialiased">
-    <!-- Navigation -->
-    <header class="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <!-- Navigation Bar -->
+    <nav id="navbar" class="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <!-- Top Bar -->
         <div class="bg-gradient-to-r from-purple-600 to-pink-600 text-white text-sm">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -164,9 +132,9 @@
             <div class="flex items-center justify-between h-16">
                 <!-- Logo -->
                 <div class="flex items-center">
-                    <a href="#" class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                    <button onclick="navigateTo('landing')" class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                         EliteShop
-                    </a>
+                    </button>
                 </div>
 
                 <!-- Search Bar -->
@@ -175,125 +143,1192 @@
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i data-lucide="search" class="h-5 w-5 text-gray-400"></i>
                         </div>
-                        <input type="text" class="input pl-10 pr-4" placeholder="Rechercher des produits...">
+                        <input type="text" id="search-input" class="input pl-10 pr-4" placeholder="Rechercher des produits..." onkeypress="handleSearchKeyPress(event)">
                     </div>
                 </div>
 
-                <!-- Actions -->
+                <!-- User Actions -->
                 <div class="flex items-center space-x-4">
-                    <button class="btn btn-outline">
-                        <i data-lucide="user" class="mr-2 h-4 w-4"></i>
-                        Connexion
-                    </button>
-                    <button class="btn btn-primary relative">
+                    <div id="auth-buttons">
+                        <button class="btn btn-outline" onclick="showLoginModal()">
+                            <i data-lucide="user" class="mr-2 h-4 w-4"></i>
+                            Connexion
+                        </button>
+                    </div>
+                    <div id="user-menu" class="hidden">
+                        <div class="relative">
+                            <button class="btn btn-ghost" onclick="toggleUserDropdown()">
+                                <i data-lucide="user" class="mr-2 h-4 w-4"></i>
+                                <span id="user-name">Utilisateur</span>
+                                <i data-lucide="chevron-down" class="ml-2 h-4 w-4"></i>
+                            </button>
+                            <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+                                <div class="py-1">
+                                    <a href="#" onclick="navigateTo('profile')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profil</a>
+                                    <a href="#" onclick="navigateTo('orders')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Mes commandes</a>
+                                    <a href="#" onclick="navigateTo('wishlist')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ma liste de souhaits</a>
+                                    <a href="#" onclick="navigateTo('admin')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" id="admin-link">Administration</a>
+                                    <div class="border-t border-gray-100"></div>
+                                    <a href="#" onclick="logout()" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Se déconnecter</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary relative" onclick="navigateTo('cart')">
                         <i data-lucide="shopping-cart" class="mr-2 h-4 w-4"></i>
                         Panier
-                        <span class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">3</span>
+                        <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">0</span>
                     </button>
                 </div>
             </div>
         </div>
 
         <!-- Navigation Menu -->
-        <nav class="border-t">
+        <div class="border-t">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex items-center justify-between h-12">
-                    <div class="flex items-center space-x-8">
-                        <a href="#" class="text-sm font-medium text-gray-700 hover:text-primary">Accueil</a>
-                        <a href="#" class="text-sm font-medium text-gray-700 hover:text-primary">Produits</a>
-                        <a href="#" class="text-sm font-medium text-gray-700 hover:text-primary">Catégories</a>
-                        <a href="#" class="text-sm font-medium text-gray-700 hover:text-primary">À propos</a>
-                        <a href="#" class="text-sm font-medium text-gray-700 hover:text-primary">Contact</a>
-                    </div>
+                <div class="flex items-center justify-center h-12 space-x-8">
+                    <button onclick="navigateTo('home')" class="text-sm font-medium text-gray-700 hover:text-primary">Accueil</button>
+                    <button onclick="navigateTo('products')" class="text-sm font-medium text-gray-700 hover:text-primary">Produits</button>
+                    <button onclick="navigateTo('about')" class="text-sm font-medium text-gray-700 hover:text-primary">À propos</button>
+                    <button onclick="navigateTo('contact')" class="text-sm font-medium text-gray-700 hover:text-primary">Contact</button>
+                    <button onclick="navigateTo('help')" class="text-sm font-medium text-gray-700 hover:text-primary">Aide</button>
                 </div>
             </div>
-        </nav>
-    </header>
+        </div>
+    </nav>
 
     <!-- Main Content -->
     <main id="main-content">
-        <!-- Hero Section -->
-        <section class="bg-gradient-to-r from-purple-600 to-pink-600 text-white">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-                <div class="text-center">
-                    <h1 class="text-4xl md:text-6xl font-bold mb-6">
-                        Bienvenue chez EliteShop
-                    </h1>
-                    <p class="text-xl md:text-2xl mb-8 text-purple-100">
-                        Découvrez notre sélection premium de produits tech, mode et lifestyle
-                    </p>
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                        <button class="btn bg-white text-purple-600 hover:bg-gray-100 px-8 py-3 text-lg">
-                            Découvrir les produits
-                        </button>
-                        <button class="btn border border-white text-white hover:bg-white hover:text-purple-600 px-8 py-3 text-lg">
-                            Voir les offres
-                        </button>
+        <!-- Landing Page -->
+        <div id="landing-page" class="page active">
+            <div class="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800">
+                <!-- Hero Section -->
+                <section class="py-20 text-center text-white">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="max-w-4xl mx-auto">
+                            <h1 class="text-4xl lg:text-6xl font-bold mb-6">
+                                Découvrez l'Excellence
+                                <span class="text-yellow-300"> Shopping</span>
+                            </h1>
+                            <p class="text-xl mb-8 text-blue-100">
+                                Des milliers de produits premium sélectionnés avec soin pour vous offrir 
+                                la meilleure expérience d'achat en ligne.
+                            </p>
+                            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                                <button onclick="showLoginModal()" class="btn bg-white text-blue-600 hover:bg-gray-100 text-lg px-8 py-3 h-auto">
+                                    <i data-lucide="shopping-bag" class="mr-2 h-5 w-5"></i>
+                                    Commencer à Acheter
+                                </button>
+                                <button onclick="navigateTo('products')" class="btn border-white text-white hover:bg-white hover:text-blue-600 text-lg px-8 py-3 h-auto">
+                                    Découvrir les Catégories
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Features Section -->
+                <section class="py-16 bg-white/10 backdrop-blur-sm">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="text-center mb-12">
+                            <h2 class="text-3xl font-bold text-white mb-4">Pourquoi Choisir EliteShop ?</h2>
+                            <p class="text-blue-100 max-w-2xl mx-auto">
+                                Une expérience de shopping premium avec des services exceptionnels
+                            </p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <div class="card bg-white/20 backdrop-blur-sm border-white/20">
+                                <div class="card-content p-6 text-center text-white">
+                                    <div class="bg-green-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <i data-lucide="truck" class="h-8 w-8"></i>
+                                    </div>
+                                    <h3 class="text-xl font-semibold mb-2">Livraison Gratuite</h3>
+                                    <p class="text-blue-100">Livraison gratuite pour toute commande supérieure à 50€</p>
+                                </div>
+                            </div>
+
+                            <div class="card bg-white/20 backdrop-blur-sm border-white/20">
+                                <div class="card-content p-6 text-center text-white">
+                                    <div class="bg-blue-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <i data-lucide="shield" class="h-8 w-8"></i>
+                                    </div>
+                                    <h3 class="text-xl font-semibold mb-2">Garantie Qualité</h3>
+                                    <p class="text-blue-100">Tous nos produits sont garantis et certifiés premium</p>
+                                </div>
+                            </div>
+
+                            <div class="card bg-white/20 backdrop-blur-sm border-white/20">
+                                <div class="card-content p-6 text-center text-white">
+                                    <div class="bg-purple-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <i data-lucide="rotate-ccw" class="h-8 w-8"></i>
+                                    </div>
+                                    <h3 class="text-xl font-semibold mb-2">Retours Faciles</h3>
+                                    <p class="text-blue-100">Retours gratuits sous 30 jours, satisfaction garantie</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- Home Page -->
+        <div id="home-page" class="page">
+            <div class="min-h-screen bg-gray-50">
+                <!-- Hero Section -->
+                <section class="bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-800 text-white py-20">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                            <div>
+                                <h1 class="text-4xl lg:text-6xl font-bold mb-6">
+                                    Découvrez l'Excellence
+                                    <span class="text-yellow-300"> Shopping</span>
+                                </h1>
+                                <p class="text-xl mb-8 text-blue-100">
+                                    Des milliers de produits premium sélectionnés avec soin pour vous offrir 
+                                    la meilleure expérience d'achat en ligne.
+                                </p>
+                                <div class="flex flex-col sm:flex-row gap-4">
+                                    <button onclick="navigateTo('products')" class="btn bg-white text-blue-600 hover:bg-gray-100 h-auto px-6 py-3">
+                                        <i data-lucide="shopping-bag" class="mr-2 h-5 w-5"></i>
+                                        Acheter Maintenant
+                                    </button>
+                                    <button onclick="navigateTo('products')" class="btn border-white text-white hover:bg-white hover:text-blue-600 h-auto px-6 py-3">
+                                        Explorer les Catégories
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="relative">
+                                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8">
+                                    <div class="grid grid-cols-2 gap-4" id="hero-featured-products">
+                                        <!-- Generated by JS -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Categories Section -->
+                <section class="py-16">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="text-center mb-12">
+                            <h2 class="text-3xl font-bold text-gray-900 mb-4">Nos Catégories</h2>
+                            <p class="text-gray-600">Explorez notre large gamme de produits</p>
+                        </div>
+                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6" id="home-categories">
+                            <!-- Generated by JS -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Featured Products -->
+                <section class="py-16 bg-white">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="flex justify-between items-center mb-8">
+                            <div>
+                                <h2 class="text-3xl font-bold text-gray-900 mb-2">Produits Vedettes</h2>
+                                <p class="text-gray-600">Découvrez nos meilleures ventes</p>
+                            </div>
+                            <button onclick="navigateTo('products')" class="btn btn-outline">
+                                Voir tous les produits
+                                <i data-lucide="arrow-right" class="ml-2 h-4 w-4"></i>
+                            </button>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="featured-products">
+                            <!-- Generated by JS -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Newsletter -->
+                <section class="py-16 bg-gray-900 text-white">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                        <h2 class="text-3xl font-bold mb-4">Restez Informé</h2>
+                        <p class="text-gray-300 mb-8">Recevez nos dernières offres et nouveautés directement par email</p>
+                        <div class="max-w-md mx-auto flex gap-4">
+                            <input type="email" class="input flex-1" placeholder="votre@email.com">
+                            <button class="btn btn-primary">S'abonner</button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- Products Page -->
+        <div id="products-page" class="page">
+            <div class="min-h-screen bg-gray-50">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <!-- Page Header -->
+                    <div class="mb-8">
+                        <h1 class="text-3xl font-bold text-gray-900 mb-2">Nos Produits</h1>
+                        <p class="text-gray-600">Découvrez notre large sélection de produits premium</p>
+                    </div>
+
+                    <!-- Filters and Sort -->
+                    <div class="flex flex-col lg:flex-row gap-8">
+                        <!-- Sidebar Filters -->
+                        <div class="lg:w-1/4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title text-lg">Filtres</h3>
+                                </div>
+                                <div class="card-content space-y-6">
+                                    <!-- Categories -->
+                                    <div>
+                                        <h4 class="font-medium mb-3">Catégories</h4>
+                                        <div class="space-y-2" id="category-filters">
+                                            <!-- Generated by JS -->
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Price Range -->
+                                    <div>
+                                        <h4 class="font-medium mb-3">Prix</h4>
+                                        <div class="space-y-2">
+                                            <label class="flex items-center">
+                                                <input type="radio" name="price" value="all" checked class="mr-2">
+                                                Tous les prix
+                                            </label>
+                                            <label class="flex items-center">
+                                                <input type="radio" name="price" value="0-50" class="mr-2">
+                                                0€ - 50€
+                                            </label>
+                                            <label class="flex items-center">
+                                                <input type="radio" name="price" value="50-100" class="mr-2">
+                                                50€ - 100€
+                                            </label>
+                                            <label class="flex items-center">
+                                                <input type="radio" name="price" value="100-500" class="mr-2">
+                                                100€ - 500€
+                                            </label>
+                                            <label class="flex items-center">
+                                                <input type="radio" name="price" value="500+" class="mr-2">
+                                                500€+
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Products Grid -->
+                        <div class="lg:w-3/4">
+                            <!-- Sort and View Options -->
+                            <div class="flex justify-between items-center mb-6">
+                                <div class="flex items-center space-x-4">
+                                    <span class="text-sm text-gray-600" id="products-count">12 produits</span>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <select class="input w-48" id="sort-select" onchange="handleSortChange()">
+                                        <option value="newest">Plus récents</option>
+                                        <option value="price-asc">Prix croissant</option>
+                                        <option value="price-desc">Prix décroissant</option>
+                                        <option value="name">Nom A-Z</option>
+                                        <option value="popular">Popularité</option>
+                                    </select>
+                                    <div class="flex items-center border rounded">
+                                        <button class="btn btn-ghost p-2" onclick="setViewMode('grid')" id="grid-view-btn">
+                                            <i data-lucide="grid-3x3" class="h-4 w-4"></i>
+                                        </button>
+                                        <button class="btn btn-ghost p-2" onclick="setViewMode('list')" id="list-view-btn">
+                                            <i data-lucide="list" class="h-4 w-4"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Products Grid -->
+                            <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                                <!-- Generated by JS -->
+                            </div>
+
+                            <!-- Pagination -->
+                            <div class="flex justify-center mt-8">
+                                <div class="flex items-center space-x-2" id="pagination">
+                                    <!-- Generated by JS -->
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <!-- Featured Products -->
-        <section class="py-16">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Produits Vedettes</h2>
-                    <p class="text-gray-600">Découvrez notre sélection de produits premium</p>
-                </div>
+        <!-- Product Detail Page -->
+        <div id="product-detail-page" class="page">
+            <div class="min-h-screen bg-gray-50">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <!-- Breadcrumb -->
+                    <nav class="mb-8" id="product-breadcrumb">
+                        <ol class="flex items-center space-x-2 text-sm text-gray-500">
+                            <li><button onclick="navigateTo('home')" class="hover:text-primary">Accueil</button></li>
+                            <li><i data-lucide="chevron-right" class="h-4 w-4"></i></li>
+                            <li><button onclick="navigateTo('products')" class="hover:text-primary">Produits</button></li>
+                            <li><i data-lucide="chevron-right" class="h-4 w-4"></i></li>
+                            <li class="text-gray-900" id="product-breadcrumb-name">Produit</li>
+                        </ol>
+                    </nav>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="featured-products">
-                    <!-- Les produits seront générés par JavaScript -->
-                </div>
-            </div>
-        </section>
-
-        <!-- Categories -->
-        <section class="py-16 bg-gray-50">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Nos Catégories</h2>
-                    <p class="text-gray-600">Explorez toutes nos catégories de produits</p>
-                </div>
-
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6" id="categories">
-                    <!-- Les catégories seront générées par JavaScript -->
-                </div>
-            </div>
-        </section>
-
-        <!-- All Products -->
-        <section class="py-16">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between items-center mb-8">
-                    <h2 class="text-3xl font-bold text-gray-900">Tous nos Produits</h2>
-                    <div class="flex items-center space-x-4">
-                        <select class="input w-48">
-                            <option>Toutes les catégories</option>
-                            <option>Électronique</option>
-                            <option>Mode</option>
-                            <option>Beauté</option>
-                            <option>Sport</option>
-                            <option>Maison</option>
-                        </select>
-                        <select class="input w-48">
-                            <option>Trier par popularité</option>
-                            <option>Prix croissant</option>
-                            <option>Prix décroissant</option>
-                            <option>Nouveautés</option>
-                        </select>
+                    <div id="product-detail-content">
+                        <!-- Generated by JS -->
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="all-products">
-                    <!-- Les produits seront générés par JavaScript -->
+        <!-- Cart Page -->
+        <div id="cart-page" class="page">
+            <div class="min-h-screen bg-gray-50">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <div class="mb-8">
+                        <h1 class="text-3xl font-bold text-gray-900 mb-2">Mon Panier</h1>
+                        <p class="text-gray-600" id="cart-items-count">Chargement...</p>
+                    </div>
+
+                    <div id="cart-content">
+                        <!-- Generated by JS -->
+                    </div>
                 </div>
             </div>
-        </section>
+        </div>
+
+        <!-- Checkout Page -->
+        <div id="checkout-page" class="page">
+            <div class="min-h-screen bg-gray-50">
+                <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <div class="mb-8">
+                        <h1 class="text-3xl font-bold text-gray-900 mb-2">Finaliser la commande</h1>
+                        <p class="text-gray-600">Complétez vos informations pour finaliser votre achat</p>
+                    </div>
+
+                    <div id="checkout-content">
+                        <!-- Generated by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Admin Page -->
+        <div id="admin-page" class="page">
+            <div class="min-h-screen bg-gray-50">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <!-- Admin Header -->
+                    <div class="mb-8">
+                        <h1 class="text-3xl font-bold text-gray-900 mb-2">Administration</h1>
+                        <p class="text-gray-600">Gérez votre boutique et vos produits</p>
+                    </div>
+
+                    <!-- Admin Content -->
+                    <div id="admin-content">
+                        <!-- Admin Dashboard -->
+                        <div class="mb-8 grid grid-cols-1 md:grid-cols-4 gap-6">
+                            <div class="card">
+                                <div class="card-header flex flex-row items-center justify-between space-y-0 pb-2">
+                                    <h3 class="text-sm font-medium">Total Produits</h3>
+                                    <i data-lucide="package" class="h-4 w-4 text-muted-foreground"></i>
+                                </div>
+                                <div class="card-content">
+                                    <div class="text-2xl font-bold" id="admin-total-products">0</div>
+                                    <p class="text-xs text-muted-foreground">Produits en ligne</p>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header flex flex-row items-center justify-between space-y-0 pb-2">
+                                    <h3 class="text-sm font-medium">Commandes</h3>
+                                    <i data-lucide="shopping-cart" class="h-4 w-4 text-muted-foreground"></i>
+                                </div>
+                                <div class="card-content">
+                                    <div class="text-2xl font-bold" id="admin-total-orders">0</div>
+                                    <p class="text-xs text-muted-foreground">Commandes ce mois</p>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header flex flex-row items-center justify-between space-y-0 pb-2">
+                                    <h3 class="text-sm font-medium">Revenus</h3>
+                                    <i data-lucide="trending-up" class="h-4 w-4 text-muted-foreground"></i>
+                                </div>
+                                <div class="card-content">
+                                    <div class="text-2xl font-bold" id="admin-total-revenue">0€</div>
+                                    <p class="text-xs text-muted-foreground">Ce mois</p>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header flex flex-row items-center justify-between space-y-0 pb-2">
+                                    <h3 class="text-sm font-medium">Stock Faible</h3>
+                                    <i data-lucide="alert-triangle" class="h-4 w-4 text-red-500"></i>
+                                </div>
+                                <div class="card-content">
+                                    <div class="text-2xl font-bold text-red-600" id="admin-low-stock">0</div>
+                                    <p class="text-xs text-muted-foreground">Produits &lt; 10 unités</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Admin Tabs -->
+                        <div class="tabs w-full">
+                            <div class="tabs-list grid w-full grid-cols-3">
+                                <button class="tabs-trigger" data-tab="products" onclick="switchAdminTab('products')">Produits</button>
+                                <button class="tabs-trigger" data-tab="orders" onclick="switchAdminTab('orders')">Commandes</button>
+                                <button class="tabs-trigger" data-tab="settings" onclick="switchAdminTab('settings')">Paramètres</button>
+                            </div>
+
+                            <!-- Products Tab -->
+                            <div id="admin-products-tab" class="tabs-content">
+                                <div class="flex justify-between items-center mb-6">
+                                    <h2 class="text-xl font-semibold">Gestion des Produits</h2>
+                                    <button class="btn btn-primary" onclick="showProductForm()">
+                                        <i data-lucide="plus" class="mr-2 h-4 w-4"></i>
+                                        Ajouter un Produit
+                                    </button>
+                                </div>
+
+                                <!-- Products Table -->
+                                <div class="card">
+                                    <div class="card-content p-0">
+                                        <div class="relative w-full overflow-auto">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Image</th>
+                                                        <th>Nom</th>
+                                                        <th>Prix</th>
+                                                        <th>Stock</th>
+                                                        <th>Statut</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="admin-products-table">
+                                                    <!-- Generated by JS -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Orders Tab -->
+                            <div id="admin-orders-tab" class="tabs-content hidden">
+                                <h2 class="text-xl font-semibold mb-6">Gestion des Commandes</h2>
+                                <div class="card">
+                                    <div class="card-content">
+                                        <p class="text-center text-gray-500 py-8">Aucune commande pour le moment</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Settings Tab -->
+                            <div id="admin-settings-tab" class="tabs-content hidden">
+                                <h2 class="text-xl font-semibold mb-6">Paramètres de la Boutique</h2>
+                                <div class="card">
+                                    <div class="card-content space-y-6">
+                                        <div>
+                                            <label class="block text-sm font-medium mb-2">Nom de la boutique</label>
+                                            <input type="text" class="input" value="EliteShop" readonly>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium mb-2">Email de contact</label>
+                                            <input type="email" class="input" value="contact@eliteshop.fr" readonly>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium mb-2">Téléphone</label>
+                                            <input type="tel" class="input" value="+33 1 23 45 67 89" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Page -->
+        <div id="profile-page" class="page">
+            <div class="min-h-screen bg-gray-50">
+                <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <div class="mb-8">
+                        <h1 class="text-3xl font-bold text-gray-900 mb-2">Mon Profil</h1>
+                        <p class="text-gray-600">Gérez vos informations personnelles</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <!-- Profile Info -->
+                        <div class="md:col-span-2">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Informations Personnelles</h3>
+                                </div>
+                                <div class="card-content space-y-6">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-medium mb-2">Prénom</label>
+                                            <input type="text" class="input" value="Utilisateur" id="profile-firstname">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium mb-2">Nom</label>
+                                            <input type="text" class="input" value="Premium" id="profile-lastname">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-2">Email</label>
+                                        <input type="email" class="input" value="user@example.com" id="profile-email">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-2">Téléphone</label>
+                                        <input type="tel" class="input" value="" id="profile-phone">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-2">Adresse</label>
+                                        <textarea class="input min-h-20" id="profile-address" placeholder="Votre adresse complète"></textarea>
+                                    </div>
+                                    <button class="btn btn-primary">Mettre à jour</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Account Stats -->
+                        <div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Statistiques</h3>
+                                </div>
+                                <div class="card-content space-y-4">
+                                    <div class="flex justify-between">
+                                        <span class="text-sm text-gray-600">Commandes</span>
+                                        <span class="font-medium" id="profile-orders-count">0</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm text-gray-600">Total dépensé</span>
+                                        <span class="font-medium" id="profile-total-spent">0€</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm text-gray-600">Liste de souhaits</span>
+                                        <span class="font-medium" id="profile-wishlist-count">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders Page -->
+        <div id="orders-page" class="page">
+            <div class="min-h-screen bg-gray-50">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <div class="mb-8">
+                        <h1 class="text-3xl font-bold text-gray-900 mb-2">Mes Commandes</h1>
+                        <p class="text-gray-600">Suivez vos commandes et téléchargez vos factures</p>
+                    </div>
+
+                    <div id="orders-content">
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="text-center py-12">
+                                    <i data-lucide="package" class="mx-auto h-12 w-12 text-gray-300 mb-4"></i>
+                                    <h3 class="text-lg font-medium text-gray-900 mb-2">Aucune commande</h3>
+                                    <p class="text-gray-500 mb-6">Vous n'avez encore passé aucune commande</p>
+                                    <button onclick="navigateTo('products')" class="btn btn-primary">
+                                        Découvrir nos produits
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Wishlist Page -->
+        <div id="wishlist-page" class="page">
+            <div class="min-h-screen bg-gray-50">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <div class="mb-8">
+                        <h1 class="text-3xl font-bold text-gray-900 mb-2">Ma Liste de Souhaits</h1>
+                        <p class="text-gray-600">Vos produits favoris sauvegardés</p>
+                    </div>
+
+                    <div id="wishlist-content">
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="text-center py-12">
+                                    <i data-lucide="heart" class="mx-auto h-12 w-12 text-gray-300 mb-4"></i>
+                                    <h3 class="text-lg font-medium text-gray-900 mb-2">Liste vide</h3>
+                                    <p class="text-gray-500 mb-6">Ajoutez des produits à votre liste de souhaits</p>
+                                    <button onclick="navigateTo('products')" class="btn btn-primary">
+                                        Découvrir nos produits
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- About Page -->
+        <div id="about-page" class="page">
+            <div class="min-h-screen bg-gray-50">
+                <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <div class="mb-8">
+                        <h1 class="text-3xl font-bold text-gray-900 mb-2">À Propos d'EliteShop</h1>
+                        <p class="text-gray-600">Découvrez notre histoire et nos valeurs</p>
+                    </div>
+
+                    <div class="space-y-8">
+                        <div class="card">
+                            <div class="card-content p-8">
+                                <h2 class="text-2xl font-bold mb-4">Notre Mission</h2>
+                                <p class="text-gray-600 leading-relaxed">
+                                    EliteShop s'engage à offrir une expérience d'achat en ligne exceptionnelle avec une sélection 
+                                    rigoureuse de produits premium. Nous croyons que chaque client mérite le meilleur, c'est pourquoi 
+                                    nous nous efforçons de maintenir les plus hauts standards de qualité et de service.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-content p-8">
+                                <h2 class="text-2xl font-bold mb-4">Nos Valeurs</h2>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <div class="text-center">
+                                        <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                            <i data-lucide="shield" class="h-8 w-8 text-blue-600"></i>
+                                        </div>
+                                        <h3 class="font-semibold mb-2">Qualité</h3>
+                                        <p class="text-sm text-gray-600">Sélection rigoureuse de produits premium</p>
+                                    </div>
+                                    <div class="text-center">
+                                        <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                            <i data-lucide="users" class="h-8 w-8 text-green-600"></i>
+                                        </div>
+                                        <h3 class="font-semibold mb-2">Service Client</h3>
+                                        <p class="text-sm text-gray-600">Support exceptionnel et personnalisé</p>
+                                    </div>
+                                    <div class="text-center">
+                                        <div class="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                            <i data-lucide="zap" class="h-8 w-8 text-purple-600"></i>
+                                        </div>
+                                        <h3 class="font-semibold mb-2">Innovation</h3>
+                                        <p class="text-sm text-gray-600">Technologie de pointe pour votre expérience</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Page -->
+        <div id="contact-page" class="page">
+            <div class="min-h-screen bg-gray-50">
+                <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <div class="mb-8">
+                        <h1 class="text-3xl font-bold text-gray-900 mb-2">Contactez-nous</h1>
+                        <p class="text-gray-600">Nous sommes là pour vous aider</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Contact Form -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Envoyez-nous un message</h3>
+                            </div>
+                            <div class="card-content space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Nom complet</label>
+                                    <input type="text" class="input" placeholder="Votre nom">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Email</label>
+                                    <input type="email" class="input" placeholder="votre@email.com">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Sujet</label>
+                                    <select class="input">
+                                        <option>Question générale</option>
+                                        <option>Support technique</option>
+                                        <option>Problème de commande</option>
+                                        <option>Retour/Remboursement</option>
+                                        <option>Autre</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Message</label>
+                                    <textarea class="input min-h-32" placeholder="Votre message..."></textarea>
+                                </div>
+                                <button class="btn btn-primary w-full">Envoyer le message</button>
+                            </div>
+                        </div>
+
+                        <!-- Contact Info -->
+                        <div class="space-y-6">
+                            <div class="card">
+                                <div class="card-content p-6">
+                                    <div class="flex items-start space-x-4">
+                                        <div class="bg-blue-100 p-3 rounded-lg">
+                                            <i data-lucide="phone" class="h-6 w-6 text-blue-600"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-semibold mb-1">Téléphone</h3>
+                                            <p class="text-gray-600">+33 1 23 45 67 89</p>
+                                            <p class="text-sm text-gray-500">Lun-Ven 9h-18h</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-content p-6">
+                                    <div class="flex items-start space-x-4">
+                                        <div class="bg-green-100 p-3 rounded-lg">
+                                            <i data-lucide="mail" class="h-6 w-6 text-green-600"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-semibold mb-1">Email</h3>
+                                            <p class="text-gray-600">contact@eliteshop.fr</p>
+                                            <p class="text-sm text-gray-500">Réponse sous 24h</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-content p-6">
+                                    <div class="flex items-start space-x-4">
+                                        <div class="bg-purple-100 p-3 rounded-lg">
+                                            <i data-lucide="map-pin" class="h-6 w-6 text-purple-600"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-semibold mb-1">Adresse</h3>
+                                            <p class="text-gray-600">123 Rue du Commerce<br>75001 Paris, France</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Page -->
+        <div id="help-page" class="page">
+            <div class="min-h-screen bg-gray-50">
+                <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <div class="mb-8">
+                        <h1 class="text-3xl font-bold text-gray-900 mb-2">Centre d'Aide</h1>
+                        <p class="text-gray-600">Trouvez rapidement les réponses à vos questions</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="card cursor-pointer hover:shadow-lg transition-shadow" onclick="navigateTo('shipping')">
+                            <div class="card-content p-6">
+                                <div class="flex items-center space-x-4">
+                                    <div class="bg-blue-100 p-3 rounded-lg">
+                                        <i data-lucide="truck" class="h-6 w-6 text-blue-600"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-semibold mb-1">Livraison</h3>
+                                        <p class="text-sm text-gray-600">Informations sur les délais et tarifs</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card cursor-pointer hover:shadow-lg transition-shadow" onclick="navigateTo('returns')">
+                            <div class="card-content p-6">
+                                <div class="flex items-center space-x-4">
+                                    <div class="bg-green-100 p-3 rounded-lg">
+                                        <i data-lucide="rotate-ccw" class="h-6 w-6 text-green-600"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-semibold mb-1">Retours</h3>
+                                        <p class="text-sm text-gray-600">Procédure de retour et remboursement</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card cursor-pointer hover:shadow-lg transition-shadow" onclick="navigateTo('faq')">
+                            <div class="card-content p-6">
+                                <div class="flex items-center space-x-4">
+                                    <div class="bg-purple-100 p-3 rounded-lg">
+                                        <i data-lucide="help-circle" class="h-6 w-6 text-purple-600"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-semibold mb-1">FAQ</h3>
+                                        <p class="text-sm text-gray-600">Questions fréquemment posées</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card cursor-pointer hover:shadow-lg transition-shadow" onclick="navigateTo('contact')">
+                            <div class="card-content p-6">
+                                <div class="flex items-center space-x-4">
+                                    <div class="bg-orange-100 p-3 rounded-lg">
+                                        <i data-lucide="message-circle" class="h-6 w-6 text-orange-600"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-semibold mb-1">Contact</h3>
+                                        <p class="text-sm text-gray-600">Nous contacter directement</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Popular Questions -->
+                    <div class="mt-12">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-6">Questions Populaires</h2>
+                        <div class="space-y-4">
+                            <div class="card">
+                                <div class="card-content p-6">
+                                    <h3 class="font-semibold mb-2">Comment passer une commande ?</h3>
+                                    <p class="text-gray-600">Ajoutez les produits à votre panier, puis cliquez sur "Finaliser la commande" pour compléter votre achat.</p>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-content p-6">
+                                    <h3 class="font-semibold mb-2">Quels sont les modes de paiement acceptés ?</h3>
+                                    <p class="text-gray-600">Nous acceptons les cartes bancaires Visa, Mastercard, American Express et PayPal.</p>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-content p-6">
+                                    <h3 class="font-semibold mb-2">Comment suivre ma commande ?</h3>
+                                    <p class="text-gray-600">Vous recevrez un email avec un numéro de suivi dès l'expédition de votre commande.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- FAQ Page -->
+        <div id="faq-page" class="page">
+            <div class="min-h-screen bg-gray-50">
+                <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <div class="mb-8">
+                        <h1 class="text-3xl font-bold text-gray-900 mb-2">Questions Fréquentes</h1>
+                        <p class="text-gray-600">Trouvez rapidement les réponses à vos questions</p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="card">
+                            <div class="card-content p-6">
+                                <h3 class="font-semibold mb-3">Commandes et Paiements</h3>
+                                <div class="space-y-4">
+                                    <div>
+                                        <h4 class="font-medium mb-2">Comment passer une commande ?</h4>
+                                        <p class="text-gray-600 text-sm">Ajoutez les produits à votre panier, remplissez vos informations de livraison et procédez au paiement sécurisé.</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium mb-2">Quels modes de paiement acceptez-vous ?</h4>
+                                        <p class="text-gray-600 text-sm">Nous acceptons les cartes Visa, Mastercard, American Express et PayPal.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-content p-6">
+                                <h3 class="font-semibold mb-3">Livraison</h3>
+                                <div class="space-y-4">
+                                    <div>
+                                        <h4 class="font-medium mb-2">Quels sont les délais de livraison ?</h4>
+                                        <p class="text-gray-600 text-sm">2-3 jours ouvrés en France métropolitaine, 5-7 jours pour l'international.</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium mb-2">Les frais de livraison sont-ils gratuits ?</h4>
+                                        <p class="text-gray-600 text-sm">Livraison gratuite dès 50€ d'achat, sinon 5,99€ en France métropolitaine.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-content p-6">
+                                <h3 class="font-semibold mb-3">Retours et Remboursements</h3>
+                                <div class="space-y-4">
+                                    <div>
+                                        <h4 class="font-medium mb-2">Puis-je retourner un produit ?</h4>
+                                        <p class="text-gray-600 text-sm">Oui, vous avez 30 jours pour retourner tout produit en parfait état.</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium mb-2">Comment procéder à un retour ?</h4>
+                                        <p class="text-gray-600 text-sm">Contactez notre service client pour obtenir une étiquette de retour gratuite.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shipping Page -->
+        <div id="shipping-page" class="page">
+            <div class="min-h-screen bg-gray-50">
+                <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <div class="mb-8">
+                        <h1 class="text-3xl font-bold text-gray-900 mb-2">Informations de Livraison</h1>
+                        <p class="text-gray-600">Tout ce que vous devez savoir sur nos livraisons</p>
+                    </div>
+
+                    <div class="space-y-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Délais de Livraison</h3>
+                            </div>
+                            <div class="card-content">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <h4 class="font-semibold mb-2">France Métropolitaine</h4>
+                                        <ul class="space-y-1 text-sm text-gray-600">
+                                            <li>• Standard: 2-3 jours ouvrés</li>
+                                            <li>• Express: 24h (commande avant 12h)</li>
+                                            <li>• Point relais: 2-4 jours ouvrés</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold mb-2">International</h4>
+                                        <ul class="space-y-1 text-sm text-gray-600">
+                                            <li>• Europe: 5-7 jours ouvrés</li>
+                                            <li>• Monde: 10-15 jours ouvrés</li>
+                                            <li>• Express international: 3-5 jours</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Tarifs de Livraison</h3>
+                            </div>
+                            <div class="card-content">
+                                <div class="overflow-x-auto">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Zone</th>
+                                                <th>Standard</th>
+                                                <th>Express</th>
+                                                <th>Gratuit dès</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>France</td>
+                                                <td>5,99€</td>
+                                                <td>9,99€</td>
+                                                <td>50€</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Europe</td>
+                                                <td>12,99€</td>
+                                                <td>19,99€</td>
+                                                <td>100€</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Monde</td>
+                                                <td>24,99€</td>
+                                                <td>39,99€</td>
+                                                <td>200€</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Returns Page -->
+        <div id="returns-page" class="page">
+            <div class="min-h-screen bg-gray-50">
+                <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <div class="mb-8">
+                        <h1 class="text-3xl font-bold text-gray-900 mb-2">Retours et Remboursements</h1>
+                        <p class="text-gray-600">Politique de retour simple et transparente</p>
+                    </div>
+
+                    <div class="space-y-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Conditions de Retour</h3>
+                            </div>
+                            <div class="card-content">
+                                <ul class="space-y-3">
+                                    <li class="flex items-start space-x-3">
+                                        <i data-lucide="check-circle" class="h-5 w-5 text-green-500 mt-0.5"></i>
+                                        <span>30 jours pour retourner votre commande</span>
+                                    </li>
+                                    <li class="flex items-start space-x-3">
+                                        <i data-lucide="check-circle" class="h-5 w-5 text-green-500 mt-0.5"></i>
+                                        <span>Produits en parfait état, avec emballage d'origine</span>
+                                    </li>
+                                    <li class="flex items-start space-x-3">
+                                        <i data-lucide="check-circle" class="h-5 w-5 text-green-500 mt-0.5"></i>
+                                        <span>Retour gratuit en France métropolitaine</span>
+                                    </li>
+                                    <li class="flex items-start space-x-3">
+                                        <i data-lucide="check-circle" class="h-5 w-5 text-green-500 mt-0.5"></i>
+                                        <span>Remboursement sous 5-7 jours ouvrés</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Comment procéder ?</h3>
+                            </div>
+                            <div class="card-content">
+                                <div class="space-y-4">
+                                    <div class="flex items-start space-x-4">
+                                        <div class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center font-semibold text-sm">1</div>
+                                        <div>
+                                            <h4 class="font-medium mb-1">Contactez-nous</h4>
+                                            <p class="text-sm text-gray-600">Envoyez un email à contact@eliteshop.fr avec votre numéro de commande</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start space-x-4">
+                                        <div class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center font-semibold text-sm">2</div>
+                                        <div>
+                                            <h4 class="font-medium mb-1">Recevez l'étiquette</h4>
+                                            <p class="text-sm text-gray-600">Nous vous envoyons une étiquette de retour prépayée par email</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start space-x-4">
+                                        <div class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center font-semibold text-sm">3</div>
+                                        <div>
+                                            <h4 class="font-medium mb-1">Expédiez le colis</h4>
+                                            <p class="text-sm text-gray-600">Emballez soigneusement et déposez le colis dans un point relais</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start space-x-4">
+                                        <div class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center font-semibold text-sm">4</div>
+                                        <div>
+                                            <h4 class="font-medium mb-1">Remboursement</h4>
+                                            <p class="text-sm text-gray-600">Dès réception, nous procédons au remboursement sur votre moyen de paiement</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Privacy Page -->
+        <div id="privacy-page" class="page">
+            <div class="min-h-screen bg-gray-50">
+                <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <div class="mb-8">
+                        <h1 class="text-3xl font-bold text-gray-900 mb-2">Politique de Confidentialité</h1>
+                        <p class="text-gray-600">Dernière mise à jour: Janvier 2024</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-content p-8 prose max-w-none">
+                            <h2>Collecte des données</h2>
+                            <p>Nous collectons uniquement les informations nécessaires pour traiter vos commandes et améliorer votre expérience d'achat.</p>
+                            
+                            <h2>Utilisation des données</h2>
+                            <p>Vos données personnelles sont utilisées pour traiter vos commandes, vous contacter concernant votre commande, et vous tenir informé de nos nouveautés si vous y avez consenti.</p>
+                            
+                            <h2>Protection des données</h2>
+                            <p>Nous mettons en place des mesures de sécurité appropriées pour protéger vos données contre tout accès non autorisé, modification, divulgation ou destruction.</p>
+                            
+                            <h2>Vos droits</h2>
+                            <p>Vous avez le droit d'accéder, de rectifier, de supprimer vos données ou de vous opposer à leur traitement. Contactez-nous à contact@eliteshop.fr pour exercer ces droits.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Terms Page -->
+        <div id="terms-page" class="page">
+            <div class="min-h-screen bg-gray-50">
+                <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <div class="mb-8">
+                        <h1 class="text-3xl font-bold text-gray-900 mb-2">Conditions Générales de Vente</h1>
+                        <p class="text-gray-600">Dernière mise à jour: Janvier 2024</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-content p-8 prose max-w-none">
+                            <h2>Article 1 - Objet</h2>
+                            <p>Les présentes conditions générales de vente régissent les relations contractuelles entre EliteShop et ses clients.</p>
+                            
+                            <h2>Article 2 - Prix</h2>
+                            <p>Les prix sont indiqués en euros toutes taxes comprises. Nous nous réservons le droit de modifier nos prix à tout moment.</p>
+                            
+                            <h2>Article 3 - Commandes</h2>
+                            <p>Toute commande vaut acceptation des présentes conditions générales de vente.</p>
+                            
+                            <h2>Article 4 - Livraison</h2>
+                            <p>Les délais de livraison sont donnés à titre indicatif. Un retard de livraison ne peut donner lieu à l'annulation de la commande.</p>
+                            
+                            <h2>Article 5 - Garantie</h2>
+                            <p>Tous nos produits bénéficient de la garantie légale de conformité et de la garantie des vices cachés.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cookies Page -->
+        <div id="cookies-page" class="page">
+            <div class="min-h-screen bg-gray-50">
+                <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <div class="mb-8">
+                        <h1 class="text-3xl font-bold text-gray-900 mb-2">Politique des Cookies</h1>
+                        <p class="text-gray-600">Information sur l'utilisation des cookies sur notre site</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-content p-8">
+                            <h2 class="text-xl font-semibold mb-4">Qu'est-ce qu'un cookie ?</h2>
+                            <p class="text-gray-600 mb-6">Un cookie est un petit fichier texte stocké sur votre ordinateur ou appareil mobile lorsque vous visitez notre site web.</p>
+                            
+                            <h2 class="text-xl font-semibold mb-4">Types de cookies utilisés</h2>
+                            <div class="space-y-4">
+                                <div>
+                                    <h3 class="font-medium mb-2">Cookies essentiels</h3>
+                                    <p class="text-sm text-gray-600">Nécessaires au fonctionnement du site (panier, session utilisateur)</p>
+                                </div>
+                                <div>
+                                    <h3 class="font-medium mb-2">Cookies de performance</h3>
+                                    <p class="text-sm text-gray-600">Nous aident à comprendre comment vous utilisez notre site</p>
+                                </div>
+                                <div>
+                                    <h3 class="font-medium mb-2">Cookies de personnalisation</h3>
+                                    <p class="text-sm text-gray-600">Mémorisent vos préférences pour améliorer votre expérience</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white">
+    <footer class="bg-gray-900 text-white mt-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div>
@@ -304,13 +1339,13 @@
                         Votre boutique e-commerce premium pour tous vos besoins en tech, mode et lifestyle.
                     </p>
                     <div class="flex space-x-4">
-                        <button class="btn bg-gray-700 hover:bg-gray-600 p-2">
+                        <button class="bg-gray-700 hover:bg-gray-600 p-2 rounded">
                             <i data-lucide="facebook" class="h-5 w-5"></i>
                         </button>
-                        <button class="btn bg-gray-700 hover:bg-gray-600 p-2">
+                        <button class="bg-gray-700 hover:bg-gray-600 p-2 rounded">
                             <i data-lucide="twitter" class="h-5 w-5"></i>
                         </button>
-                        <button class="btn bg-gray-700 hover:bg-gray-600 p-2">
+                        <button class="bg-gray-700 hover:bg-gray-600 p-2 rounded">
                             <i data-lucide="instagram" class="h-5 w-5"></i>
                         </button>
                     </div>
@@ -319,35 +1354,30 @@
                 <div>
                     <h4 class="font-semibold mb-4">Navigation</h4>
                     <ul class="space-y-2 text-gray-300">
-                        <li><a href="#" class="hover:text-white">Accueil</a></li>
-                        <li><a href="#" class="hover:text-white">Produits</a></li>
-                        <li><a href="#" class="hover:text-white">Catégories</a></li>
-                        <li><a href="#" class="hover:text-white">À propos</a></li>
-                        <li><a href="#" class="hover:text-white">Contact</a></li>
+                        <li><button onclick="navigateTo('home')" class="hover:text-white">Accueil</button></li>
+                        <li><button onclick="navigateTo('products')" class="hover:text-white">Produits</button></li>
+                        <li><button onclick="navigateTo('about')" class="hover:text-white">À propos</button></li>
+                        <li><button onclick="navigateTo('contact')" class="hover:text-white">Contact</button></li>
                     </ul>
                 </div>
 
                 <div>
                     <h4 class="font-semibold mb-4">Support</h4>
                     <ul class="space-y-2 text-gray-300">
-                        <li><a href="#" class="hover:text-white">FAQ</a></li>
-                        <li><a href="#" class="hover:text-white">Livraison</a></li>
-                        <li><a href="#" class="hover:text-white">Retours</a></li>
-                        <li><a href="#" class="hover:text-white">Service Client</a></li>
+                        <li><button onclick="navigateTo('help')" class="hover:text-white">Aide</button></li>
+                        <li><button onclick="navigateTo('faq')" class="hover:text-white">FAQ</button></li>
+                        <li><button onclick="navigateTo('shipping')" class="hover:text-white">Livraison</button></li>
+                        <li><button onclick="navigateTo('returns')" class="hover:text-white">Retours</button></li>
                     </ul>
                 </div>
 
                 <div>
-                    <h4 class="font-semibold mb-4">Newsletter</h4>
-                    <p class="text-gray-300 mb-4">
-                        Recevez nos dernières offres et nouveautés
-                    </p>
-                    <div class="flex">
-                        <input type="email" class="input flex-1 rounded-r-none" placeholder="votre@email.com">
-                        <button class="btn btn-primary rounded-l-none">
-                            S'abonner
-                        </button>
-                    </div>
+                    <h4 class="font-semibold mb-4">Légal</h4>
+                    <ul class="space-y-2 text-gray-300">
+                        <li><button onclick="navigateTo('privacy')" class="hover:text-white">Confidentialité</button></li>
+                        <li><button onclick="navigateTo('terms')" class="hover:text-white">CGV</button></li>
+                        <li><button onclick="navigateTo('cookies')" class="hover:text-white">Cookies</button></li>
+                    </ul>
                 </div>
             </div>
 
@@ -357,139 +1387,400 @@
         </div>
     </footer>
 
+    <!-- Modals -->
+    <!-- Login Modal -->
+    <div id="login-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+        <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">Connexion</h2>
+                <button onclick="hideLoginModal()" class="text-gray-400 hover:text-gray-600">
+                    <i data-lucide="x" class="h-6 w-6"></i>
+                </button>
+            </div>
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Email</label>
+                        <input type="email" class="input" placeholder="votre@email.com" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Mot de passe</label>
+                        <input type="password" class="input" placeholder="••••••••" required>
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-4 mt-6">
+                    <button type="button" onclick="hideLoginModal()" class="btn btn-outline">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Se connecter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Product Form Modal -->
+    <div id="product-form-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+        <div class="bg-white rounded-lg p-8 max-w-2xl w-full mx-4 max-h-screen overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold" id="product-form-title">Ajouter un Produit</h2>
+                <button onclick="hideProductForm()" class="text-gray-400 hover:text-gray-600">
+                    <i data-lucide="x" class="h-6 w-6"></i>
+                </button>
+            </div>
+            <form id="product-form" onsubmit="handleProductSubmit(event)">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Nom du produit</label>
+                        <input type="text" name="name" class="input" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Prix (€)</label>
+                        <input type="number" name="price" class="input" step="0.01" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">SKU</label>
+                        <input type="text" name="sku" class="input" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Stock</label>
+                        <input type="number" name="stock" class="input" required>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium mb-2">Catégorie</label>
+                        <select name="categoryId" class="input" required>
+                            <option value="">Sélectionner une catégorie</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium mb-2">URL de l'image</label>
+                        <input type="url" name="imageUrl" class="input">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium mb-2">Description</label>
+                        <textarea name="description" class="input min-h-20" rows="3"></textarea>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="flex items-center">
+                            <input type="checkbox" name="featured" class="mr-2">
+                            Produit vedette
+                        </label>
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-4 mt-6">
+                    <button type="button" onclick="hideProductForm()" class="btn btn-outline">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="fixed top-4 right-4 z-50 hidden">
+        <div class="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg">
+            <span id="notification-message"></span>
+        </div>
+    </div>
+
+
     <!-- JavaScript -->
     <script>
-        // Données de démonstration
-        const categories = [
-            { id: 1, name: "Électronique", icon: "smartphone", count: 120 },
-            { id: 2, name: "Mode", icon: "shirt", count: 85 },
-            { id: 3, name: "Beauté", icon: "sparkles", count: 45 },
-            { id: 4, name: "Sport", icon: "activity", count: 67 },
-            { id: 5, name: "Maison", icon: "home", count: 89 },
-            { id: 6, name: "Livres", icon: "book", count: 156 }
-        ];
-
-        const products = [
+        // Data storage
+        let currentUser = null;
+        let cart = [];
+        let products = [
             {
                 id: 1,
-                name: "iPhone 15 Pro Max",
-                price: "1299.99",
-                originalPrice: "1399.99",
-                image: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=300",
-                category: "Électronique",
+                name: "MacBook Pro M3",
+                price: 2999.99,
+                originalPrice: 3299.99,
+                image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400",
+                category: "tech",
+                categoryId: 1,
+                description: "Le MacBook Pro ultime avec la puce M3 révolutionnaire",
+                stock: 15,
+                sku: "MBP-M3-16",
                 featured: true,
-                rating: 4.8,
-                reviews: 245
+                rating: 4.9,
+                reviews: 2847
             },
             {
                 id: 2,
-                name: "MacBook Air M3",
-                price: "1199.99",
-                originalPrice: null,
-                image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=300",
-                category: "Électronique",
+                name: "AirPods Pro (3ème génération)",
+                price: 279.99,
+                originalPrice: 329.99,
+                image: "https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=400",
+                category: "tech",
+                categoryId: 1,
+                description: "Audio spatial personnalisé et réduction de bruit active",
+                stock: 42,
+                sku: "APP-3G",
                 featured: true,
-                rating: 4.9,
-                reviews: 189
+                rating: 4.8,
+                reviews: 1923
             },
             {
                 id: 3,
-                name: "AirPods Pro 2",
-                price: "279.99",
-                originalPrice: "299.99",
-                image: "https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=300",
-                category: "Électronique",
+                name: "iPhone 15 Pro Max",
+                price: 1229.99,
+                originalPrice: 1479.99,
+                image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=400",
+                category: "tech",
+                categoryId: 1,
+                description: "Le smartphone le plus avancé avec l'action button",
+                stock: 28,
+                sku: "IP15-PM-256",
                 featured: true,
-                rating: 4.7,
-                reviews: 567
+                rating: 4.9,
+                reviews: 3421
             },
             {
                 id: 4,
-                name: "Nike Air Max 270",
-                price: "149.99",
-                originalPrice: "169.99",
-                image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300",
-                category: "Sport",
-                featured: true,
+                name: "Sweat-shirt Premium",
+                price: 89.99,
+                originalPrice: 129.99,
+                image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400",
+                category: "mode",
+                categoryId: 2,
+                description: "Sweat-shirt en coton bio ultra-confortable",
+                stock: 67,
+                sku: "SW-PREM-L",
+                featured: false,
                 rating: 4.6,
-                reviews: 234
+                reviews: 892
             },
             {
                 id: 5,
-                name: "Samsung Galaxy S24 Ultra",
-                price: "1199.99",
-                originalPrice: null,
-                image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=300",
-                category: "Électronique",
-                featured: false,
-                rating: 4.8,
-                reviews: 156
+                name: "Sneakers Air Jordan 1",
+                price: 169.99,
+                originalPrice: 199.99,
+                image: "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400",
+                category: "mode",
+                categoryId: 2,
+                description: "Baskets iconiques dans un coloris exclusif",
+                stock: 31,
+                sku: "AJ1-EXC-42",
+                featured: true,
+                rating: 4.7,
+                reviews: 1567
             },
             {
                 id: 6,
-                name: "Canon EOS R6 Mark II",
-                price: "2499.99",
-                originalPrice: "2699.99",
-                image: "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=300",
-                category: "Électronique",
-                featured: false,
-                rating: 4.9,
-                reviews: 89
-            },
-            {
-                id: 7,
-                name: "Adidas UltraBoost 22",
-                price: "179.99",
-                originalPrice: null,
-                image: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=300",
-                category: "Sport",
-                featured: false,
+                name: "Montre connectée Elite",
+                price: 399.99,
+                originalPrice: 499.99,
+                image: "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=400",
+                category: "lifestyle",
+                categoryId: 3,
+                description: "Montre connectée avec suivi santé avancé",
+                stock: 19,
+                sku: "MCE-HLTH-42",
+                featured: true,
                 rating: 4.5,
-                reviews: 123
-            },
-            {
-                id: 8,
-                name: "PlayStation 5",
-                price: "499.99",
-                originalPrice: null,
-                image: "https://images.unsplash.com/photo-1607853202273-797f1c22a38e?w=300",
-                category: "Électronique",
-                featured: false,
-                rating: 4.8,
-                reviews: 445
+                reviews: 743
             }
         ];
 
-        // Fonction pour créer une carte produit
-        function createProductCard(product) {
-            const discount = product.originalPrice ? Math.round((1 - parseFloat(product.price) / parseFloat(product.originalPrice)) * 100) : null;
+        let categories = [
+            { id: 1, name: "Tech", slug: "tech" },
+            { id: 2, name: "Mode", slug: "mode" },
+            { id: 3, name: "Lifestyle", slug: "lifestyle" }
+        ];
+
+        let orders = [];
+        let wishlist = [];
+
+        // Current state
+        let currentPage = 'home';
+        let selectedCategory = 'all';
+        let sortBy = 'name';
+        let currentAdminTab = 'products';
+        let editingProduct = null;
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeLucideIcons();
+            loadFromStorage();
+            updateCartCounter();
+            navigateTo('home');
+        });
+
+        // Initialize Lucide icons
+        function initializeLucideIcons() {
+            // This would normally load Lucide icons, but we'll use a simplified version
+            console.log('Lucide icons initialized');
+        }
+
+        // Storage functions
+        function loadFromStorage() {
+            const savedCart = localStorage.getItem('eliteshop-cart');
+            if (savedCart) {
+                cart = JSON.parse(savedCart);
+            }
+
+            const savedUser = localStorage.getItem('eliteshop-user');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                updateAuthUI();
+            }
+
+            const savedWishlist = localStorage.getItem('eliteshop-wishlist');
+            if (savedWishlist) {
+                wishlist = JSON.parse(savedWishlist);
+            }
+        }
+
+        function saveToStorage() {
+            localStorage.setItem('eliteshop-cart', JSON.stringify(cart));
+            if (currentUser) {
+                localStorage.setItem('eliteshop-user', JSON.stringify(currentUser));
+            }
+            localStorage.setItem('eliteshop-wishlist', JSON.stringify(wishlist));
+        }
+
+        // Navigation
+        function navigateTo(page) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
             
+            // Show target page
+            const targetPage = document.getElementById(page + '-page');
+            if (targetPage) {
+                targetPage.classList.remove('hidden');
+                currentPage = page;
+
+                // Update nav active state
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                });
+                const activeLink = document.querySelector(`[onclick="navigateTo('${page}')"]`);
+                if (activeLink) {
+                    activeLink.classList.add('active');
+                }
+
+                // Page-specific initialization
+                if (page === 'products') {
+                    loadProducts();
+                } else if (page === 'cart') {
+                    loadCart();
+                } else if (page === 'admin') {
+                    loadAdmin();
+                } else if (page === 'home') {
+                    loadHomePage();
+                }
+
+                // Scroll to top
+                window.scrollTo(0, 0);
+            }
+        }
+
+        // Home page
+        function loadHomePage() {
+            loadFeaturedProducts();
+            loadCategories();
+        }
+
+        function loadFeaturedProducts() {
+            const featuredProducts = products.filter(p => p.featured).slice(0, 6);
+            const container = document.getElementById('featured-products');
+            if (container) {
+                container.innerHTML = featuredProducts.map(product => createProductCard(product)).join('');
+            }
+        }
+
+        function loadCategories() {
+            const container = document.getElementById('categories-grid');
+            if (container) {
+                container.innerHTML = categories.map(category => `
+                    <div class="card cursor-pointer hover:shadow-lg transition-shadow" onclick="navigateToCategory('${category.slug}')">
+                        <div class="card-content p-6 text-center">
+                            <h3 class="font-semibold text-lg">${category.name}</h3>
+                            <p class="text-gray-600 text-sm mt-2">${getProductCount(category.id)} produits</p>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function getProductCount(categoryId) {
+            return products.filter(p => p.categoryId === categoryId).length;
+        }
+
+        function navigateToCategory(categorySlug) {
+            selectedCategory = categorySlug;
+            navigateTo('products');
+        }
+
+        // Products page
+        function loadProducts() {
+            const filteredProducts = getFilteredProducts();
+            const container = document.getElementById('products-grid');
+            if (container) {
+                container.innerHTML = filteredProducts.map(product => createProductCard(product)).join('');
+            }
+            updateProductCount(filteredProducts.length);
+        }
+
+        function getFilteredProducts() {
+            let filtered = products;
+
+            if (selectedCategory !== 'all') {
+                const category = categories.find(c => c.slug === selectedCategory);
+                if (category) {
+                    filtered = filtered.filter(p => p.categoryId === category.id);
+                }
+            }
+
+            // Sort products
+            filtered.sort((a, b) => {
+                switch (sortBy) {
+                    case 'price-low':
+                        return a.price - b.price;
+                    case 'price-high':
+                        return b.price - a.price;
+                    case 'rating':
+                        return b.rating - a.rating;
+                    default:
+                        return a.name.localeCompare(b.name);
+                }
+            });
+
+            return filtered;
+        }
+
+        function updateProductCount(count) {
+            const counter = document.getElementById('product-count');
+            if (counter) {
+                counter.textContent = `${count} produit${count > 1 ? 's' : ''}`;
+            }
+        }
+
+        function createProductCard(product) {
+            const discount = product.originalPrice ? Math.round((1 - product.price / product.originalPrice) * 100) : 0;
+            const isInWishlist = wishlist.some(item => item.id === product.id);
+
             return `
-                <div class="card overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                    <div class="relative">
-                        <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover">
-                        ${discount ? `<span class="absolute top-2 left-2 badge badge-destructive">-${discount}%</span>` : ''}
-                        <button class="absolute top-2 right-2 btn bg-white/80 hover:bg-white p-2">
-                            <i data-lucide="heart" class="h-4 w-4"></i>
+                <div class="card group cursor-pointer" onclick="showProductDetail(${product.id})">
+                    <div class="relative overflow-hidden">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                        ${discount > 0 ? `<div class="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded text-xs font-medium">-${discount}%</div>` : ''}
+                        <button onclick="event.stopPropagation(); toggleWishlist(${product.id})" class="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:bg-gray-50">
+                            <i data-lucide="heart" class="h-4 w-4 ${isInWishlist ? 'fill-red-500 text-red-500' : 'text-gray-600'}"></i>
                         </button>
                     </div>
-                    <div class="p-4">
-                        <h3 class="font-semibold text-gray-900 mb-2">${product.name}</h3>
-                        <div class="flex items-center mb-2">
-                            <div class="flex items-center">
-                                ${Array(5).fill(0).map((_, i) => 
-                                    `<i data-lucide="star" class="h-4 w-4 ${i < Math.floor(product.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}"></i>`
-                                ).join('')}
+                    <div class="card-content p-4">
+                        <h3 class="font-semibold text-lg mb-2 group-hover:text-blue-600 transition-colors">${product.name}</h3>
+                        <p class="text-gray-600 text-sm mb-3 line-clamp-2">${product.description}</p>
+                        <div class="flex items-center mb-3">
+                            <div class="flex text-yellow-400">
+                                ${'★'.repeat(Math.floor(product.rating))}${'☆'.repeat(5 - Math.floor(product.rating))}
                             </div>
                             <span class="text-sm text-gray-500 ml-2">(${product.reviews})</span>
                         </div>
                         <div class="flex items-center justify-between">
-                            <div>
-                                <span class="text-lg font-bold text-gray-900">${product.price}€</span>
-                                ${product.originalPrice ? `<span class="text-sm text-gray-500 line-through ml-2">${product.originalPrice}€</span>` : ''}
+                            <div class="flex items-center space-x-2">
+                                <span class="text-xl font-bold text-blue-600">${product.price.toFixed(2)}€</span>
+                                ${product.originalPrice ? `<span class="text-sm text-gray-500 line-through">${product.originalPrice.toFixed(2)}€</span>` : ''}
                             </div>
-                            <button class="btn btn-primary">
-                                <i data-lucide="shopping-cart" class="mr-2 h-4 w-4"></i>
+                            <button onclick="event.stopPropagation(); addToCart(${product.id})" class="btn btn-primary btn-sm">
+                                <i data-lucide="shopping-cart" class="h-4 w-4 mr-1"></i>
                                 Ajouter
                             </button>
                         </div>
@@ -498,79 +1789,486 @@
             `;
         }
 
-        // Fonction pour créer une carte catégorie
-        function createCategoryCard(category) {
-            return `
-                <div class="card p-6 text-center hover:shadow-lg transition-shadow duration-300 cursor-pointer">
-                    <div class="w-12 h-12 mx-auto mb-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
-                        <i data-lucide="${category.icon}" class="h-6 w-6 text-white"></i>
+        // Product filters
+        function filterByCategory(category) {
+            selectedCategory = category;
+            document.querySelectorAll('.category-filter').forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white');
+                btn.classList.add('bg-gray-100', 'text-gray-700');
+            });
+            event.target.classList.remove('bg-gray-100', 'text-gray-700');
+            event.target.classList.add('bg-blue-600', 'text-white');
+            loadProducts();
+        }
+
+        function sortProducts(sort) {
+            sortBy = sort;
+            loadProducts();
+        }
+
+        // Cart functions
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            const existingItem = cart.find(item => item.id === productId);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+
+            updateCartCounter();
+            saveToStorage();
+            showNotification('Produit ajouté au panier !');
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCartCounter();
+            saveToStorage();
+            loadCart();
+            showNotification('Produit retiré du panier');
+        }
+
+        function updateQuantity(productId, quantity) {
+            const item = cart.find(item => item.id === productId);
+            if (item) {
+                if (quantity <= 0) {
+                    removeFromCart(productId);
+                } else {
+                    item.quantity = quantity;
+                    updateCartCounter();
+                    saveToStorage();
+                    loadCart();
+                }
+            }
+        }
+
+        function updateCartCounter() {
+            const counter = document.getElementById('cart-counter');
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            if (counter) {
+                counter.textContent = totalItems;
+                counter.classList.toggle('hidden', totalItems === 0);
+            }
+        }
+
+        function loadCart() {
+            const container = document.getElementById('cart-items');
+            const emptyState = document.getElementById('cart-empty');
+            const cartSummary = document.getElementById('cart-summary');
+
+            if (cart.length === 0) {
+                if (container) container.classList.add('hidden');
+                if (emptyState) emptyState.classList.remove('hidden');
+                if (cartSummary) cartSummary.classList.add('hidden');
+                return;
+            }
+
+            if (container) container.classList.remove('hidden');
+            if (emptyState) emptyState.classList.add('hidden');
+            if (cartSummary) cartSummary.classList.remove('hidden');
+
+            if (container) {
+                container.innerHTML = cart.map(item => `
+                    <div class="flex items-center space-x-4 p-4 border-b">
+                        <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded">
+                        <div class="flex-1">
+                            <h3 class="font-semibold">${item.name}</h3>
+                            <p class="text-gray-600">${item.price.toFixed(2)}€</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="updateQuantity(${item.id}, ${item.quantity - 1})" class="btn btn-outline btn-sm">-</button>
+                            <span class="w-8 text-center">${item.quantity}</span>
+                            <button onclick="updateQuantity(${item.id}, ${item.quantity + 1})" class="btn btn-outline btn-sm">+</button>
+                        </div>
+                        <button onclick="removeFromCart(${item.id})" class="text-red-500 hover:text-red-700">
+                            <i data-lucide="trash-2" class="h-4 w-4"></i>
+                        </button>
                     </div>
-                    <h3 class="font-semibold text-gray-900 mb-2">${category.name}</h3>
-                    <p class="text-sm text-gray-500">${category.count} produits</p>
+                `).join('');
+            }
+
+            updateCartSummary();
+        }
+
+        function updateCartSummary() {
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const shipping = subtotal >= 50 ? 0 : 5.99;
+            const total = subtotal + shipping;
+
+            const subtotalEl = document.getElementById('cart-subtotal');
+            const shippingEl = document.getElementById('cart-shipping');
+            const totalEl = document.getElementById('cart-total');
+
+            if (subtotalEl) subtotalEl.textContent = subtotal.toFixed(2) + '€';
+            if (shippingEl) shippingEl.textContent = shipping === 0 ? 'Gratuit' : shipping.toFixed(2) + '€';
+            if (totalEl) totalEl.textContent = total.toFixed(2) + '€';
+        }
+
+        function clearCart() {
+            cart = [];
+            updateCartCounter();
+            saveToStorage();
+            loadCart();
+            showNotification('Panier vidé');
+        }
+
+        function proceedToCheckout() {
+            if (cart.length === 0) return;
+            
+            if (!currentUser) {
+                showLoginModal();
+                return;
+            }
+
+            // Simulate checkout process
+            const order = {
+                id: Date.now(),
+                userId: currentUser.id,
+                items: [...cart],
+                total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+                status: 'confirmed',
+                date: new Date().toISOString()
+            };
+
+            orders.push(order);
+            cart = [];
+            updateCartCounter();
+            saveToStorage();
+            
+            showNotification('Commande confirmée !');
+            navigateTo('orders');
+        }
+
+        // Wishlist functions
+        function toggleWishlist(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            const existingIndex = wishlist.findIndex(item => item.id === productId);
+            if (existingIndex > -1) {
+                wishlist.splice(existingIndex, 1);
+                showNotification('Retiré de la liste de souhaits');
+            } else {
+                wishlist.push(product);
+                showNotification('Ajouté à la liste de souhaits');
+            }
+
+            saveToStorage();
+            
+            // Update wishlist page if currently viewing
+            if (currentPage === 'wishlist') {
+                loadWishlist();
+            }
+        }
+
+        function loadWishlist() {
+            const container = document.getElementById('wishlist-content');
+            if (!container) return;
+
+            if (wishlist.length === 0) {
+                container.innerHTML = `
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="text-center py-12">
+                                <i data-lucide="heart" class="mx-auto h-12 w-12 text-gray-300 mb-4"></i>
+                                <h3 class="text-lg font-medium text-gray-900 mb-2">Liste vide</h3>
+                                <p class="text-gray-500 mb-6">Ajoutez des produits à votre liste de souhaits</p>
+                                <button onclick="navigateTo('products')" class="btn btn-primary">
+                                    Découvrir nos produits
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    ${wishlist.map(product => createProductCard(product)).join('')}
                 </div>
             `;
         }
 
-        // Initialiser la page
-        function initializePage() {
-            // Générer les catégories
-            const categoriesContainer = document.getElementById('categories');
-            categoriesContainer.innerHTML = categories.map(createCategoryCard).join('');
-
-            // Générer les produits vedettes
-            const featuredProductsContainer = document.getElementById('featured-products');
-            const featuredProducts = products.filter(p => p.featured);
-            featuredProductsContainer.innerHTML = featuredProducts.map(createProductCard).join('');
-
-            // Générer tous les produits
-            const allProductsContainer = document.getElementById('all-products');
-            allProductsContainer.innerHTML = products.map(createProductCard).join('');
-
-            // Initialiser Lucide icons
-            lucide.createIcons();
+        // Authentication
+        function showLoginModal() {
+            document.getElementById('login-modal').classList.remove('hidden');
         }
 
-        // Démarrer l'application quand le DOM est chargé
-        document.addEventListener('DOMContentLoaded', initializePage);
-
-        // Gestion du panier (simulation)
-        let cart = [];
-
-        function addToCart(productId) {
-            const product = products.find(p => p.id === productId);
-            if (product) {
-                cart.push(product);
-                updateCartCount();
-                showNotification(`${product.name} ajouté au panier!`);
-            }
+        function hideLoginModal() {
+            document.getElementById('login-modal').classList.add('hidden');
         }
 
-        function updateCartCount() {
-            const cartButtons = document.querySelectorAll('[data-cart-count]');
-            cartButtons.forEach(button => {
-                button.setAttribute('data-cart-count', cart.length);
-            });
-        }
-
-        function showNotification(message) {
-            // Créer une notification simple
-            const notification = document.createElement('div');
-            notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
-            notification.textContent = message;
-            document.body.appendChild(notification);
+        function handleLogin(event) {
+            event.preventDefault();
             
-            setTimeout(() => {
-                notification.remove();
-            }, 3000);
+            // Simulate login
+            currentUser = {
+                id: 1,
+                email: 'user@example.com',
+                name: 'Utilisateur Premium',
+                isAdmin: true
+            };
+
+            updateAuthUI();
+            hideLoginModal();
+            saveToStorage();
+            showNotification('Connexion réussie !');
         }
 
-        // Ajouter les événements aux boutons "Ajouter au panier"
-        document.addEventListener('click', function(e) {
-            if (e.target.closest('[data-product-id]')) {
-                const productId = parseInt(e.target.closest('[data-product-id]').getAttribute('data-product-id'));
-                addToCart(productId);
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('eliteshop-user');
+            updateAuthUI();
+            navigateTo('home');
+            showNotification('Déconnexion réussie');
+        }
+
+        function updateAuthUI() {
+            const loginBtn = document.getElementById('login-btn');
+            const userMenu = document.getElementById('user-menu');
+            const userName = document.getElementById('user-name');
+            const adminLink = document.getElementById('admin-link');
+
+            if (currentUser) {
+                if (loginBtn) loginBtn.classList.add('hidden');
+                if (userMenu) userMenu.classList.remove('hidden');
+                if (userName) userName.textContent = currentUser.name;
+                if (adminLink && currentUser.isAdmin) adminLink.classList.remove('hidden');
+            } else {
+                if (loginBtn) loginBtn.classList.remove('hidden');
+                if (userMenu) userMenu.classList.add('hidden');
+                if (adminLink) adminLink.classList.add('hidden');
             }
-        });
+        }
+
+        // Admin functions
+        function loadAdmin() {
+            if (!currentUser || !currentUser.isAdmin) {
+                navigateTo('home');
+                return;
+            }
+
+            updateAdminStats();
+            switchAdminTab('products');
+        }
+
+        function updateAdminStats() {
+            const totalProducts = document.getElementById('admin-total-products');
+            const totalOrders = document.getElementById('admin-total-orders');
+            const totalRevenue = document.getElementById('admin-total-revenue');
+            const lowStock = document.getElementById('admin-low-stock');
+
+            if (totalProducts) totalProducts.textContent = products.length;
+            if (totalOrders) totalOrders.textContent = orders.length;
+            if (totalRevenue) {
+                const revenue = orders.reduce((sum, order) => sum + order.total, 0);
+                totalRevenue.textContent = revenue.toFixed(2) + '€';
+            }
+            if (lowStock) {
+                const lowStockCount = products.filter(p => p.stock < 10).length;
+                lowStock.textContent = lowStockCount;
+            }
+        }
+
+        function switchAdminTab(tab) {
+            currentAdminTab = tab;
+
+            // Update tab buttons
+            document.querySelectorAll('.tabs-trigger').forEach(btn => {
+                btn.classList.remove('bg-white', 'text-blue-600', 'shadow-sm');
+                btn.classList.add('text-gray-500');
+            });
+            document.querySelector(`[data-tab="${tab}"]`).classList.add('bg-white', 'text-blue-600', 'shadow-sm');
+            document.querySelector(`[data-tab="${tab}"]`).classList.remove('text-gray-500');
+
+            // Show/hide tab content
+            document.querySelectorAll('.tabs-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            document.getElementById(`admin-${tab}-tab`).classList.remove('hidden');
+
+            // Load tab content
+            if (tab === 'products') {
+                loadAdminProducts();
+            }
+        }
+
+        function loadAdminProducts() {
+            const container = document.getElementById('admin-products-table');
+            if (!container) return;
+
+            container.innerHTML = products.map(product => `
+                <tr>
+                    <td>
+                        <img src="${product.image}" alt="${product.name}" class="w-12 h-12 object-cover rounded">
+                    </td>
+                    <td>
+                        <div>
+                            <div class="font-medium">${product.name}</div>
+                            <div class="text-sm text-gray-500">${product.sku}</div>
+                        </div>
+                    </td>
+                    <td>${product.price.toFixed(2)}€</td>
+                    <td>
+                        <span class="badge ${product.stock < 10 ? 'badge-destructive' : 'badge-secondary'}">
+                            ${product.stock}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge badge-success">Actif</span>
+                    </td>
+                    <td>
+                        <div class="flex space-x-2">
+                            <button onclick="editProduct(${product.id})" class="btn btn-outline btn-sm">
+                                <i data-lucide="edit" class="h-4 w-4"></i>
+                            </button>
+                            <button onclick="deleteProduct(${product.id})" class="btn btn-outline btn-sm text-red-600">
+                                <i data-lucide="trash" class="h-4 w-4"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function showProductForm(productId = null) {
+            editingProduct = productId;
+            const modal = document.getElementById('product-form-modal');
+            const title = document.getElementById('product-form-title');
+            const form = document.getElementById('product-form');
+
+            if (productId) {
+                const product = products.find(p => p.id === productId);
+                title.textContent = 'Modifier le Produit';
+                form.name.value = product.name;
+                form.price.value = product.price;
+                form.sku.value = product.sku;
+                form.stock.value = product.stock;
+                form.categoryId.value = product.categoryId;
+                form.imageUrl.value = product.image;
+                form.description.value = product.description;
+                form.featured.checked = product.featured;
+            } else {
+                title.textContent = 'Ajouter un Produit';
+                form.reset();
+            }
+
+            // Populate categories
+            const categorySelect = form.categoryId;
+            categorySelect.innerHTML = '<option value="">Sélectionner une catégorie</option>' +
+                categories.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('');
+
+            modal.classList.remove('hidden');
+        }
+
+        function hideProductForm() {
+            document.getElementById('product-form-modal').classList.add('hidden');
+            editingProduct = null;
+        }
+
+        function handleProductSubmit(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+
+            const productData = {
+                name: formData.get('name'),
+                price: parseFloat(formData.get('price')),
+                sku: formData.get('sku'),
+                stock: parseInt(formData.get('stock')),
+                categoryId: parseInt(formData.get('categoryId')),
+                image: formData.get('imageUrl') || 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400',
+                description: formData.get('description'),
+                featured: formData.has('featured'),
+                rating: 4.5,
+                reviews: Math.floor(Math.random() * 1000) + 100
+            };
+
+            if (editingProduct) {
+                const index = products.findIndex(p => p.id === editingProduct);
+                products[index] = { ...products[index], ...productData };
+                showNotification('Produit modifié avec succès');
+            } else {
+                productData.id = Date.now();
+                products.push(productData);
+                showNotification('Produit ajouté avec succès');
+            }
+
+            hideProductForm();
+            loadAdminProducts();
+            updateAdminStats();
+        }
+
+        function editProduct(productId) {
+            showProductForm(productId);
+        }
+
+        function deleteProduct(productId) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) {
+                products = products.filter(p => p.id !== productId);
+                loadAdminProducts();
+                updateAdminStats();
+                showNotification('Produit supprimé');
+            }
+        }
+
+        // Product detail
+        function showProductDetail(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            // For simplicity, we'll show an alert. In a real app, this would be a modal or separate page
+            alert(`${product.name}\n\n${product.description}\n\nPrix: ${product.price.toFixed(2)}€\nStock: ${product.stock} unités`);
+        }
+
+        // Utility functions
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            const messageEl = document.getElementById('notification-message');
+            
+            if (notification && messageEl) {
+                messageEl.textContent = message;
+                notification.classList.remove('hidden');
+                
+                setTimeout(() => {
+                    notification.classList.add('hidden');
+                }, 3000);
+            }
+        }
+
+        // Toggle mobile menu
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            if (menu) {
+                menu.classList.toggle('hidden');
+            }
+        }
+
+        // Search functionality
+        function handleSearch(event) {
+            if (event.key === 'Enter') {
+                const query = event.target.value.toLowerCase();
+                const filteredProducts = products.filter(product => 
+                    product.name.toLowerCase().includes(query) ||
+                    product.description.toLowerCase().includes(query)
+                );
+                
+                // Update products page with search results
+                selectedCategory = 'all';
+                navigateTo('products');
+                
+                // Override the normal product loading with search results
+                const container = document.getElementById('products-grid');
+                if (container) {
+                    container.innerHTML = filteredProducts.map(product => createProductCard(product)).join('');
+                }
+                updateProductCount(filteredProducts.length);
+            }
+        }
     </script>
 </body>
 </html>
