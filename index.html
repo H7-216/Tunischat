@@ -4,11 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E-Shop</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .admin-panel { background: #f8f9fa; padding: 20px; border-radius: 10px; }
-        .product-card { transition: transform 0.3s; }
+        .product-card { transition: transform 0.3s; margin-bottom: 20px; }
         .product-card:hover { transform: scale(1.02); }
         .cart-icon { position: relative; }
         .cart-count { 
@@ -21,40 +20,74 @@
             padding: 0 5px;
             font-size: 12px;
         }
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        .legal-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 1000;
+            padding: 20px;
+            overflow-y: auto;
+            display: none;
+        }
+        .close-legal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header class="bg-dark text-white p-3">
         <div class="container d-flex justify-content-between align-items-center">
             <h1>E-Shop</h1>
-            <div class="cart-icon">
-                <button class="btn btn-light" onclick="openCart()">
-                    🛒 <span id="cartCounter" class="cart-count">0</span>
-                </button>
+            <div class="d-flex align-items-center">
+                <div class="cart-icon me-3">
+                    <button class="btn btn-light" onclick="openCart()">
+                        🛒 <span id="cartCounter" class="cart-count">0</span>
+                    </button>
+                </div>
+                <div class="position-relative">
+                    <button class="btn btn-light" onclick="showNotifications()">
+                        🔔 <span id="notificationBadge" class="notification-badge" style="display: none;"></span>
+                    </button>
+                </div>
             </div>
         </div>
     </header>
 
-    <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
             <button class="btn btn-primary me-2" onclick="showShop()">Boutique</button>
-            <button class="btn btn-danger" onclick="showAdmin()">Admin</button>
+            <button class="btn btn-danger" id="adminBtn" style="display: none;" onclick="showAdmin()">Admin</button>
+            <button class="btn btn-outline-secondary ms-auto" onclick="login()">Connexion</button>
         </div>
     </nav>
 
-    <!-- Main Content -->
     <main class="container my-5">
-        <!-- Shop Section -->
         <div id="shopSection">
             <h2>Nos Produits</h2>
-            <div class="row" id="productList">
-                <!-- Produits chargés via JS -->
-            </div>
+            <div class="row" id="productList"></div>
         </div>
 
-        <!-- Admin Section (cachée par défaut) -->
         <div id="adminSection" class="admin-panel" style="display: none;">
             <h2>Espace Admin</h2>
             <form id="productForm" class="mb-4">
@@ -82,59 +115,156 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody id="adminProductList">
-                    <!-- Produits chargés via JS -->
-                </tbody>
+                <tbody id="adminProductList"></tbody>
             </table>
         </div>
 
-        <!-- Cart Modal -->
-        <div class="modal fade" id="cartModal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Votre Panier</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body" id="cartItems">
-                        <!-- Panier chargé via JS -->
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                        <button class="btn btn-primary" onclick="checkout()">Payer</button>
-                    </div>
-                </div>
-            </div>
+        <div id="notificationsSection" class="admin-panel" style="display: none;">
+            <h2>Notifications de Commandes</h2>
+            <div id="ordersList"></div>
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-dark text-white text-center p-3 mt-5">
-        <p>&copy; 2024 E-Shop - Tous droits réservés</p>
+    <div class="modal fade" id="cartModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Votre Panier</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="cartItems"></div>
+                <div class="modal-footer">
+                    <p class="text-danger me-auto">⚠️ Paiement en espèce uniquement ! 🚫</p>
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    <button class="btn btn-primary" onclick="checkout()">Commander</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white p-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p>&copy; 2024 E-Shop - Tous droits réservés</p>
+                    <p>🚫 Paiement en espèces uniquement</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <button class="btn btn-link text-white" onclick="showLegalPage('privacy')">Confidentialité</button>
+                    <button class="btn btn-link text-white" onclick="showLegalPage('cgv')">CGV</button>
+                    <button class="btn btn-link text-white" onclick="showLegalPage('cookies')">Cookies</button>
+                </div>
+            </div>
+        </div>
     </footer>
 
-    <!-- Bootstrap & JS -->
+    <div id="privacyPage" class="legal-page">
+        <span class="close-legal" onclick="hideLegalPages()">×</span>
+        <h2>Politique de Confidentialité</h2>
+        <p>Cette politique de confidentialité décrit comment nous collectons, utilisons et protégeons vos informations personnelles.</p>
+        <h3>1. Collecte des informations</h3>
+        <p>Nous collectons des informations lorsque vous passez une commande sur notre site.</p>
+        <h3>2. Utilisation des informations</h3>
+        <p>Vos informations sont utilisées pour traiter vos commandes et améliorer votre expérience client.</p>
+        <h3>3. Protection des informations</h3>
+        <p>Nous mettons en œuvre des mesures de sécurité pour protéger vos informations personnelles.</p>
+    </div>
+
+    <div id="cgvPage" class="legal-page">
+        <span class="close-legal" onclick="hideLegalPages()">×</span>
+        <h2>Conditions Générales de Vente</h2>
+        <h3>1. Prix</h3>
+        <p>Les prix sont indiqués en euros et sont valables tant qu'ils sont visibles sur le site.</p>
+        <h3>2. Commandes</h3>
+        <p>Les commandes sont payables en espèces à la livraison.</p>
+        <h3>3. Livraison</h3>
+        <p>Les délais de livraison sont indicatifs et peuvent varier.</p>
+        <h3>4. Retours</h3>
+        <p>Les retours sont acceptés sous 14 jours après réception.</p>
+    </div>
+
+    <div id="cookiesPage" class="legal-page">
+        <span class="close-legal" onclick="hideLegalPages()">×</span>
+        <h2>Politique relative aux Cookies</h2>
+        <h3>1. Qu'est-ce qu'un cookie ?</h3>
+        <p>Un cookie est un petit fichier stocké sur votre ordinateur lorsque vous visitez un site web.</p>
+        <h3>2. Utilisation des cookies</h3>
+        <p>Nous utilisons des cookies pour améliorer votre expérience de navigation.</p>
+        <h3>3. Contrôle des cookies</h3>
+        <p>Vous pouvez contrôler ou supprimer les cookies via les paramètres de votre navigateur.</p>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Stockage des produits (simule une base de données)
+        const ownerCode = "1508";
         let products = JSON.parse(localStorage.getItem('products')) || [];
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let orders = JSON.parse(localStorage.getItem('orders')) || [];
+        let userCodes = JSON.parse(localStorage.getItem('userCodes')) || [];
+        let currentUser = null;
 
-        // Afficher la boutique
+        function login() {
+            const code = prompt("Entrez votre code d'accès :");
+            if (code === ownerCode) {
+                currentUser = { type: 'owner', code: code };
+                document.getElementById('adminBtn').style.display = 'block';
+                alert("Mode Propriétaire activé !");
+                showShop();
+            } else if (userCodes.includes(code)) {
+                currentUser = { type: 'client', code: code };
+                document.getElementById('adminBtn').style.display = 'none';
+                alert("Bienvenue Client !");
+                showShop();
+            } else {
+                const save = confirm("Nouveau client ? Enregistrer ce code ?");
+                if (save) {
+                    userCodes.push(code);
+                    localStorage.setItem('userCodes', JSON.stringify(userCodes));
+                    currentUser = { type: 'client', code: code };
+                }
+            }
+            updateNotificationBadge();
+        }
+
         function showShop() {
             document.getElementById('shopSection').style.display = 'block';
             document.getElementById('adminSection').style.display = 'none';
+            document.getElementById('notificationsSection').style.display = 'none';
             renderProducts();
         }
 
-        // Afficher l'admin
         function showAdmin() {
-            document.getElementById('shopSection').style.display = 'none';
-            document.getElementById('adminSection').style.display = 'block';
-            renderAdminProducts();
+            if (currentUser && currentUser.type === 'owner') {
+                document.getElementById('shopSection').style.display = 'none';
+                document.getElementById('adminSection').style.display = 'block';
+                document.getElementById('notificationsSection').style.display = 'none';
+                renderAdminProducts();
+            } else {
+                alert("Accès réservé au propriétaire !");
+            }
         }
 
-        // Ajouter/modifier un produit
+        function showNotifications() {
+            if (currentUser && currentUser.type === 'owner') {
+                document.getElementById('shopSection').style.display = 'none';
+                document.getElementById('adminSection').style.display = 'none';
+                document.getElementById('notificationsSection').style.display = 'block';
+                renderOrders();
+            } else {
+                alert("Vous n'avez pas accès aux notifications.");
+            }
+        }
+
+        function showLegalPage(page) {
+            document.getElementById(page + 'Page').style.display = 'block';
+        }
+
+        function hideLegalPages() {
+            document.querySelectorAll('.legal-page').forEach(page => {
+                page.style.display = 'none';
+            });
+        }
+
         document.getElementById('productForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const productId = document.getElementById('productId').value;
@@ -157,19 +287,17 @@
 
         function saveProduct(id, name, price, image) {
             if (id) {
-                // Modification
                 const index = products.findIndex(p => p.id == id);
                 products[index] = { ...products[index], name, price, image: image || products[index].image };
             } else {
-                // Ajout
                 products.push({ id: Date.now(), name, price, image });
             }
             localStorage.setItem('products', JSON.stringify(products));
             document.getElementById('productForm').reset();
             renderAdminProducts();
+            renderProducts();
         }
 
-        // Supprimer un produit
         function deleteProduct(id) {
             products = products.filter(p => p.id != id);
             localStorage.setItem('products', JSON.stringify(products));
@@ -177,7 +305,6 @@
             renderProducts();
         }
 
-        // Éditer un produit
         function editProduct(id) {
             const product = products.find(p => p.id == id);
             document.getElementById('productId').value = product.id;
@@ -185,11 +312,10 @@
             document.getElementById('productPrice').value = product.price;
         }
 
-        // Afficher les produits (boutique)
         function renderProducts() {
             const container = document.getElementById('productList');
             container.innerHTML = products.map(product => `
-                <div class="col-md-4 mb-4">
+                <div class="col-md-4">
                     <div class="card product-card">
                         <img src="${product.image || 'https://via.placeholder.com/150'}" class="card-img-top" alt="${product.name}">
                         <div class="card-body">
@@ -202,7 +328,6 @@
             `).join('');
         }
 
-        // Afficher les produits (admin)
         function renderAdminProducts() {
             const container = document.getElementById('adminProductList');
             container.innerHTML = products.map(product => `
@@ -217,7 +342,6 @@
             `).join('');
         }
 
-        // Gestion du panier
         function addToCart(productId) {
             const product = products.find(p => p.id == productId);
             const existingItem = cart.find(item => item.id == productId);
@@ -260,11 +384,75 @@
         }
 
         function checkout() {
-            alert('Paiement simulé ! Merci pour votre achat.');
+            if (cart.length === 0) {
+                alert("Votre panier est vide !");
+                return;
+            }
+
+            if (!currentUser) {
+                alert("Veuillez vous connecter pour passer commande.");
+                login();
+                return;
+            }
+
+            const order = {
+                id: Date.now(),
+                items: [...cart],
+                total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+                date: new Date().toLocaleString(),
+                clientCode: currentUser.code,
+                status: "En attente"
+            };
+
+            orders.push(order);
+            localStorage.setItem('orders', JSON.stringify(orders));
+            
             cart = [];
             localStorage.setItem('cart', JSON.stringify(cart));
+            
             updateCartCounter();
+            updateNotificationBadge();
+            
+            alert("Commande validée ! Paiement en espèce à la livraison.");
             document.getElementById('cartModal').querySelector('.btn-close').click();
+        }
+
+        function renderOrders() {
+            const container = document.getElementById('ordersList');
+            const pendingOrders = orders.filter(order => order.status === "En attente");
+            
+            if (pendingOrders.length === 0) {
+                container.innerHTML = "<p>Aucune commande en attente.</p>";
+                return;
+            }
+
+            container.innerHTML = pendingOrders.map(order => `
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Commande #${order.id}</h5>
+                        <p class="card-text">Client: ${order.clientCode}</p>
+                        <p class="card-text">Date: ${order.date}</p>
+                        <p class="card-text">Total: ${order.total.toFixed(2)} €</p>
+                        <h6>Articles:</h6>
+                        <ul>
+                            ${order.items.map(item => `
+                                <li>${item.name} - ${item.quantity}x ${item.price.toFixed(2)} €</li>
+                            `).join('')}
+                        </ul>
+                        <button class="btn btn-success" onclick="validateOrder(${order.id})">Valider la commande</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function validateOrder(orderId) {
+            const orderIndex = orders.findIndex(o => o.id == orderId);
+            if (orderIndex !== -1) {
+                orders[orderIndex].status = "Validée";
+                localStorage.setItem('orders', JSON.stringify(orders));
+                renderOrders();
+                updateNotificationBadge();
+            }
         }
 
         function updateCartCounter() {
@@ -272,9 +460,22 @@
             document.getElementById('cartCounter').textContent = totalItems;
         }
 
-        // Initialisation
+        function updateNotificationBadge() {
+            if (currentUser && currentUser.type === 'owner') {
+                const pendingCount = orders.filter(o => o.status === "En attente").length;
+                const badge = document.getElementById('notificationBadge');
+                if (pendingCount > 0) {
+                    badge.textContent = pendingCount;
+                    badge.style.display = 'flex';
+                } else {
+                    badge.style.display = 'none';
+                }
+            }
+        }
+
         showShop();
         updateCartCounter();
+        updateNotificationBadge();
     </script>
 </body>
 </html>
