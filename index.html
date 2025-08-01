@@ -6,6 +6,7 @@
     <title>E-Shop Premium</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root {
             --primary-color: #6c63ff;
@@ -15,6 +16,7 @@
             --dark-bg: #2b2d42;
             --text-light: #f8f9fa;
             --text-dark: #2b2d42;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
         }
         
         body {
@@ -41,14 +43,15 @@
         }
         
         .auth-box {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
             padding: 40px;
             width: 100%;
             max-width: 500px;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: var(--card-shadow);
             text-align: center;
             animation: fadeIn 0.8s ease-out;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
         @keyframes fadeIn {
@@ -70,6 +73,7 @@
             margin-bottom: 25px;
             font-size: 16px;
             transition: all 0.3s;
+            background: transparent;
         }
         
         .auth-input:focus {
@@ -87,12 +91,15 @@
             border-radius: 50px;
             transition: all 0.3s;
             margin-top: 10px;
+            color: white;
+            box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
         }
         
         .auth-btn:hover {
             background-color: var(--secondary-color);
             transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(108, 99, 255, 0.3);
+            box-shadow: 0 10px 25px rgba(108, 99, 255, 0.4);
+            color: white;
         }
         
         .premium-header {
@@ -104,32 +111,140 @@
             z-index: 1000;
         }
         
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .header-logo {
+            display: flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .header-logo i {
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+        }
+        
+        .header-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .header-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .badge-circle {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        
         .premium-nav {
             background-color: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+            padding: 15px 0;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
         
         .nav-btn {
-            border-radius: 50px;
-            padding: 8px 20px;
+            background: white;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 10px 25px;
             font-weight: 600;
-            margin: 0 5px;
+            border-radius: 30px;
             transition: all 0.3s;
+            margin: 0 5px;
+            box-shadow: 0 4px 10px rgba(108, 99, 255, 0.1);
         }
         
         .nav-btn:hover {
+            background: var(--primary-color);
+            color: white;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 15px rgba(108, 99, 255, 0.2);
+        }
+        
+        .nav-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .nav-btn.admin {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+        
+        .nav-btn.admin:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+        
+        .nav-btn.admin.active {
+            background: var(--accent-color);
+            color: white;
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
         }
         
         .product-card {
             border: none;
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            box-shadow: var(--card-shadow);
             transition: all 0.3s;
-            margin-bottom: 30px;
             background-color: white;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
         
         .product-card:hover {
@@ -137,8 +252,14 @@
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
         }
         
+        .product-img-container {
+            height: 250px;
+            overflow: hidden;
+        }
+        
         .product-img {
-            height: 200px;
+            width: 100%;
+            height: 100%;
             object-fit: cover;
             transition: transform 0.5s;
         }
@@ -147,66 +268,108 @@
             transform: scale(1.05);
         }
         
+        .product-body {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .product-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--dark-bg);
+        }
+        
         .product-price {
             color: var(--primary-color);
             font-weight: 700;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
         }
         
         .add-to-cart {
-            background-color: var(--primary-color);
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
             border: none;
-            border-radius: 50px;
-            padding: 8px 20px;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
             font-weight: 600;
             transition: all 0.3s;
+            margin-top: auto;
+            align-self: flex-start;
+            box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
         }
         
         .add-to-cart:hover {
-            background-color: var(--secondary-color);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
-        }
-        
-        .cart-icon, .notification-icon {
-            position: relative;
-            margin-left: 15px;
-            cursor: pointer;
-        }
-        
-        .badge-circle {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            background-color: var(--accent-color);
+            box-shadow: 0 6px 20px rgba(108, 99, 255, 0.4);
             color: white;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: bold;
         }
         
         .premium-footer {
             background: linear-gradient(135deg, var(--dark-bg) 0%, #1a1a2e 100%);
             color: var(--text-light);
             padding: 50px 0 20px;
-            margin-top: 50px;
+            margin-top: 80px;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .footer-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 15px;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 20px;
         }
         
         .footer-link {
-            color: rgba(255, 255, 255, 0.7);
+            color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
             transition: all 0.3s;
-            margin: 0 15px;
+            font-weight: 500;
+            position: relative;
         }
         
         .footer-link:hover {
             color: white;
-            transform: translateX(5px);
+        }
+        
+        .footer-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            transition: width 0.3s;
+        }
+        
+        .footer-link:hover::after {
+            width: 100%;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .legal-page {
@@ -222,6 +385,16 @@
             display: none;
         }
         
+        .legal-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: var(--card-shadow);
+            position: relative;
+        }
+        
         .close-legal {
             position: absolute;
             top: 30px;
@@ -230,6 +403,8 @@
             cursor: pointer;
             color: var(--primary-color);
             transition: all 0.3s;
+            background: none;
+            border: none;
         }
         
         .close-legal:hover {
@@ -237,49 +412,193 @@
             color: var(--accent-color);
         }
         
+        .legal-title {
+            color: var(--dark-bg);
+            margin-bottom: 30px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .legal-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+        }
+        
+        .legal-section {
+            margin-bottom: 30px;
+        }
+        
+        .legal-section h3 {
+            color: var(--dark-bg);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .legal-section p {
+            color: #666;
+            line-height: 1.8;
+        }
+        
         .admin-panel {
             background-color: white;
             border-radius: 15px;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            box-shadow: var(--card-shadow);
             margin-bottom: 30px;
+        }
+        
+        .section-title {
+            position: relative;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            color: var(--dark-bg);
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
         }
         
         .order-card {
             border: none;
             border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-            margin-bottom: 20px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
             transition: all 0.3s;
+            background: white;
         }
         
         .order-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .order-title {
+            font-size: 1.2rem;
+            color: var(--dark-bg);
+            margin: 0;
+        }
+        
+        .order-status {
+            background-color: #f8f9fa;
+            color: var(--dark-bg);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .order-body {
+            padding: 20px;
+        }
+        
+        .order-detail {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        
+        .order-detail-label {
+            font-weight: 600;
+            color: var(--dark-bg);
+            width: 120px;
+        }
+        
+        .order-detail-value {
+            color: #666;
+        }
+        
+        .order-items {
+            margin-top: 20px;
+        }
+        
+        .order-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        
+        .order-item-img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-right: 15px;
+        }
+        
+        .order-item-info {
+            flex: 1;
+        }
+        
+        .order-item-name {
+            font-weight: 600;
+            color: var(--dark-bg);
+            margin-bottom: 5px;
+        }
+        
+        .order-item-price {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .order-footer {
+            padding: 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .order-total {
+            font-size: 1.2rem;
+            color: var(--dark-bg);
+            font-weight: 700;
         }
         
         .validate-btn {
-            background-color: var(--primary-color);
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
             border: none;
-            border-radius: 50px;
-            padding: 8px 25px;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 30px;
             font-weight: 600;
             transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
         }
         
         .validate-btn:hover {
-            background-color: var(--secondary-color);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
+            box-shadow: 0 6px 20px rgba(108, 99, 255, 0.4);
+            color: white;
         }
         
         .payment-method {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
             background-color: #f8f9fa;
             padding: 5px 15px;
-            border-radius: 50px;
+            border-radius: 30px;
             margin-left: 10px;
             font-size: 0.8rem;
+            gap: 5px;
         }
         
         .hero-section {
@@ -288,22 +607,166 @@
             padding: 80px 0;
             border-radius: 0 0 20px 20px;
             margin-bottom: 50px;
+            text-align: center;
         }
         
-        .section-title {
-            position: relative;
-            margin-bottom: 30px;
-            display: inline-block;
+        .hero-title {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            font-weight: 700;
         }
         
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 0;
-            width: 50px;
-            height: 3px;
+        .hero-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .form-control {
+            border-radius: 10px;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(108, 99, 255, 0.25);
+        }
+        
+        .btn-primary {
             background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        
+        .table {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .table th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .table td, .table th {
+            vertical-align: middle;
+        }
+        
+        .btn-sm {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        
+        .modal-content {
+            border-radius: 15px;
+            overflow: hidden;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .modal-header {
+            border-bottom: none;
+            padding: 20px;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .modal-footer {
+            border-top: none;
+            padding: 20px;
+        }
+        
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        
+        .cart-item-img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-right: 15px;
+        }
+        
+        .cart-item-info {
+            flex: 1;
+        }
+        
+        .cart-item-name {
+            font-weight: 600;
+            color: var(--dark-bg);
+            margin-bottom: 5px;
+        }
+        
+        .cart-item-price {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .cart-item-remove {
+            color: var(--accent-color);
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .cart-item-remove:hover {
+            transform: rotate(90deg);
+        }
+        
+        .cart-summary {
+            padding: 20px 0;
+        }
+        
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--dark-bg);
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-container, .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .header-actions {
+                margin-top: 15px;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 10px;
+            }
         }
     </style>
 </head>
@@ -312,12 +775,14 @@
     <div id="authSection" class="auth-container">
         <div class="auth-box">
             <svg class="logo" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M3 11V13H21V11H3ZM3 5V7H21V5H3ZM3 17V19H21V17H3Z" fill="var(--primary-color)"/>
+                <path d="M12 2L3 7V17L12 22L21 17V7L12 2Z" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M3 7L12 12L21 7" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 22V12" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
             <h2 class="mb-4">Bienvenue sur E-Shop Premium</h2>
             <p class="mb-4">Veuillez entrer votre code d'accès pour continuer</p>
             <input type="password" id="authCode" class="form-control auth-input" placeholder="Votre code d'accès">
-            <button onclick="checkAuth()" class="btn auth-btn">Accéder</button>
+            <button onclick="checkAuth()" class="btn auth-btn">Accéder <i class="fas fa-arrow-right ms-2"></i></button>
         </div>
     </div>
 
@@ -325,53 +790,53 @@
     <div id="appSection" style="display: none;">
         <!-- Header -->
         <header class="premium-header">
-            <div class="container">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3 11V13H21V11H3ZM3 5V7H21V5H3ZM3 17V19H21V17H3Z" fill="white"/>
-                        </svg>
-                        <h4 class="text-white mb-0 ms-2">E-Shop Premium</h4>
-                    </div>
-                    <div class="d-flex align-items-center">
-                        <div class="cart-icon" onclick="openCart()">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M17 18C17.5304 18 18.0391 18.2107 18.4142 18.5858C18.7893 18.9609 19 19.4696 19 20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22C16.4696 22 15.9609 21.7893 15.5858 21.4142C15.2107 21.0391 15 20.5304 15 20C15 19.4696 15.2107 18.9609 15.5858 18.5858C15.9609 18.2107 16.4696 18 17 18ZM7 18C7.53043 18 8.03914 18.2107 8.41421 18.5858C8.78929 18.9609 9 19.4696 9 20C9 20.5304 8.78929 21.0391 8.41421 21.4142C8.03914 21.7893 7.53043 22 7 22C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20C5 19.4696 5.21071 18.9609 5.58579 18.5858C5.96086 18.2107 6.46957 18 7 18ZM7.17 2.76L7.2 2.8L10.1 7.6L15.55 6.25C16.25 6.09 16.94 6.5 17.1 7.21C17.26 7.91 16.85 8.59 16.14 8.74L10.7 10.08L9.1 13H17V15H7C6.72 15 6.47 14.89 6.29 14.71C6.11 14.53 6 14.28 6 14C6 13.97 6 13.94 6.01 13.9L7.4 10.33L3 2H1V0H3.27L4.21 1.41L4.27 1.5C4.4 1.67 4.71 2.06 5.17 2.76H7.17Z" fill="white"/>
-                            </svg>
-                            <span id="cartCounter" class="badge-circle">0</span>
-                        </div>
-                        <div class="notification-icon" onclick="showNotifications()">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 22C13.1 22 14 21.1 14 20H10C10 21.1 10.9 22 12 22ZM18 16V11C18 7.93 16.37 5.36 13.5 4.68V4C13.5 3.17 12.83 2.5 12 2.5C11.17 2.5 10.5 3.17 10.5 4V4.68C7.64 5.36 6 7.92 6 11V16L4 18V19H20V18L18 16Z" fill="white"/>
-                            </svg>
-                            <span id="notificationBadge" class="badge-circle" style="display: none;"></span>
-                        </div>
-                    </div>
+            <div class="header-container">
+                <a href="#" class="header-logo" onclick="showShop()">
+                    <i class="fas fa-store"></i>
+                    <span>E-Shop</span>
+                </a>
+                <div class="header-actions">
+                    <button class="header-btn" onclick="openCart()">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cartCounter" class="badge-circle">0</span>
+                    </button>
+                    <button class="header-btn" onclick="showNotifications()">
+                        <i class="fas fa-bell"></i>
+                        <span id="notificationBadge" class="badge-circle" style="display: none;"></span>
+                    </button>
                 </div>
             </div>
         </header>
 
         <!-- Navigation -->
-        <nav class="navbar navbar-expand-lg premium-nav">
-            <div class="container">
-                <button id="shopBtn" class="btn nav-btn btn-primary" onclick="showShop()">Boutique</button>
-                <button id="adminBtn" class="btn nav-btn btn-danger" style="display: none;" onclick="showAdmin()">Admin</button>
-                <button id="notificationsBtn" class="btn nav-btn btn-warning ms-auto" style="display: none;" onclick="showNotifications()">Notifications</button>
+        <nav class="premium-nav">
+            <div class="nav-container">
+                <div>
+                    <button id="shopBtn" class="nav-btn active" onclick="showShop()">
+                        <i class="fas fa-home me-2"></i>Boutique
+                    </button>
+                    <button id="adminBtn" class="nav-btn admin" style="display: none;" onclick="showAdmin()">
+                        <i class="fas fa-user-shield me-2"></i>Admin
+                    </button>
+                </div>
+                <button id="notificationsBtn" class="nav-btn" style="display: none;" onclick="showNotifications()">
+                    <i class="fas fa-bell me-2"></i>Notifications
+                </button>
             </div>
         </nav>
 
         <!-- Main Content -->
         <main class="container my-5">
             <!-- Hero Section -->
-            <div id="heroSection" class="hero-section text-center">
-                <h1 class="display-4">Bienvenue sur E-Shop Premium</h1>
-                <p class="lead">Découvrez nos produits exclusifs</p>
+            <div id="heroSection" class="hero-section">
+                <h1 class="hero-title">Découvrez nos produits exclusifs</h1>
+                <p class="hero-subtitle">Des articles de qualité sélectionnés avec soin pour vous</p>
             </div>
 
             <!-- Shop Section -->
             <div id="shopSection">
                 <h2 class="section-title">Nos Produits</h2>
-                <div class="row" id="productList"></div>
+                <div class="product-grid" id="productList"></div>
             </div>
 
             <!-- Admin Section -->
@@ -393,7 +858,9 @@
                         <label class="form-label">Image</label>
                         <input type="file" id="productImage" class="form-control" accept="image/*">
                     </div>
-                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Enregistrer
+                    </button>
                 </form>
                 <h3 class="section-title">Liste des Produits</h3>
                 <div class="table-responsive">
@@ -426,11 +893,28 @@
                         <h5 class="modal-title">Votre Panier</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
-                    <div class="modal-body" id="cartItems"></div>
+                    <div class="modal-body">
+                        <div id="cartItems"></div>
+                        <div class="cart-summary">
+                            <div class="cart-total">
+                                <span>Total</span>
+                                <span id="cartTotalPrice">0.00 €</span>
+                            </div>
+                        </div>
+                    </div>
                     <div class="modal-footer">
-                        <p class="text-danger me-auto">⚠️ Paiement en espèce uniquement <span class="payment-method">🚫 Carte bancaire</span></p>
-                        <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                        <button class="btn btn-primary" onclick="checkout()">Commander</button>
+                        <p class="text-danger me-auto">
+                            <i class="fas fa-exclamation-circle me-2"></i>Paiement en espèce uniquement 
+                            <span class="payment-method">
+                                <i class="fas fa-ban me-1"></i>Carte bancaire
+                            </span>
+                        </p>
+                        <button class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-2"></i>Fermer
+                        </button>
+                        <button class="btn btn-primary" onclick="checkout()">
+                            <i class="fas fa-check me-2"></i>Commander
+                        </button>
                     </div>
                 </div>
             </div>
@@ -438,80 +922,120 @@
 
         <!-- Footer -->
         <footer class="premium-footer">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-6">
-                        <h5>E-Shop Premium</h5>
+            <div class="footer-container">
+                <div class="footer-content">
+                    <div>
+                        <div class="footer-brand">
+                            <i class="fas fa-store me-2"></i>E-Shop Premium
+                        </div>
                         <p>Votre boutique en ligne haut de gamme</p>
-                        <p>🚫 Paiement en espèces uniquement</p>
                     </div>
-                    <div class="col-md-6 text-end">
-                        <button class="footer-link" onclick="showLegalPage('privacy')">Confidentialité</button>
-                        <button class="footer-link" onclick="showLegalPage('cgv')">CGV</button>
-                        <button class="footer-link" onclick="showLegalPage('cookies')">Cookies</button>
+                    <div class="footer-links">
+                        <button class="footer-link" onclick="showLegalPage('privacy')">
+                            <i class="fas fa-user-shield me-2"></i>Confidentialité
+                        </button>
+                        <button class="footer-link" onclick="showLegalPage('cgv')">
+                            <i class="fas fa-file-contract me-2"></i>CGV
+                        </button>
+                        <button class="footer-link" onclick="showLegalPage('cookies')">
+                            <i class="fas fa-cookie-bite me-2"></i>Cookies
+                        </button>
                     </div>
                 </div>
-                <div class="text-center mt-4">
-                    <p>&copy; 2024 E-Shop Premium - Tous droits réservés</p>
+                <div class="footer-bottom">
+                    <p class="mb-0">
+                        <i class="fas fa-money-bill-wave me-2"></i>Paiement en espèces uniquement
+                    </p>
+                    <p class="mb-0 mt-2">&copy; 2024 E-Shop Premium - Tous droits réservés</p>
                 </div>
             </div>
         </footer>
 
         <!-- Legal Pages -->
         <div id="privacyPage" class="legal-page">
-            <span class="close-legal" onclick="hideLegalPages()">×</span>
-            <h2>Politique de Confidentialité</h2>
-            <div class="mt-4">
-                <h4>1. Collecte des informations</h4>
-                <p>Nous collectons des informations lorsque vous passez une commande sur notre site.</p>
-                
-                <h4>2. Utilisation des informations</h4>
-                <p>Vos informations sont utilisées pour traiter vos commandes et améliorer votre expérience client.</p>
-                
-                <h4>3. Protection des informations</h4>
-                <p>Nous mettons en œuvre des mesures de sécurité pour protéger vos informations personnelles.</p>
-                
-                <h4>4. Partage des informations</h4>
-                <p>Nous ne vendons, n'échangeons et ne transférons pas vos informations personnelles.</p>
+            <div class="legal-container">
+                <button class="close-legal" onclick="hideLegalPages()">
+                    <i class="fas fa-times"></i>
+                </button>
+                <h2 class="legal-title">
+                    <i class="fas fa-user-shield me-2"></i>Politique de Confidentialité
+                </h2>
+                <div class="legal-section">
+                    <h3>1. Collecte des informations</h3>
+                    <p>Nous collectons des informations lorsque vous passez une commande sur notre site. Ces informations incluent votre nom, votre adresse e-mail, votre adresse postale et votre numéro de téléphone.</p>
+                </div>
+                <div class="legal-section">
+                    <h3>2. Utilisation des informations</h3>
+                    <p>Les informations que nous recueillons auprès de vous peuvent être utilisées pour :</p>
+                    <ul>
+                        <li>Personnaliser votre expérience et répondre à vos besoins individuels</li>
+                        <li>Fournir un contenu publicitaire personnalisé</li>
+                        <li>Améliorer notre site web</li>
+                        <li>Améliorer le service client et vos besoins de prise en charge</li>
+                        <li>Vous contacter par e-mail</li>
+                        <li>Administrer un concours, une promotion ou une enquête</li>
+                    </ul>
+                </div>
+                <div class="legal-section">
+                    <h3>3. Protection des informations</h3>
+                    <p>Nous mettons en œuvre une variété de mesures de sécurité pour préserver la sécurité de vos informations personnelles. Nous utilisons un cryptage de pointe pour protéger les informations sensibles transmises en ligne. Nous protégeons également vos informations hors ligne.</p>
+                </div>
             </div>
         </div>
 
         <div id="cgvPage" class="legal-page">
-            <span class="close-legal" onclick="hideLegalPages()">×</span>
-            <h2>Conditions Générales de Vente</h2>
-            <div class="mt-4">
-                <h4>1. Prix</h4>
-                <p>Les prix sont indiqués en euros et sont valables tant qu'ils sont visibles sur le site.</p>
-                
-                <h4>2. Commandes</h4>
-                <p>Les commandes sont payables en espèces à la livraison.</p>
-                
-                <h4>3. Livraison</h4>
-                <p>Les délais de livraison sont indicatifs et peuvent varier.</p>
-                
-                <h4>4. Retours</h4>
-                <p>Les retours sont acceptés sous 14 jours après réception.</p>
-                
-                <h4>5. Garantie</h4>
-                <p>Tous nos produits bénéficient d'une garantie de 2 ans.</p>
+            <div class="legal-container">
+                <button class="close-legal" onclick="hideLegalPages()">
+                    <i class="fas fa-times"></i>
+                </button>
+                <h2 class="legal-title">
+                    <i class="fas fa-file-contract me-2"></i>Conditions Générales de Vente
+                </h2>
+                <div class="legal-section">
+                    <h3>1. Prix</h3>
+                    <p>Les prix de nos produits sont indiqués en euros toutes taxes comprises (TVA incluse). Nous nous réservons le droit de modifier nos prix à tout moment mais nous nous engageons à appliquer les tarifs en vigueur indiqués au moment de la passation de votre commande.</p>
+                </div>
+                <div class="legal-section">
+                    <h3>2. Commandes</h3>
+                    <p>Les commandes sont payables en espèces à la livraison. Vous recevrez une confirmation de commande par e-mail dès que celle-ci aura été enregistrée par nos services. Nous nous réservons le droit d'annuler toute commande d'un client avec lequel il existerait un litige relatif au paiement d'une commande antérieure.</p>
+                </div>
+                <div class="legal-section">
+                    <h3>3. Livraison</h3>
+                    <p>Les délais de livraison sont donnés à titre indicatif et ne sont pas garantis. En cas de retard de livraison, nous vous informerons par e-mail ou par téléphone. Les risques liés au transport sont à notre charge jusqu'à la livraison du colis à l'adresse indiquée dans le bon de commande.</p>
+                </div>
+                <div class="legal-section">
+                    <h3>4. Retours</h3>
+                    <p>Vous disposez d'un délai de 14 jours à compter de la réception de votre commande pour nous retourner tout article ne vous convenant pas. Les articles doivent être retournés dans leur état d'origine, non utilisés et dans leur emballage d'origine. Les frais de retour sont à votre charge.</p>
+                </div>
             </div>
         </div>
 
         <div id="cookiesPage" class="legal-page">
-            <span class="close-legal" onclick="hideLegalPages()">×</span>
-            <h2>Politique relative aux Cookies</h2>
-            <div class="mt-4">
-                <h4>1. Qu'est-ce qu'un cookie ?</h4>
-                <p>Un cookie est un petit fichier stocké sur votre ordinateur lorsque vous visitez un site web.</p>
-                
-                <h4>2. Utilisation des cookies</h4>
-                <p>Nous utilisons des cookies pour améliorer votre expérience de navigation.</p>
-                
-                <h4>3. Contrôle des cookies</h4>
-                <p>Vous pouvez contrôler ou supprimer les cookies via les paramètres de votre navigateur.</p>
-                
-                <h4>4. Cookies tiers</h4>
-                <p>Nous n'utilisons pas de cookies tiers sur notre site.</p>
+            <div class="legal-container">
+                <button class="close-legal" onclick="hideLegalPages()">
+                    <i class="fas fa-times"></i>
+                </button>
+                <h2 class="legal-title">
+                    <i class="fas fa-cookie-bite me-2"></i>Politique relative aux Cookies
+                </h2>
+                <div class="legal-section">
+                    <h3>1. Qu'est-ce qu'un cookie ?</h3>
+                    <p>Un cookie est un petit fichier texte stocké sur votre ordinateur ou appareil mobile lorsque vous visitez un site web. Les cookies sont largement utilisés pour faire fonctionner les sites web ou les rendre plus efficaces, ainsi que pour fournir des informations aux propriétaires du site.</p>
+                </div>
+                <div class="legal-section">
+                    <h3>2. Utilisation des cookies</h3>
+                    <p>Nous utilisons des cookies pour :</p>
+                    <ul>
+                        <li>Mémoriser vos préférences et paramètres</li>
+                        <li>Analyser l'utilisation de notre site web pour améliorer nos services</li>
+                        <li>Faciliter votre navigation sur notre site</li>
+                        <li>Personnaliser le contenu et les publicités</li>
+                    </ul>
+                </div>
+                <div class="legal-section">
+                    <h3>3. Contrôle des cookies</h3>
+                    <p>Vous pouvez contrôler et/ou supprimer les cookies comme vous le souhaitez. Vous pouvez supprimer tous les cookies déjà stockés sur votre ordinateur et configurer la plupart des navigateurs pour empêcher leur installation. Cependant, dans ce cas, vous devrez peut-être ajuster manuellement certaines préférences à chaque visite du site et certains services et fonctionnalités pourraient ne pas être disponibles.</p>
+                </div>
             </div>
         </div>
     </div>
@@ -565,6 +1089,11 @@
             document.getElementById('adminSection').style.display = 'none';
             document.getElementById('notificationsSection').style.display = 'none';
             document.getElementById('heroSection').style.display = 'block';
+            
+            document.getElementById('shopBtn').classList.add('active');
+            document.getElementById('adminBtn').classList.remove('active');
+            document.getElementById('notificationsBtn').classList.remove('active');
+            
             renderProducts();
         }
 
@@ -574,6 +1103,11 @@
                 document.getElementById('adminSection').style.display = 'block';
                 document.getElementById('notificationsSection').style.display = 'none';
                 document.getElementById('heroSection').style.display = 'none';
+                
+                document.getElementById('shopBtn').classList.remove('active');
+                document.getElementById('adminBtn').classList.add('active');
+                document.getElementById('notificationsBtn').classList.remove('active');
+                
                 renderAdminProducts();
             } else {
                 alert("Accès réservé au propriétaire !");
@@ -586,6 +1120,11 @@
                 document.getElementById('adminSection').style.display = 'none';
                 document.getElementById('notificationsSection').style.display = 'block';
                 document.getElementById('heroSection').style.display = 'none';
+                
+                document.getElementById('shopBtn').classList.remove('active');
+                document.getElementById('adminBtn').classList.remove('active');
+                document.getElementById('notificationsBtn').classList.add('active');
+                
                 renderOrders();
             } else {
                 alert("Vous n'avez pas accès aux notifications.");
@@ -653,16 +1192,16 @@
         function renderProducts() {
             const container = document.getElementById('productList');
             container.innerHTML = products.map(product => `
-                <div class="col-md-4">
-                    <div class="card product-card">
-                        <img src="${product.image || 'https://via.placeholder.com/300'}" class="card-img-top product-img" alt="${product.name}">
-                        <div class="card-body">
-                            <h5 class="card-title">${product.name}</h5>
-                            <p class="product-price">${product.price.toFixed(2)} €</p>
-                            <button class="btn add-to-cart" onclick="addToCart(${product.id})">
-                                Ajouter au panier
-                            </button>
-                        </div>
+                <div class="product-card">
+                    <div class="product-img-container">
+                        <img src="${product.image || 'https://via.placeholder.com/300x400'}" class="product-img" alt="${product.name}">
+                    </div>
+                    <div class="product-body">
+                        <h5 class="product-title">${product.name}</h5>
+                        <p class="product-price">${product.price.toFixed(2)} €</p>
+                        <button class="btn add-to-cart" onclick="addToCart(${product.id})">
+                            <i class="fas fa-cart-plus me-2"></i>Ajouter au panier
+                        </button>
                     </div>
                 </div>
             `).join('');
@@ -676,8 +1215,12 @@
                     <td>${product.name}</td>
                     <td>${product.price.toFixed(2)} €</td>
                     <td>
-                        <button class="btn btn-sm btn-warning me-2" onclick="editProduct(${product.id})">Éditer</button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteProduct(${product.id})">Supprimer</button>
+                        <button class="btn btn-sm btn-warning me-2" onclick="editProduct(${product.id})">
+                            <i class="fas fa-edit me-1"></i>Éditer
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteProduct(${product.id})">
+                            <i class="fas fa-trash me-1"></i>Supprimer
+                        </button>
                     </td>
                 </tr>
             `).join('');
@@ -695,6 +1238,13 @@
             
             localStorage.setItem('cart', JSON.stringify(cart));
             updateCartCounter();
+            
+            // Animation feedback
+            const btn = event.target;
+            btn.innerHTML = '<i class="fas fa-check me-2"></i>Ajouté !';
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-cart-plus me-2"></i>Ajouter au panier';
+            }, 1000);
         }
 
         function openCart() {
@@ -702,25 +1252,20 @@
             const container = document.getElementById('cartItems');
             
             container.innerHTML = cart.map(item => `
-                <div class="d-flex justify-content-between align-items-center mb-3 p-3 border-bottom">
-                    <div class="d-flex align-items-center">
-                        <img src="${item.image || 'https://via.placeholder.com/60'}" width="60" height="60" style="object-fit: cover; border-radius: 10px;" class="me-3">
-                        <div>
-                            <h6 class="mb-1">${item.name}</h6>
-                            <p class="mb-0">${item.price.toFixed(2)} € x ${item.quantity}</p>
-                        </div>
+                <div class="cart-item">
+                    <img src="${item.image || 'https://via.placeholder.com/60'}" class="cart-item-img" alt="${item.name}">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-price">${item.price.toFixed(2)} € x ${item.quantity}</div>
                     </div>
-                    <button class="btn btn-sm btn-outline-danger" onclick="removeFromCart(${item.id})">Retirer</button>
+                    <button class="cart-item-remove" onclick="removeFromCart(${item.id})">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
             `).join('');
             
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            container.innerHTML += `
-                <div class="d-flex justify-content-between p-3">
-                    <h5>Total</h5>
-                    <h5>${total.toFixed(2)} €</h5>
-                </div>
-            `;
+            document.getElementById('cartTotalPrice').textContent = total.toFixed(2) + ' €';
             
             modal.show();
         }
@@ -773,40 +1318,45 @@
             if (pendingOrders.length === 0) {
                 container.innerHTML = `
                     <div class="alert alert-info">
-                        Aucune commande en attente de validation.
+                        <i class="fas fa-info-circle me-2"></i>Aucune commande en attente de validation.
                     </div>
                 `;
                 return;
             }
 
             container.innerHTML = pendingOrders.map(order => `
-                <div class="card order-card mb-4">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <div>
-                                <h5 class="card-title">Commande #${order.id}</h5>
-                                <p class="card-text"><strong>Client:</strong> ${order.clientName}</p>
-                                <p class="card-text"><strong>Date:</strong> ${order.date}</p>
-                                <p class="card-text"><strong>Total:</strong> ${order.total.toFixed(2)} €</p>
-                            </div>
-                            <button class="btn validate-btn" onclick="validateOrder(${order.id})">
-                                Valider la commande
-                            </button>
+                <div class="order-card">
+                    <div class="order-header">
+                        <h5 class="order-title">Commande #${order.id}</h5>
+                        <span class="order-status">${order.status}</span>
+                    </div>
+                    <div class="order-body">
+                        <div class="order-detail">
+                            <div class="order-detail-label">Client:</div>
+                            <div class="order-detail-value">${order.clientName}</div>
                         </div>
-                        <h6>Articles:</h6>
-                        <div class="row">
+                        <div class="order-detail">
+                            <div class="order-detail-label">Date:</div>
+                            <div class="order-detail-value">${order.date}</div>
+                        </div>
+                        <div class="order-items">
+                            <h6>Articles:</h6>
                             ${order.items.map(item => `
-                                <div class="col-md-4 mb-3">
-                                    <div class="d-flex align-items-center">
-                                        <img src="${item.image || 'https://via.placeholder.com/50'}" width="50" height="50" style="object-fit: cover; border-radius: 5px;" class="me-3">
-                                        <div>
-                                            <p class="mb-0"><strong>${item.name}</strong></p>
-                                            <p class="mb-0">${item.price.toFixed(2)} € x ${item.quantity}</p>
-                                        </div>
+                                <div class="order-item">
+                                    <img src="${item.image || 'https://via.placeholder.com/60'}" class="order-item-img" alt="${item.name}">
+                                    <div class="order-item-info">
+                                        <div class="order-item-name">${item.name}</div>
+                                        <div class="order-item-price">${item.price.toFixed(2)} € x ${item.quantity}</div>
                                     </div>
                                 </div>
                             `).join('')}
                         </div>
+                    </div>
+                    <div class="order-footer">
+                        <div class="order-total">Total: ${order.total.toFixed(2)} €</div>
+                        <button class="btn validate-btn" onclick="validateOrder(${order.id})">
+                            <i class="fas fa-check me-2"></i>Valider la commande
+                        </button>
                     </div>
                 </div>
             `).join('');
@@ -819,6 +1369,15 @@
                 localStorage.setItem('orders', JSON.stringify(orders));
                 renderOrders();
                 updateNotificationBadge();
+                
+                // Animation feedback
+                const btn = event.target;
+                btn.innerHTML = '<i class="fas fa-check-circle me-2"></i>Validée !';
+                btn.classList.remove('validate-btn');
+                btn.classList.add('btn-success');
+                setTimeout(() => {
+                    btn.style.display = 'none';
+                }, 1000);
             }
         }
 
