@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>E-Shop Premium</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
@@ -19,10 +19,26 @@
             --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
         }
         
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
         body {
             font-family: 'Poppins', sans-serif;
             background-color: var(--light-bg);
             color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         
         h1, h2, h3, h4, h5, h6 {
@@ -841,18 +857,23 @@
         }
         
         .hero-section {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                        url('https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
             color: white;
             padding: 80px 0;
             border-radius: 0 0 20px 20px;
             margin-bottom: 50px;
             text-align: center;
+            position: relative;
         }
         
         .hero-title {
             font-size: 2.5rem;
             margin-bottom: 20px;
             font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
         
         .hero-subtitle {
@@ -860,6 +881,7 @@
             opacity: 0.9;
             max-width: 700px;
             margin: 0 auto;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
         
         .form-control {
@@ -1039,6 +1061,15 @@
             .add-to-cart {
                 padding: 5px 8px;
                 font-size: 0.7rem;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+                padding: 0 15px;
             }
         }
     </style>
@@ -1488,22 +1519,37 @@
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
         let orders = JSON.parse(localStorage.getItem('orders')) || [];
         let clients = JSON.parse(localStorage.getItem('clients')) || [];
-        let currentUser = null;
+        let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
         let currentCategory = null;
         let currentSubCategory = null;
 
+        // Vérifier si l'utilisateur est déjà connecté au chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            if (currentUser) {
+                showApp();
+                if (currentUser.type === 'owner') {
+                    document.getElementById('adminBtn').style.display = 'inline-block';
+                    document.getElementById('notificationsBtn').style.display = 'inline-block';
+                    document.getElementById('notifBtn').style.display = 'inline-block';
+                    showAdmin();
+                } else {
+                    showShop();
+                }
+            }
+        });
+
         if (products.length === 0) {
             products = [
-                { id: 1, name: "T-shirt Homme", price: 24.99, image: "", category: "homme", subCategory: "Vêtements" },
-                { id: 2, name: "Jean Homme", price: 59.99, image: "", category: "homme", subCategory: "Vêtements" },
-                { id: 3, name: "Chaussures Homme", price: 89.99, image: "", category: "homme", subCategory: "Chaussures" },
-                { id: 4, name: "Montre Homme", price: 129.99, image: "", category: "homme", subCategory: "Accessoires" },
-                { id: 5, name: "Robe Femme", price: 49.99, image: "", category: "femme", subCategory: "Vêtements" },
-                { id: 6, name: "Sac à main", price: 79.99, image: "", category: "femme", subCategory: "Accessoires" },
-                { id: 7, name: "Chaussures Femme", price: 69.99, image: "", category: "femme", subCategory: "Chaussures" },
-                { id: 8, name: "T-shirt Enfant", price: 19.99, image: "", category: "enfant", subCategory: "Vêtements" },
-                { id: 9, name: "Jouet éducatif", price: 29.99, image: "", category: "enfant", subCategory: "Jouets" },
-                { id: 10, name: "Chaussures Enfant", price: 39.99, image: "", category: "enfant", subCategory: "Chaussures" }
+                { id: 1, name: "T-shirt Homme", price: 24.99, image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80", category: "homme", subCategory: "Vêtements" },
+                { id: 2, name: "Jean Homme", price: 59.99, image: "https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80", category: "homme", subCategory: "Vêtements" },
+                { id: 3, name: "Chaussures Homme", price: 89.99, image: "https://images.unsplash.com/photo-1463100099107-aa0980c362e6?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80", category: "homme", subCategory: "Chaussures" },
+                { id: 4, name: "Montre Homme", price: 129.99, image: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80", category: "homme", subCategory: "Accessoires" },
+                { id: 5, name: "Robe Femme", price: 49.99, image: "https://images.unsplash.com/photo-1539008835657-9e8e9680e956?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80", category: "femme", subCategory: "Vêtements" },
+                { id: 6, name: "Sac à main", price: 79.99, image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80", category: "femme", subCategory: "Accessoires" },
+                { id: 7, name: "Chaussures Femme", price: 69.99, image: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80", category: "femme", subCategory: "Chaussures" },
+                { id: 8, name: "T-shirt Enfant", price: 19.99, image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80", category: "enfant", subCategory: "Vêtements" },
+                { id: 9, name: "Jouet éducatif", price: 29.99, image: "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80", category: "enfant", subCategory: "Jouets" },
+                { id: 10, name: "Chaussures Enfant", price: 39.99, image: "https://images.unsplash.com/photo-1543508282-6319a3e2621f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80", category: "enfant", subCategory: "Chaussures" }
             ];
             localStorage.setItem('products', JSON.stringify(products));
         }
@@ -1513,6 +1559,7 @@
             
             if (code === ownerCode) {
                 currentUser = { type: 'owner', name: 'Propriétaire' };
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
                 document.getElementById('adminBtn').style.display = 'inline-block';
                 document.getElementById('notificationsBtn').style.display = 'inline-block';
                 document.getElementById('notifBtn').style.display = 'inline-block';
@@ -1522,6 +1569,7 @@
                 const client = clients.find(c => c.code === code);
                 if (client) {
                     currentUser = { type: 'client', name: client.name, code: client.code };
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
                     showApp();
                     showShop();
                 } else {
@@ -1530,6 +1578,7 @@
                         clients.push({ code, name });
                         localStorage.setItem('clients', JSON.stringify(clients));
                         currentUser = { type: 'client', name, code };
+                        localStorage.setItem('currentUser', JSON.stringify(currentUser));
                         showApp();
                         showShop();
                     }
@@ -1539,6 +1588,7 @@
 
         function logout() {
             currentUser = null;
+            localStorage.removeItem('currentUser');
             document.getElementById('appSection').style.display = 'none';
             document.getElementById('authSection').style.display = 'flex';
             document.getElementById('authCode').value = '';
@@ -1719,7 +1769,7 @@
                 <div class="product-card">
                     <div class="product-img-container">
                         <span class="product-category">${product.subCategory}</span>
-                        <img src="${product.image || 'https://via.placeholder.com/300x400?text=' + product.name}" class="product-img" alt="${product.name}">
+                        <img src="${product.image}" class="product-img" alt="${product.name}" onerror="this.src='https://via.placeholder.com/300x400?text=Image+non+disponible'">
                     </div>
                     <div class="product-body">
                         <h5 class="product-title">${product.name}</h5>
@@ -1745,7 +1795,7 @@
             const container = document.getElementById('adminProductList');
             container.innerHTML = products.map(product => `
                 <tr>
-                    <td><img src="${product.image || 'https://via.placeholder.com/50?text=' + product.name}" width="50" height="50" style="object-fit: cover;"></td>
+                    <td><img src="${product.image || 'https://via.placeholder.com/50?text=' + product.name}" width="50" height="50" style="object-fit: cover;" onerror="this.src='https://via.placeholder.com/50?text=Image+non+disponible'"></td>
                     <td>${product.name}</td>
                     <td>${product.price.toFixed(2)} €</td>
                     <td>${product.category} / ${product.subCategory}</td>
@@ -1774,6 +1824,11 @@
             localStorage.setItem('cart', JSON.stringify(cart));
             updateCartCounter();
             
+            // Notification en temps réel pour le propriétaire
+            if (currentUser && currentUser.type === 'owner') {
+                updateNotificationBadge();
+            }
+            
             const btn = event.target;
             btn.innerHTML = '<i class="fas fa-check me-2"></i>Ajouté !';
             setTimeout(() => {
@@ -1787,7 +1842,7 @@
             
             container.innerHTML = cart.map(item => `
                 <div class="cart-item">
-                    <img src="${item.image || 'https://via.placeholder.com/60?text=' + item.name}" class="cart-item-img" alt="${item.name}">
+                    <img src="${item.image || 'https://via.placeholder.com/60?text=' + item.name}" class="cart-item-img" alt="${item.name}" onerror="this.src='https://via.placeholder.com/60?text=Image+non+disponible'">
                     <div class="cart-item-info">
                         <div class="cart-item-name">${item.name}</div>
                         <div class="cart-item-price">${item.price.toFixed(2)} € x ${item.quantity}</div>
@@ -1843,6 +1898,11 @@
             
             alert("Commande validée ! Vous pouvez payer en espèces ou par carte à la livraison.");
             document.getElementById('cartModal').querySelector('.btn-close').click();
+            
+            // Notification en temps réel pour le propriétaire
+            if (currentUser && currentUser.type === 'owner') {
+                renderOrders();
+            }
         }
 
         function renderOrders() {
@@ -1877,7 +1937,7 @@
                             <h6>Articles:</h6>
                             ${order.items.map(item => `
                                 <div class="order-item">
-                                    <img src="${item.image || 'https://via.placeholder.com/60'}" class="order-item-img" alt="${item.name}">
+                                    <img src="${item.image || 'https://via.placeholder.com/60'}" class="order-item-img" alt="${item.name}" onerror="this.src='https://via.placeholder.com/60?text=Image+non+disponible'">
                                     <div class="order-item-info">
                                         <div class="order-item-name">${item.name}</div>
                                         <div class="order-item-price">${item.price.toFixed(2)} € x ${item.quantity}</div>
