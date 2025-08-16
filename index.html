@@ -88,6 +88,39 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 60;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            padding: 16px;
+            max-width: 300px;
+            border-left: 4px solid #3B82F6;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        .toast.error {
+            border-left-color: #EF4444;
+        }
+        
+        .toast.success {
+            border-left-color: #10B981;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -343,14 +376,27 @@
 
                             <!-- Message Input -->
                             <div class="border-t border-gray-200 p-4">
-                                <div class="flex space-x-3">
-                                    <input id="message-input" type="text" placeholder="Tapez votre message..." 
-                                           class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                           onkeypress="handleKeyPress(event)">
-                                    <button onclick="sendMessage()" 
-                                            class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale">
-                                        <i class="fas fa-paper-plane"></i>
-                                    </button>
+                                <!-- Attachments preview -->
+                                <div id="attachments-preview" class="hidden mb-4 flex flex-wrap gap-2"></div>
+                                
+                                <div class="flex items-end space-x-4">
+                                    <div class="flex-1">
+                                        <textarea id="message-input" placeholder="Tapez votre message..." 
+                                                  class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                                                  rows="2" onkeypress="handleKeyPress(event)"></textarea>
+                                    </div>
+                                    <div class="flex flex-col space-y-2">
+                                        <input id="file-input" type="file" class="hidden" multiple 
+                                               accept="image/*,video/*,.pdf,.doc,.docx,.txt" onchange="handleFileSelect(event)">
+                                        <button onclick="document.getElementById('file-input').click()" 
+                                                class="p-3 text-gray-500 hover:text-blue-500 transition-colors">
+                                            <i id="file-icon" class="fas fa-paperclip text-lg"></i>
+                                        </button>
+                                        <button onclick="sendMessage()" 
+                                                class="gradient-bg text-white p-3 rounded-lg hover-scale">
+                                            <i class="fas fa-paper-plane"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -395,12 +441,25 @@
                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors">
                         </div>
 
+                        <div id="confirm-password-field" class="hidden">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Confirmez le code</label>
+                            <input type="password" id="confirm-password" placeholder="Confirmez votre code"
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors">
+                        </div>
+
                         <button type="submit" id="auth-btn"
                                 class="w-full gradient-bg text-white py-3 rounded-lg font-medium hover-scale">
                             Se connecter
                         </button>
                     </div>
                 </form>
+
+                <div class="mt-6 text-center">
+                    <button id="toggle-auth" onclick="toggleAuthMode()" 
+                            class="text-blue-500 hover:text-blue-600 transition-colors">
+                        Pas de compte ? Créer un compte
+                    </button>
+                </div>
 
                 <button onclick="hideAuthModal()" 
                         class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
@@ -424,6 +483,9 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Toast Container -->
+        <div id="toast-container"></div>
     </div>
 
     <!-- JavaScript -->
@@ -433,6 +495,8 @@
         let isConnected = false;
         let messages = [];
         let currentView = 'public';
+        let attachments = [];
+        let isLogin = true;
 
         // Firebase message handling
         function initializeFirebase() {
@@ -462,7 +526,7 @@
         }
 
         function sendFirebaseMessage(content, type = 'public', recipient = null) {
-            if (!window.database || !currentUser || !content.trim()) return;
+            if (!window.database || !currentUser || (!content.trim() && attachments.length === 0)) return;
 
             const messagesRef = window.firebaseRefs.ref(window.database, 'messages');
             const newMessage = {
@@ -472,6 +536,7 @@
                 type: type,
                 isPrivate: type === 'private',
                 authorId: currentUser.username,
+                ...(attachments.length > 0 && { attachments: [...attachments] }),
                 ...(recipient && { recipientId: recipient })
             };
 
@@ -486,11 +551,47 @@
         function hideAuthModal() {
             document.getElementById('auth-modal').classList.add('hidden');
         }
+        
+        function toggleAuthMode() {
+            isLogin = !isLogin;
+            const confirmField = document.getElementById('confirm-password-field');
+            const authBtn = document.getElementById('auth-btn');
+            const toggleBtn = document.getElementById('toggle-auth');
+            const confirmInput = document.getElementById('confirm-password');
+            const passwordInput = document.getElementById('password');
+            
+            if (isLogin) {
+                confirmField.classList.add('hidden');
+                authBtn.textContent = 'Se connecter';
+                toggleBtn.textContent = 'Pas de compte ? Créer un compte';
+                confirmInput.removeAttribute('required');
+                passwordInput.setAttribute('minlength', '1');
+            } else {
+                confirmField.classList.remove('hidden');
+                authBtn.textContent = 'Créer un compte';
+                toggleBtn.textContent = 'Déjà un compte ? Se connecter';
+                confirmInput.setAttribute('required', '');
+                passwordInput.setAttribute('minlength', '4');
+            }
+        }
 
         function handleAuth(event) {
             event.preventDefault();
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+
+            // Validation for registration
+            if (!isLogin) {
+                if (password.length < 4) {
+                    showToast('Le code doit contenir au moins 4 caractères', 'error');
+                    return;
+                }
+                if (password !== confirmPassword) {
+                    showToast('Les codes ne correspondent pas', 'error');
+                    return;
+                }
+            }
 
             // Simple authentication for demo
             if (username && password) {
@@ -501,6 +602,7 @@
                 };
                 
                 localStorage.setItem('h7_user', JSON.stringify(currentUser));
+                showToast(isLogin ? 'Connexion réussie!' : 'Compte créé avec succès!', 'success');
                 hideAuthModal();
                 showChatApp();
                 initializeFirebase();
@@ -548,14 +650,17 @@
             const input = document.getElementById('message-input');
             const content = input.value.trim();
             
-            if (content) {
+            if (content || attachments.length > 0) {
                 sendFirebaseMessage(content, currentView);
                 input.value = '';
+                attachments = [];
+                updateAttachmentsPreview();
             }
         }
 
         function handleKeyPress(event) {
-            if (event.key === 'Enter') {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
                 sendMessage();
             }
         }
@@ -582,7 +687,22 @@
                                 <span class="font-medium text-gray-900">${msg.username}</span>
                                 <span class="text-xs text-gray-500">${formatTime(msg.timestamp)}</span>
                             </div>
-                            <p class="text-gray-700">${msg.content}</p>
+                            ${msg.content ? `<p class="text-gray-700 mb-2">${msg.content}</p>` : ''}
+                            ${msg.attachments && msg.attachments.length > 0 ? `
+                                <div class="flex flex-wrap gap-2">
+                                    ${msg.attachments.map(att => `
+                                        <div class="flex items-center space-x-2 bg-gray-100 px-2 py-1 rounded text-sm">
+                                            <i class="fas ${
+                                                att.type.startsWith('image/') ? 'fa-image' :
+                                                att.type.includes('pdf') ? 'fa-file-pdf' :
+                                                att.type.startsWith('video/') ? 'fa-video' :
+                                                'fa-file'
+                                            } text-gray-600"></i>
+                                            <span class="text-gray-700">${att.name}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
                         </div>
                     </div>
                 `).join('');
@@ -739,6 +859,90 @@
 
         function hideModal() {
             document.getElementById('generic-modal').classList.add('hidden');
+        }
+        
+        // Toast notifications
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <div class="flex items-center space-x-2">
+                    <i class="fas ${
+                        type === 'error' ? 'fa-exclamation-circle text-red-500' :
+                        type === 'success' ? 'fa-check-circle text-green-500' :
+                        'fa-info-circle text-blue-500'
+                    }"></i>
+                    <span class="text-gray-800">${message}</span>
+                    <button onclick="this.parentElement.parentElement.remove()" class="text-gray-400 hover:text-gray-600 ml-2">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.remove();
+                }
+            }, 5000);
+        }
+        
+        // File handling
+        function handleFileSelect(event) {
+            const files = Array.from(event.target.files || []);
+            if (files.length === 0) return;
+            
+            const fileIcon = document.getElementById('file-icon');
+            fileIcon.className = 'fas fa-spinner fa-spin text-lg';
+            
+            files.forEach(file => {
+                // Simulate file upload for demo
+                const fileData = {
+                    name: file.name,
+                    type: file.type,
+                    size: file.size,
+                    url: URL.createObjectURL(file)
+                };
+                attachments.push(fileData);
+            });
+            
+            updateAttachmentsPreview();
+            showToast(`${files.length} fichier${files.length > 1 ? 's' : ''} ajouté${files.length > 1 ? 's' : ''}`, 'success');
+            
+            fileIcon.className = 'fas fa-paperclip text-lg';
+            event.target.value = '';
+        }
+        
+        function updateAttachmentsPreview() {
+            const preview = document.getElementById('attachments-preview');
+            
+            if (attachments.length === 0) {
+                preview.classList.add('hidden');
+                preview.innerHTML = '';
+                return;
+            }
+            
+            preview.classList.remove('hidden');
+            preview.innerHTML = attachments.map((attachment, index) => `
+                <div class="flex items-center space-x-2 bg-gray-100 px-3 py-2 rounded-lg">
+                    <i class="fas ${
+                        attachment.type.startsWith('image/') ? 'fa-image' :
+                        attachment.type.includes('pdf') ? 'fa-file-pdf' :
+                        attachment.type.startsWith('video/') ? 'fa-video' :
+                        'fa-file'
+                    } text-gray-600"></i>
+                    <span class="text-sm text-gray-700">${attachment.name}</span>
+                    <button onclick="removeAttachment(${index})" class="text-red-500 hover:text-red-700">
+                        <i class="fas fa-times text-xs"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+        
+        function removeAttachment(index) {
+            attachments.splice(index, 1);
+            updateAttachmentsPreview();
         }
 
         // Initialize app
