@@ -2,1995 +2,759 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>E-Shop Premium</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H7 Social - Plateforme de Communication Moderne</title>
+    <meta name="description" content="H7 Social est une plateforme de communication moderne qui connecte les utilisateurs en temps réel. Échangez, partagez et collaborez en toute simplicité.">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="H7 Social - Communication en Temps Réel">
+    <meta property="og:description" content="Rejoignez H7 Social pour discuter avec la communauté en temps réel, envoyer des messages privés et rester connecté avec vos amis.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Firebase -->
+    <script type="module">
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+      import { getDatabase, ref, push, onValue, off } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+      import { getAuth, GoogleAuthProvider } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyBmMSD2SwHt-zF_YZHPEs6-03IlLGnO1CM",
+        authDomain: "chat-2026-671bb.firebaseapp.com",
+        databaseURL: "https://chat-2026-671bb-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "chat-2026-671bb",
+        storageBucket: "chat-2026-671bb.firebasestorage.app",
+        messagingSenderId: "767585260701",
+        appId: "1:767585260701:web:9159e8293d385415f87074",
+        measurementId: "G-8ZHZV3QQDH"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      window.database = getDatabase(app);
+      window.auth = getAuth(app);
+      window.googleProvider = new GoogleAuthProvider();
+      window.firebaseRefs = { ref, push, onValue, off };
+    </script>
+    
     <style>
         :root {
-            --primary-color: #6c63ff;
-            --secondary-color: #4d44db;
-            --accent-color: #ff6584;
-            --light-bg: #f8f9fa;
-            --dark-bg: #2b2d42;
-            --text-light: #f8f9fa;
-            --text-dark: #2b2d42;
-            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --primary: #3B82F6;
+            --secondary: #8B5CF6;
         }
         
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        .gradient-bg {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
         }
         
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow-x: hidden;
-            position: relative;
+        .hover-scale {
+            transition: transform 0.2s ease-in-out;
         }
         
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--light-bg);
-            color: var(--text-dark);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
-        }
-        
-        .auth-container {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-image: url('https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
-            background-size: cover;
-            background-position: center;
-            background-blend-mode: overlay;
-        }
-        
-        .auth-box {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 40px;
-            width: 100%;
-            max-width: 500px;
-            box-shadow: var(--card-shadow);
-            text-align: center;
-            animation: fadeIn 0.8s ease-out;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .logo {
-            width: 120px;
-            margin-bottom: 30px;
-            filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.1));
-        }
-        
-        .auth-input {
-            border: none;
-            border-bottom: 2px solid #ddd;
-            border-radius: 0;
-            padding: 15px 5px;
-            margin-bottom: 25px;
-            font-size: 16px;
-            transition: all 0.3s;
-            background: transparent;
-        }
-        
-        .auth-input:focus {
-            border-bottom-color: var(--primary-color);
-            box-shadow: none;
-        }
-        
-        .auth-btn {
-            background-color: var(--primary-color);
-            border: none;
-            padding: 12px 30px;
-            font-size: 16px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            border-radius: 50px;
-            transition: all 0.3s;
-            margin-top: 10px;
-            color: white;
-            box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
-        }
-        
-        .auth-btn:hover {
-            background-color: var(--secondary-color);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(108, 99, 255, 0.4);
-            color: white;
-        }
-        
-        .premium-header {
-            background: linear-gradient(135deg, var(--dark-bg) 0%, #1a1a2e 100%);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-            padding: 15px 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-        
-        .header-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        .header-logo {
-            display: flex;
-            align-items: center;
-            color: white;
-            text-decoration: none;
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-        
-        .header-logo i {
-            margin-right: 10px;
-            color: var(--primary-color);
-        }
-        
-        .header-actions {
-            display: flex;
-            align-items: center;
-        }
-        
-        .header-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-left: 15px;
-            transition: all 0.3s;
-            position: relative;
-        }
-        
-        .header-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
-        }
-        
-        .badge-circle {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background-color: var(--accent-color);
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            font-weight: bold;
-        }
-        
-        .menu-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            margin-right: auto;
-        }
-        
-        .nav-menu {
-            position: fixed;
-            top: 0;
-            left: -300px;
-            width: 300px;
-            height: 100vh;
-            background: white;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-            z-index: 1001;
-            transition: all 0.3s;
-            padding: 20px;
-            overflow-y: auto;
-        }
-        
-        .nav-menu.active {
-            left: 0;
-        }
-        
-        .close-menu {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--dark-bg);
-        }
-        
-        .menu-category {
-            margin-bottom: 15px;
-        }
-        
-        .menu-category-title {
-            font-weight: 600;
-            color: var(--dark-bg);
-            margin-bottom: 10px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .menu-category-items {
-            padding-left: 15px;
-            display: none;
-        }
-        
-        .menu-category-items.active {
-            display: block;
-        }
-        
-        .menu-item {
-            padding: 8px 0;
-            color: var(--dark-bg);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .menu-item:hover {
-            color: var(--primary-color);
-            transform: translateX(5px);
-        }
-        
-        .nav-buttons {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .nav-icon-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-        }
-        
-        .nav-icon-btn:hover {
-            transform: translateY(-2px);
-        }
-        
-        .nav-icon-btn.active {
-            color: var(--accent-color);
-        }
-        
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px;
-            width: 100%;
-        }
-        
-        .product-card {
-            border: none;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: var(--card-shadow);
-            transition: all 0.3s;
-            background-color: white;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            animation: fadeInUp 0.5s ease-out;
-        }
-        
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-        
-        .product-img-container {
-            height: 120px;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .product-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s;
-        }
-        
-        .product-card:hover .product-img {
+        .hover-scale:hover {
             transform: scale(1.05);
         }
         
-        .product-category {
-            position: absolute;
-            top: 5px;
-            left: 5px;
-            background: var(--primary-color);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 600;
+        .chat-message {
+            animation: slideInUp 0.3s ease-out;
         }
         
-        .product-body {
-            padding: 10px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
-        .product-title {
-            font-size: 0.9rem;
-            margin-bottom: 5px;
-            color: var(--dark-bg);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
-        .product-price {
-            color: var(--primary-color);
-            font-weight: 700;
-            font-size: 0.9rem;
-            margin-bottom: 8px;
-        }
-        
-        .add-to-cart {
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-            border: none;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 30px;
-            font-weight: 600;
-            transition: all 0.3s;
-            margin-top: auto;
-            align-self: flex-start;
-            box-shadow: 0 4px 10px rgba(108, 99, 255, 0.3);
-            font-size: 0.8rem;
-            width: 100%;
-            text-align: center;
-        }
-        
-        .add-to-cart:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(108, 99, 255, 0.4);
-            color: white;
-        }
-        
-        .premium-footer {
-            background: linear-gradient(135deg, var(--dark-bg) 0%, #1a1a2e 100%);
-            color: var(--text-light);
-            padding: 50px 0 20px;
-            margin-top: 80px;
-        }
-        
-        .footer-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        .footer-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-        
-        .footer-section {
-            flex: 1;
-            min-width: 200px;
-            margin-bottom: 20px;
-        }
-        
-        .footer-brand {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .footer-brand i {
-            margin-right: 10px;
-            color: var(--primary-color);
-        }
-        
-        .footer-about {
-            color: rgba(255, 255, 255, 0.8);
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-        
-        .footer-links-title {
-            color: white;
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-            position: relative;
-            padding-bottom: 10px;
-        }
-        
-        .footer-links-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 40px;
-            height: 2px;
-            background: var(--primary-color);
-        }
-        
-        .footer-links {
-            list-style: none;
-            padding: 0;
-        }
-        
-        .footer-link {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            transition: all 0.3s;
-            margin-bottom: 10px;
-            display: block;
-        }
-        
-        .footer-link:hover {
-            color: white;
-            transform: translateX(5px);
-        }
-        
-        .footer-contact {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-            color: rgba(255, 255, 255, 0.8);
-        }
-        
-        .footer-contact i {
-            margin-right: 10px;
-            color: var(--primary-color);
-            width: 20px;
-            text-align: center;
-        }
-        
-        .footer-bottom {
-            text-align: center;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .payment-methods {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .payment-method {
-            display: flex;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 5px 15px;
-            border-radius: 20px;
-            color: white;
-            font-size: 0.9rem;
-        }
-        
-        .payment-method i {
-            margin-right: 5px;
-            font-size: 1.2rem;
-        }
-        
-        .legal-page {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: white;
-            z-index: 2000;
-            padding: 50px;
-            overflow-y: auto;
-            display: none;
-        }
-        
-        .legal-container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            padding: 40px;
-            box-shadow: var(--card-shadow);
-            position: relative;
-        }
-        
-        .close-legal {
-            position: absolute;
-            top: 30px;
-            right: 30px;
-            font-size: 30px;
-            cursor: pointer;
-            color: var(--primary-color);
-            transition: all 0.3s;
-            background: none;
-            border: none;
-        }
-        
-        .close-legal:hover {
-            transform: rotate(90deg);
-            color: var(--accent-color);
-        }
-        
-        .legal-title {
-            color: var(--dark-bg);
-            margin-bottom: 30px;
-            position: relative;
-            padding-bottom: 15px;
-        }
-        
-        .legal-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 80px;
-            height: 3px;
-            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
-        }
-        
-        .legal-section {
-            margin-bottom: 30px;
-        }
-        
-        .legal-section h3 {
-            color: var(--dark-bg);
-            margin-bottom: 15px;
-            font-size: 1.2rem;
-        }
-        
-        .legal-section p {
-            color: #666;
-            line-height: 1.8;
-        }
-        
-        .contact-page {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 2000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            display: none;
-        }
-        
-        .contact-container {
-            background: white;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 500px;
-            padding: 30px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-            position: relative;
-            animation: popIn 0.4s ease-out;
-        }
-        
-        @keyframes popIn {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-        
-        .close-contact {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 25px;
-            color: var(--primary-color);
-            cursor: pointer;
-            transition: all 0.3s;
-            background: none;
-            border: none;
-        }
-        
-        .close-contact:hover {
-            transform: rotate(90deg);
-            color: var(--accent-color);
-        }
-        
-        .contact-title {
-            text-align: center;
-            margin-bottom: 30px;
-            color: var(--dark-bg);
-        }
-        
-        .contact-title i {
-            font-size: 2.5rem;
-            color: var(--primary-color);
-            margin-bottom: 15px;
-            display: block;
-        }
-        
-        .contact-methods {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        
-        .contact-method {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            border-radius: 10px;
-            background: #f8f9fa;
-            transition: all 0.3s;
-            text-decoration: none;
-            color: var(--dark-bg);
-        }
-        
-        .contact-method:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-        
-        .contact-icon {
-            width: 50px;
-            height: 50px;
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary);
             border-radius: 50%;
-            background: var(--primary-color);
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.5rem;
-            margin-right: 15px;
-            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
         }
         
-        .contact-info h4 {
-            margin-bottom: 5px;
-            font-size: 1.1rem;
-        }
-        
-        .contact-info p {
-            color: #666;
-            margin: 0;
-        }
-        
-        .snapcode {
-            width: 100px;
-            height: 100px;
-            background: #FFFC00;
-            border-radius: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 20px auto;
-            color: black;
-            font-weight: bold;
-            font-size: 0.8rem;
-            text-align: center;
-            padding: 10px;
-        }
-        
-        .admin-panel {
-            background-color: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: var(--card-shadow);
-            margin-bottom: 30px;
-        }
-        
-        .section-title {
-            position: relative;
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            color: var(--dark-bg);
-        }
-        
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 80px;
-            height: 3px;
-            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
-        }
-        
-        .order-card {
-            border: none;
-            border-radius: 15px;
-            box-shadow: var(--card-shadow);
-            margin-bottom: 30px;
-            transition: all 0.3s;
-            background: white;
-        }
-        
-        .order-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-        }
-        
-        .order-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .order-title {
-            font-size: 1.2rem;
-            color: var(--dark-bg);
-            margin: 0;
-        }
-        
-        .order-status {
-            background-color: #f8f9fa;
-            color: var(--dark-bg);
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-        
-        .order-body {
-            padding: 20px;
-        }
-        
-        .order-detail {
-            display: flex;
-            margin-bottom: 15px;
-        }
-        
-        .order-detail-label {
-            font-weight: 600;
-            color: var(--dark-bg);
-            width: 120px;
-        }
-        
-        .order-detail-value {
-            color: #666;
-        }
-        
-        .order-items {
-            margin-top: 20px;
-        }
-        
-        .order-item {
-            display: flex;
-            align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid #f5f5f5;
-        }
-        
-        .order-item-img {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 10px;
-            margin-right: 15px;
-        }
-        
-        .order-item-info {
-            flex: 1;
-        }
-        
-        .order-item-name {
-            font-weight: 600;
-            color: var(--dark-bg);
-            margin-bottom: 5px;
-        }
-        
-        .order-item-price {
-            color: var(--primary-color);
-            font-weight: 600;
-        }
-        
-        .order-footer {
-            padding: 20px;
-            border-top: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .order-total {
-            font-size: 1.2rem;
-            color: var(--dark-bg);
-            font-weight: 700;
-        }
-        
-        .validate-btn {
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-            border: none;
-            color: white;
-            padding: 10px 25px;
-            border-radius: 30px;
-            font-weight: 600;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
-        }
-        
-        .validate-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(108, 99, 255, 0.4);
-            color: white;
-        }
-        
-        .hero-section {
-            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
-                        url('https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
-            background-size: cover;
-            background-position: center;
-            color: white;
-            padding: 80px 0;
-            border-radius: 0 0 20px 20px;
-            margin-bottom: 50px;
-            text-align: center;
-            position: relative;
-        }
-        
-        .hero-title {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            font-weight: 700;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        }
-        
-        .hero-subtitle {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            max-width: 700px;
-            margin: 0 auto;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-        }
-        
-        .form-control {
-            border-radius: 10px;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            transition: all 0.3s;
-        }
-        
-        .form-control:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.25rem rgba(108, 99, 255, 0.25);
-        }
-        
-        .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-        
-        .btn-primary:hover {
-            background-color: var(--secondary-color);
-            border-color: var(--secondary-color);
-        }
-        
-        .table {
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        
-        .table th {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        .table td, .table th {
-            vertical-align: middle;
-        }
-        
-        .btn-sm {
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-        }
-        
-        .modal-content {
-            border-radius: 15px;
-            overflow: hidden;
-            border: none;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-        
-        .modal-header {
-            border-bottom: none;
-            padding: 20px;
-        }
-        
-        .modal-body {
-            padding: 20px;
-        }
-        
-        .modal-footer {
-            border-top: none;
-            padding: 20px;
-        }
-        
-        .cart-item {
-            display: flex;
-            align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid #f5f5f5;
-        }
-        
-        .cart-item-img {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 10px;
-            margin-right: 15px;
-        }
-        
-        .cart-item-info {
-            flex: 1;
-        }
-        
-        .cart-item-name {
-            font-weight: 600;
-            color: var(--dark-bg);
-            margin-bottom: 5px;
-        }
-        
-        .cart-item-price {
-            color: var(--primary-color);
-            font-weight: 600;
-        }
-        
-        .cart-item-remove {
-            color: var(--accent-color);
-            background: none;
-            border: none;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .cart-item-remove:hover {
-            transform: rotate(90deg);
-        }
-        
-        .cart-summary {
-            padding: 20px 0;
-        }
-        
-        .cart-total {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--dark-bg);
-            margin-top: 20px;
-        }
-        
-        .logout-btn {
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            margin-left: 15px;
-        }
-        
-        .logout-btn i {
-            margin-right: 5px;
-        }
-        
-        @media (max-width: 768px) {
-            .product-grid {
-                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-                gap: 10px;
-            }
-            
-            .header-container {
-                flex-direction: row;
-            }
-            
-            .header-actions {
-                margin-top: 0;
-            }
-            
-            .footer-content {
-                flex-direction: column;
-            }
-            
-            .footer-section {
-                min-width: 100%;
-            }
-            
-            .nav-menu {
-                width: 80%;
-                left: -80%;
-            }
-            
-            .product-img-container {
-                height: 100px;
-            }
-            
-            .product-title {
-                font-size: 0.8rem;
-            }
-            
-            .product-price {
-                font-size: 0.8rem;
-            }
-            
-            .add-to-cart {
-                padding: 5px 8px;
-                font-size: 0.7rem;
-            }
-            
-            .hero-title {
-                font-size: 2rem;
-            }
-            
-            .hero-subtitle {
-                font-size: 1rem;
-                padding: 0 15px;
-            }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
-<body>
-    <!-- Authentification -->
-    <div id="authSection" class="auth-container">
-        <div class="auth-box">
-            <svg class="logo" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2L3 7V17L12 22L21 17V7L12 2Z" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M3 7L12 12L21 7" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M12 22V12" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <h2 class="mb-4">Bienvenue sur E-Shop Premium</h2>
-            <p class="mb-4">Veuillez entrer votre code d'accès pour continuer</p>
-            <input type="password" id="authCode" class="form-control auth-input" placeholder="Votre code d'accès">
-            <button onclick="checkAuth()" class="btn auth-btn">Accéder <i class="fas fa-arrow-right ms-2"></i></button>
-        </div>
-    </div>
-
-    <!-- Application (cachée au départ) -->
-    <div id="appSection" style="display: none;">
-        <!-- Header -->
-        <header class="premium-header">
-            <div class="header-container">
-                <button class="menu-btn" onclick="toggleMenu()">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <a href="#" class="header-logo" onclick="showShop()">
-                    <i class="fas fa-store"></i>
-                    <span>E-Shop</span>
-                </a>
-                <div class="header-actions">
-                    <button class="logout-btn" onclick="logout()">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span class="d-none d-md-inline">Déconnexion</span>
-                    </button>
-                    <button class="header-btn" onclick="openCart()">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span id="cartCounter" class="badge-circle">0</span>
-                    </button>
-                    <button class="header-btn" onclick="showNotifications()" id="notifBtn">
-                        <i class="fas fa-bell"></i>
-                        <span id="notificationBadge" class="badge-circle" style="display: none;"></span>
-                    </button>
-                </div>
-            </div>
-        </header>
-
-        <!-- Menu de navigation -->
-        <div class="nav-menu" id="navMenu">
-            <button class="close-menu" onclick="toggleMenu()">
-                <i class="fas fa-times"></i>
-            </button>
-            <h3>Catégories</h3>
-            <div class="menu-category">
-                <div class="menu-category-title" onclick="toggleCategory(this)">
-                    <span>Homme</span>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="menu-category-items">
-                    <div class="menu-item" onclick="filterProducts('homme', 'Vêtements')">Vêtements</div>
-                    <div class="menu-item" onclick="filterProducts('homme', 'Chaussures')">Chaussures</div>
-                    <div class="menu-item" onclick="filterProducts('homme', 'Accessoires')">Accessoires</div>
-                </div>
-            </div>
-            <div class="menu-category">
-                <div class="menu-category-title" onclick="toggleCategory(this)">
-                    <span>Femme</span>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="menu-category-items">
-                    <div class="menu-item" onclick="filterProducts('femme', 'Vêtements')">Vêtements</div>
-                    <div class="menu-item" onclick="filterProducts('femme', 'Chaussures')">Chaussures</div>
-                    <div class="menu-item" onclick="filterProducts('femme', 'Accessoires')">Accessoires</div>
-                </div>
-            </div>
-            <div class="menu-category">
-                <div class="menu-category-title" onclick="toggleCategory(this)">
-                    <span>Enfant</span>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="menu-category-items">
-                    <div class="menu-item" onclick="filterProducts('enfant', 'Vêtements')">Vêtements</div>
-                    <div class="menu-item" onclick="filterProducts('enfant', 'Chaussures')">Chaussures</div>
-                    <div class="menu-item" onclick="filterProducts('enfant', 'Jouets')">Jouets</div>
-                </div>
-            </div>
-            <div class="menu-category">
-                <div class="menu-category-title" onclick="toggleCategory(this)">
-                    <span>Informations</span>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="menu-category-items">
-                    <div class="menu-item" onclick="showLegalPage('privacy')">Confidentialité</div>
-                    <div class="menu-item" onclick="showLegalPage('cgv')">CGV</div>
-                    <div class="menu-item" onclick="showLegalPage('cookies')">Cookies</div>
-                    <div class="menu-item" onclick="showContactPage()">Contact</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Navigation -->
-        <nav class="premium-nav">
-            <div class="nav-container">
-                <div class="nav-buttons">
-                    <button id="shopBtn" class="nav-icon-btn active" onclick="showShop()" title="Boutique">
-                        <i class="fas fa-store"></i>
-                    </button>
-                    <button id="adminBtn" class="nav-icon-btn" style="display: none;" onclick="showAdmin()" title="Admin">
-                        <i class="fas fa-user-shield"></i>
-                    </button>
-                </div>
-                <button id="notificationsBtn" class="nav-icon-btn" style="display: none;" onclick="showNotifications()" title="Notifications">
-                    <i class="fas fa-bell"></i>
-                </button>
-            </div>
-        </nav>
-
-        <!-- Main Content -->
-        <main class="container my-5">
+<body class="bg-gray-50">
+    <!-- Application Container -->
+    <div id="app" class="min-h-screen">
+        <!-- Landing Page -->
+        <div id="landing-page" class="min-h-screen bg-gray-50">
             <!-- Hero Section -->
-            <div id="heroSection" class="hero-section">
-                <h1 class="hero-title">Découvrez nos produits exclusifs</h1>
-                <p class="hero-subtitle">Des articles de qualité sélectionnés avec soin pour vous</p>
-            </div>
-
-            <!-- Shop Section -->
-            <div id="shopSection">
-                <h2 class="section-title">Nos Produits</h2>
-                <div class="product-grid" id="productList"></div>
-            </div>
-
-            <!-- Admin Section -->
-            <div id="adminSection" class="admin-panel" style="display: none;">
-                <h2 class="section-title">Espace Admin</h2>
-                <form id="productForm" class="mb-4">
-                    <input type="hidden" id="productId">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Nom du produit</label>
-                            <input type="text" id="productName" class="form-control" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Prix (€)</label>
-                            <input type="number" id="productPrice" class="form-control" step="0.01" required>
-                        </div>
+            <div class="relative min-h-screen bg-cover bg-center flex items-center justify-center" 
+                 style="background-image: url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080')">
+                <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+                <div class="relative z-10 text-center text-white max-w-4xl px-6">
+                    <div class="w-20 h-20 gradient-bg rounded-full flex items-center justify-center mx-auto mb-8">
+                        <i class="fas fa-comments text-white text-3xl"></i>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Catégorie</label>
-                            <select id="productCategory" class="form-control" required>
-                                <option value="homme">Homme</option>
-                                <option value="femme">Femme</option>
-                                <option value="enfant">Enfant</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Sous-catégorie</label>
-                            <select id="productSubCategory" class="form-control" required>
-                                <option value="Vêtements">Vêtements</option>
-                                <option value="Chaussures">Chaussures</option>
-                                <option value="Accessoires">Accessoires</option>
-                                <option value="Jouets">Jouets</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Image</label>
-                        <input type="file" id="productImage" class="form-control" accept="image/*">
-                    </div>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save me-2"></i>Enregistrer
+                    <h1 class="text-5xl md:text-6xl font-bold mb-6">H7 Social</h1>
+                    <p class="text-xl md:text-2xl mb-8 opacity-90">
+                        La plateforme de communication moderne qui connecte les utilisateurs en temps réel
+                    </p>
+                    <button onclick="showAuthModal()" 
+                            class="gradient-bg text-white px-8 py-4 rounded-lg text-lg font-semibold hover-scale shadow-xl">
+                        Rejoindre la communauté
                     </button>
+                </div>
+            </div>
+
+            <!-- Features Section -->
+            <div class="py-20 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-16">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-4">Fonctionnalités</h2>
+                        <p class="text-xl text-gray-600">Tout ce dont vous avez besoin pour communiquer efficacement</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="text-center p-8 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow">
+                            <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <i class="fas fa-users text-white text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-4">Chat Public</h3>
+                            <p class="text-gray-600">Discutez avec tous les membres de la communauté en temps réel</p>
+                        </div>
+                        
+                        <div class="text-center p-8 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow">
+                            <div class="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <i class="fas fa-comment-dots text-white text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-4">Messages Privés</h3>
+                            <p class="text-gray-600">Échangez en privé avec vos contacts préférés</p>
+                        </div>
+                        
+                        <div class="text-center p-8 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow">
+                            <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <i class="fas fa-bolt text-white text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-4">Temps Réel</h3>
+                            <p class="text-gray-600">Recevez et envoyez des messages instantanément</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="bg-gray-900 text-white mt-16">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <!-- Brand Section -->
+                        <div class="col-span-1 lg:col-span-2">
+                            <div class="flex items-center space-x-3 mb-4">
+                                <div class="w-12 h-12 gradient-bg rounded-xl flex items-center justify-center">
+                                    <i class="fas fa-comments text-white text-xl"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold">H7 Social</h3>
+                            </div>
+                            <p class="text-gray-300 max-w-md mb-6">
+                                La plateforme de communication moderne qui connecte les utilisateurs en temps réel. 
+                                Échangez, partagez et collaborez en toute simplicité.
+                            </p>
+                            <div class="flex space-x-4">
+                                <a href="https://t.snapchat.com/XuhVH62f" target="_blank" rel="noopener noreferrer"
+                                   class="w-10 h-10 bg-yellow-500 rounded-lg flex items-center justify-center hover:bg-yellow-600 transition-colors">
+                                    <i class="fab fa-snapchat-ghost text-white"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center hover:bg-blue-700 transition-colors">
+                                    <i class="fab fa-facebook-f text-white"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 bg-pink-600 rounded-lg flex items-center justify-center hover:bg-pink-700 transition-colors">
+                                    <i class="fab fa-instagram text-white"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 bg-blue-400 rounded-lg flex items-center justify-center hover:bg-blue-500 transition-colors">
+                                    <i class="fab fa-twitter text-white"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Quick Links -->
+                        <div>
+                            <h4 class="font-semibold text-lg mb-4">Liens Rapides</h4>
+                            <ul class="space-y-2">
+                                <li>
+                                    <button onclick="showModal('about')" 
+                                            class="text-gray-300 hover:text-white transition-colors flex items-center">
+                                        <i class="fas fa-info-circle mr-2"></i>À propos de nous
+                                    </button>
+                                </li>
+                                <li>
+                                    <button onclick="showModal('features')" 
+                                            class="text-gray-300 hover:text-white transition-colors flex items-center">
+                                        <i class="fas fa-star mr-2"></i>Fonctionnalités
+                                    </button>
+                                </li>
+                                <li>
+                                    <button onclick="showModal('help')" 
+                                            class="text-gray-300 hover:text-white transition-colors flex items-center">
+                                        <i class="fas fa-question-circle mr-2"></i>Centre d'aide
+                                    </button>
+                                </li>
+                                <li>
+                                    <button onclick="showModal('blog')" 
+                                            class="text-gray-300 hover:text-white transition-colors flex items-center">
+                                        <i class="fas fa-blog mr-2"></i>Blog
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Legal Links -->
+                        <div>
+                            <h4 class="font-semibold text-lg mb-4">Légal</h4>
+                            <ul class="space-y-2">
+                                <li>
+                                    <button onclick="showModal('privacy')" 
+                                            class="text-gray-300 hover:text-white transition-colors flex items-center">
+                                        <i class="fas fa-shield-alt mr-2"></i>Confidentialité
+                                    </button>
+                                </li>
+                                <li>
+                                    <button onclick="showModal('terms')" 
+                                            class="text-gray-300 hover:text-white transition-colors flex items-center">
+                                        <i class="fas fa-file-contract mr-2"></i>CGV
+                                    </button>
+                                </li>
+                                <li>
+                                    <button onclick="showModal('cookies')" 
+                                            class="text-gray-300 hover:text-white transition-colors flex items-center">
+                                        <i class="fas fa-cookie-bite mr-2"></i>Cookies
+                                    </button>
+                                </li>
+                                <li>
+                                    <button onclick="showModal('contact')" 
+                                            class="text-gray-300 hover:text-white transition-colors flex items-center">
+                                        <i class="fas fa-envelope mr-2"></i>Nous contacter
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Bar -->
+                <div class="border-t border-gray-800">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                        <div class="flex flex-col md:flex-row justify-between items-center">
+                            <p class="text-gray-400 text-sm">
+                                © 2025 H7 Social. Tous droits réservés.
+                            </p>
+                            <div class="flex items-center space-x-6 mt-4 md:mt-0">
+                                <span class="text-gray-400 text-sm">Développé avec ❤️ par l'équipe H7</span>
+                                <div class="flex items-center space-x-2">
+                                    <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                                    <span class="text-sm text-green-400">Serveurs opérationnels</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+
+        <!-- Chat Application -->
+        <div id="chat-app" class="hidden min-h-screen bg-gray-50">
+            <!-- Header -->
+            <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex justify-between items-center h-16">
+                        <!-- Logo and Brand -->
+                        <div class="flex items-center space-x-4">
+                            <div class="w-10 h-10 gradient-bg rounded-lg flex items-center justify-center">
+                                <i class="fas fa-comments text-white text-lg"></i>
+                            </div>
+                            <h1 class="text-xl font-bold text-gray-900">H7 Social</h1>
+                            <div class="hidden md:flex items-center space-x-2 ml-8">
+                                <span id="connection-status" class="w-3 h-3 rounded-full bg-green-500"></span>
+                                <span id="online-count" class="text-sm text-gray-600">0 utilisateur en ligne</span>
+                            </div>
+                        </div>
+
+                        <!-- Navigation Buttons -->
+                        <div class="flex items-center space-x-4">
+                            <button id="public-chat-btn" onclick="switchView('public')" 
+                                    class="flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors bg-blue-500 text-white">
+                                <i class="fas fa-users"></i>
+                                <span class="hidden sm:inline">Chat Public</span>
+                            </button>
+                            <button id="private-chat-btn" onclick="switchView('private')" 
+                                    class="flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors bg-gray-200 text-gray-700 hover:bg-gray-300">
+                                <i class="fas fa-comment-dots"></i>
+                                <span class="hidden sm:inline">Messages Privés</span>
+                            </button>
+                            <button onclick="logout()" 
+                                    class="flex items-center space-x-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span class="hidden sm:inline">Déconnexion</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                    <!-- Sidebar -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <h3 class="font-semibold text-lg mb-4 text-gray-900">Utilisateurs en ligne</h3>
+                        <div id="online-users" class="space-y-3"></div>
+                    </div>
+                    
+                    <!-- Chat Area -->
+                    <div class="lg:col-span-3">
+                        <!-- Public Chat -->
+                        <div id="public-chat" class="bg-white rounded-xl shadow-sm border border-gray-200">
+                            <div class="border-b border-gray-200 p-6">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h2 class="text-xl font-semibold text-gray-900">Chat Public</h2>
+                                        <p class="text-sm text-gray-600">Discutez avec tous les membres connectés</p>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="w-3 h-3 bg-green-500 rounded-full"></span>
+                                        <span id="message-count" class="text-sm text-gray-600">0 messages</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Messages Container -->
+                            <div id="messages-container" class="h-96 overflow-y-auto p-6 space-y-4">
+                                <div class="text-center text-gray-500 py-8">
+                                    <i class="fas fa-comments text-4xl mb-4 opacity-50"></i>
+                                    <p>Aucun message pour le moment. Commencez la conversation !</p>
+                                </div>
+                            </div>
+
+                            <!-- Message Input -->
+                            <div class="border-t border-gray-200 p-4">
+                                <div class="flex space-x-3">
+                                    <input id="message-input" type="text" placeholder="Tapez votre message..." 
+                                           class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                           onkeypress="handleKeyPress(event)">
+                                    <button onclick="sendMessage()" 
+                                            class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Private Chat -->
+                        <div id="private-chat" class="hidden bg-white rounded-xl shadow-sm border border-gray-200 h-96 flex items-center justify-center">
+                            <div class="text-center text-gray-500">
+                                <i class="fas fa-user-friends text-4xl mb-4 opacity-50"></i>
+                                <p>Sélectionnez un utilisateur pour commencer une conversation privée</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Authentication Modal -->
+        <div id="auth-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+            <div class="absolute inset-0 bg-cover bg-center opacity-20" 
+                 style="background-image: url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080')"></div>
+            
+            <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md mx-4 relative z-10">
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 gradient-bg rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-comments text-white text-2xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-900 mb-2">H7 Social</h2>
+                    <p class="text-gray-600">Connectez-vous pour rejoindre la communauté</p>
+                </div>
+
+                <form id="auth-form" onsubmit="handleAuth(event)">
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nom d'utilisateur</label>
+                            <input type="text" id="username" placeholder="Votre nom d'utilisateur" required
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Code d'accès</label>
+                            <input type="password" id="password" placeholder="Votre code d'accès" required
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors">
+                        </div>
+
+                        <button type="submit" id="auth-btn"
+                                class="w-full gradient-bg text-white py-3 rounded-lg font-medium hover-scale">
+                            Se connecter
+                        </button>
+                    </div>
                 </form>
-                <h3 class="section-title">Liste des Produits</h3>
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Image</th>
-                                <th>Nom</th>
-                                <th>Prix</th>
-                                <th>Catégorie</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="adminProductList"></tbody>
-                    </table>
-                </div>
-            </div>
 
-            <!-- Notifications Section -->
-            <div id="notificationsSection" class="admin-panel" style="display: none;">
-                <h2 class="section-title">Notifications de Commandes</h2>
-                <div id="ordersList"></div>
-            </div>
-        </main>
-
-        <!-- Cart Modal -->
-        <div class="modal fade" id="cartModal" tabindex="-1">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Votre Panier</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div id="cartItems"></div>
-                        <div class="cart-summary">
-                            <div class="cart-total">
-                                <span>Total</span>
-                                <span id="cartTotalPrice">0.00 €</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <div class="payment-methods">
-                            <div class="payment-method">
-                                <i class="fas fa-money-bill-wave"></i>
-                                Espèces
-                            </div>
-                            <div class="payment-method">
-                                <i class="fab fa-cc-visa"></i>
-                                Carte
-                            </div>
-                            <div class="payment-method">
-                                <i class="fab fa-cc-paypal"></i>
-                                PayPal
-                            </div>
-                        </div>
-                        <button class="btn btn-secondary" data-bs-dismiss="modal">
-                            <i class="fas fa-times me-2"></i>Fermer
-                        </button>
-                        <button class="btn btn-primary" onclick="checkout()">
-                            <i class="fas fa-check me-2"></i>Commander
-                        </button>
-                    </div>
-                </div>
+                <button onclick="hideAuthModal()" 
+                        class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
             </div>
         </div>
 
-        <!-- Footer -->
-        <footer class="premium-footer">
-            <div class="footer-container">
-                <div class="footer-content">
-                    <div class="footer-section">
-                        <div class="footer-brand">
-                            <i class="fas fa-store"></i>
-                            E-Shop Premium
-                        </div>
-                        <p class="footer-about">
-                            Votre boutique en ligne haut de gamme proposant les meilleurs produits pour toute la famille.
-                        </p>
-                        <button class="btn btn-outline-light" onclick="showContactPage()">
-                            <i class="fas fa-envelope me-2"></i>Nous contacter
-                        </button>
-                    </div>
-                    <div class="footer-section">
-                        <h4 class="footer-links-title">Liens rapides</h4>
-                        <ul class="footer-links">
-                            <li><a href="#" class="footer-link" onclick="showShop()"><i class="fas fa-store me-2"></i>Boutique</a></li>
-                            <li><a href="#" class="footer-link" onclick="showLegalPage('cgv')"><i class="fas fa-file-contract me-2"></i>CGV</a></li>
-                            <li><a href="#" class="footer-link" onclick="showLegalPage('privacy')"><i class="fas fa-user-shield me-2"></i>Confidentialité</a></li>
-                            <li><a href="#" class="footer-link" onclick="showLegalPage('cookies')"><i class="fas fa-cookie-bite me-2"></i>Cookies</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-section">
-                        <h4 class="footer-links-title">Contact</h4>
-                        <div class="footer-contact">
-                            <i class="fas fa-phone"></i>
-                            <span>+33 6 12 34 56 78</span>
-                        </div>
-                        <div class="footer-contact">
-                            <i class="fas fa-envelope"></i>
-                            <span>contact@eshop-premium.com</span>
-                        </div>
-                        <div class="footer-contact">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>123 Rue du Commerce, Paris</span>
-                        </div>
-                    </div>
+        <!-- Generic Modal -->
+        <div id="generic-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[80vh] mx-4 overflow-hidden">
+                <div class="flex items-center justify-between p-6 border-b border-gray-200">
+                    <h2 id="modal-title" class="text-2xl font-bold text-gray-900"></h2>
+                    <button onclick="hideModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
                 </div>
-                <div class="footer-bottom">
-                    <div class="payment-methods">
-                        <div class="payment-method">
-                            <i class="fas fa-money-bill-wave"></i>
-                            Espèces
-                        </div>
-                        <div class="payment-method">
-                            <i class="fab fa-cc-visa"></i>
-                            Visa
-                        </div>
-                        <div class="payment-method">
-                            <i class="fab fa-cc-mastercard"></i>
-                            Mastercard
-                        </div>
-                        <div class="payment-method">
-                            <i class="fab fa-cc-paypal"></i>
-                            PayPal
-                        </div>
-                    </div>
-                    <p class="mb-0 mt-3">&copy; 2024 E-Shop Premium - Tous droits réservés</p>
-                </div>
-            </div>
-        </footer>
-
-        <!-- Legal Pages -->
-        <div id="privacyPage" class="legal-page">
-            <div class="legal-container">
-                <button class="close-legal" onclick="hideLegalPages()">
-                    <i class="fas fa-times"></i>
-                </button>
-                <h2 class="legal-title">
-                    <i class="fas fa-user-shield me-2"></i>Politique de Confidentialité
-                </h2>
-                <div class="legal-section">
-                    <h3>1. Collecte des informations</h3>
-                    <p>Nous collectons des informations lorsque vous passez une commande sur notre site. Ces informations incluent votre nom, votre adresse e-mail, votre adresse postale et votre numéro de téléphone.</p>
-                </div>
-                <div class="legal-section">
-                    <h3>2. Utilisation des informations</h3>
-                    <p>Les informations que nous recueillons auprès de vous peuvent être utilisées pour :</p>
-                    <ul>
-                        <li>Personnaliser votre expérience et répondre à vos besoins individuels</li>
-                        <li>Fournir un contenu publicitaire personnalisé</li>
-                        <li>Améliorer notre site web</li>
-                        <li>Améliorer le service client et vos besoins de prise en charge</li>
-                        <li>Vous contacter par e-mail</li>
-                        <li>Administrer un concours, une promotion ou une enquête</li>
-                    </ul>
-                </div>
-                <div class="legal-section">
-                    <h3>3. Protection des informations</h3>
-                    <p>Nous mettons en œuvre une variété de mesures de sécurité pour préserver la sécurité de vos informations personnelles. Nous utilisons un cryptage de pointe pour protéger les informations sensibles transmises en ligne. Nous protégeons également vos informations hors ligne.</p>
-                </div>
-            </div>
-        </div>
-
-        <div id="cgvPage" class="legal-page">
-            <div class="legal-container">
-                <button class="close-legal" onclick="hideLegalPages()">
-                    <i class="fas fa-times"></i>
-                </button>
-                <h2 class="legal-title">
-                    <i class="fas fa-file-contract me-2"></i>Conditions Générales de Vente
-                </h2>
-                <div class="legal-section">
-                    <h3>1. Prix</h3>
-                    <p>Les prix de nos produits sont indiqués en euros toutes taxes comprises (TVA incluse). Nous nous réservons le droit de modifier nos prix à tout moment mais nous nous engageons à appliquer les tarifs en vigueur indiqués au moment de la passation de votre commande.</p>
-                </div>
-                <div class="legal-section">
-                    <h3>2. Commandes</h3>
-                    <p>Les commandes sont payables en espèces ou par carte bancaire à la livraison. Vous recevrez une confirmation de commande par e-mail dès que celle-ci aura été enregistrée par nos services. Nous nous réservons le droit d'annuler toute commande d'un client avec lequel il existerait un litige relatif au paiement d'une commande antérieure.</p>
-                </div>
-                <div class="legal-section">
-                    <h3>3. Livraison</h3>
-                    <p>Les délais de livraison sont donnés à titre indicatif et ne sont pas garantis. En cas de retard de livraison, nous vous informerons par e-mail ou par téléphone. Les risques liés au transport sont à notre charge jusqu'à la livraison du colis à l'adresse indiquée dans le bon de commande.</p>
-                </div>
-                <div class="legal-section">
-                    <h3>4. Retours</h3>
-                    <p>Vous disposez d'un délai de 14 jours à compter de la réception de votre commande pour nous retourner tout article ne vous convenant pas. Les articles doivent être retournés dans leur état d'origine, non utilisés et dans leur emballage d'origine. Les frais de retour sont à votre charge.</p>
-                </div>
-            </div>
-        </div>
-
-        <div id="cookiesPage" class="legal-page">
-            <div class="legal-container">
-                <button class="close-legal" onclick="hideLegalPages()">
-                    <i class="fas fa-times"></i>
-                </button>
-                <h2 class="legal-title">
-                    <i class="fas fa-cookie-bite me-2"></i>Politique relative aux Cookies
-                </h2>
-                <div class="legal-section">
-                    <h3>1. Qu'est-ce qu'un cookie ?</h3>
-                    <p>Un cookie est un petit fichier texte stocké sur votre ordinateur ou appareil mobile lorsque vous visitez un site web. Les cookies sont largement utilisés pour faire fonctionner les sites web ou les rendre plus efficaces, ainsi que pour fournir des informations aux propriétaires du site.</p>
-                </div>
-                <div class="legal-section">
-                    <h3>2. Utilisation des cookies</h3>
-                    <p>Nous utilisons des cookies pour :</p>
-                    <ul>
-                        <li>Mémoriser vos préférences et paramètres</li>
-                        <li>Analyser l'utilisation de notre site web pour améliorer nos services</li>
-                        <li>Faciliter votre navigation sur notre site</li>
-                        <li>Personnaliser le contenu et les publicités</li>
-                    </ul>
-                </div>
-                <div class="legal-section">
-                    <h3>3. Contrôle des cookies</h3>
-                    <p>Vous pouvez contrôler et/ou supprimer les cookies comme vous le souhaitez. Vous pouvez supprimer tous les cookies déjà stockés sur votre ordinateur et configurer la plupart des navigateurs pour empêcher leur installation. Cependant, dans ce cas, vous devrez peut-être ajuster manuellement certaines préférences à chaque visite du site et certains services et fonctionnalités pourraient ne pas être disponibles.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Contact Page -->
-        <div id="contactPage" class="contact-page">
-            <div class="contact-container">
-                <button class="close-contact" onclick="hideContactPage()">
-                    <i class="fas fa-times"></i>
-                </button>
-                <div class="contact-title">
-                    <i class="fas fa-envelope-open-text"></i>
-                    <h2>Contactez-nous</h2>
-                    <p>Nous sommes à votre disposition pour toute question ou information</p>
-                </div>
-                <div class="contact-methods">
-                    <a href="tel:+33612345678" class="contact-method">
-                        <div class="contact-icon">
-                            <i class="fas fa-phone"></i>
-                        </div>
-                        <div class="contact-info">
-                            <h4>Téléphone</h4>
-                            <p>+33 6 12 34 56 78</p>
-                        </div>
-                    </a>
-                    <a href="mailto:contact@eshop-premium.com" class="contact-method">
-                        <div class="contact-icon">
-                            <i class="fas fa-envelope"></i>
-                        </div>
-                        <div class="contact-info">
-                            <h4>Email</h4>
-                            <p>contact@eshop-premium.com</p>
-                        </div>
-                    </a>
-                    <a href="https://t.snapchat.com/1UNxuFYQ" target="_blank" class="contact-method">
-                        <div class="contact-icon" style="background: #FFFC00; color: black;">
-                            <i class="fab fa-snapchat-ghost"></i>
-                        </div>
-                        <div class="contact-info">
-                            <h4>Snapchat</h4>
-                            <p>Cliquez pour nous contacter sur Snapchat</p>
-                        </div>
-                    </a>
-                    <div class="snapcode">
-                        Snapcode<br>E-Shop
-                    </div>
+                
+                <div id="modal-content" class="overflow-y-auto p-6" style="max-height: calc(80vh - 120px);">
+                    <!-- Content will be inserted here -->
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- JavaScript -->
     <script>
-        const ownerCode = "1508";
-        let products = JSON.parse(localStorage.getItem('products')) || [];
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
-        let orders = JSON.parse(localStorage.getItem('orders')) || [];
-        let clients = JSON.parse(localStorage.getItem('clients')) || [];
-        let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
-        let currentCategory = null;
-        let currentSubCategory = null;
+        // Global state
+        let currentUser = null;
+        let isConnected = false;
+        let messages = [];
+        let currentView = 'public';
 
-        // Vérifier si l'utilisateur est déjà connecté au chargement
-        document.addEventListener('DOMContentLoaded', function() {
-            if (currentUser) {
-                showApp();
-                if (currentUser.type === 'owner') {
-                    document.getElementById('adminBtn').style.display = 'inline-block';
-                    document.getElementById('notificationsBtn').style.display = 'inline-block';
-                    document.getElementById('notifBtn').style.display = 'inline-block';
-                    showAdmin();
+        // Firebase message handling
+        function initializeFirebase() {
+            if (!window.database || !currentUser) return;
+
+            const messagesRef = window.firebaseRefs.ref(window.database, 'messages');
+            
+            window.firebaseRefs.onValue(messagesRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    messages = Object.entries(data).map(([id, message]) => ({
+                        id,
+                        ...message,
+                        timestamp: new Date(message.createdAt || Date.now())
+                    }));
+                    
+                    messages.sort((a, b) => a.timestamp - b.timestamp);
+                    displayMessages();
                 } else {
-                    showShop();
+                    messages = [];
+                    displayMessages();
                 }
-            }
-        });
-
-        if (products.length === 0) {
-            products = [
-                { id: 1, name: "T-shirt Homme", price: 24.99, image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80", category: "homme", subCategory: "Vêtements" },
-                { id: 2, name: "Jean Homme", price: 59.99, image: "https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80", category: "homme", subCategory: "Vêtements" },
-                { id: 3, name: "Chaussures Homme", price: 89.99, image: "https://images.unsplash.com/photo-1463100099107-aa0980c362e6?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80", category: "homme", subCategory: "Chaussures" },
-                { id: 4, name: "Montre Homme", price: 129.99, image: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80", category: "homme", subCategory: "Accessoires" },
-                { id: 5, name: "Robe Femme", price: 49.99, image: "https://images.unsplash.com/photo-1539008835657-9e8e9680e956?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80", category: "femme", subCategory: "Vêtements" },
-                { id: 6, name: "Sac à main", price: 79.99, image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80", category: "femme", subCategory: "Accessoires" },
-                { id: 7, name: "Chaussures Femme", price: 69.99, image: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80", category: "femme", subCategory: "Chaussures" },
-                { id: 8, name: "T-shirt Enfant", price: 19.99, image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80", category: "enfant", subCategory: "Vêtements" },
-                { id: 9, name: "Jouet éducatif", price: 29.99, image: "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80", category: "enfant", subCategory: "Jouets" },
-                { id: 10, name: "Chaussures Enfant", price: 39.99, image: "https://images.unsplash.com/photo-1543508282-6319a3e2621f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80", category: "enfant", subCategory: "Chaussures" }
-            ];
-            localStorage.setItem('products', JSON.stringify(products));
+            });
+            
+            isConnected = true;
+            updateConnectionStatus();
         }
 
-        function checkAuth() {
-            const code = document.getElementById('authCode').value;
-            
-            if (code === ownerCode) {
-                currentUser = { type: 'owner', name: 'Propriétaire' };
-                localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                document.getElementById('adminBtn').style.display = 'inline-block';
-                document.getElementById('notificationsBtn').style.display = 'inline-block';
-                document.getElementById('notifBtn').style.display = 'inline-block';
-                showApp();
-                showAdmin();
-            } else {
-                const client = clients.find(c => c.code === code);
-                if (client) {
-                    currentUser = { type: 'client', name: client.name, code: client.code };
-                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                    showApp();
-                    showShop();
-                } else {
-                    const name = prompt("Nouveau client ? Entrez votre nom :");
-                    if (name) {
-                        clients.push({ code, name });
-                        localStorage.setItem('clients', JSON.stringify(clients));
-                        currentUser = { type: 'client', name, code };
-                        localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                        showApp();
-                        showShop();
-                    }
-                }
+        function sendFirebaseMessage(content, type = 'public', recipient = null) {
+            if (!window.database || !currentUser || !content.trim()) return;
+
+            const messagesRef = window.firebaseRefs.ref(window.database, 'messages');
+            const newMessage = {
+                username: currentUser.username,
+                content: content.trim(),
+                createdAt: new Date().toISOString(),
+                type: type,
+                isPrivate: type === 'private',
+                authorId: currentUser.username,
+                ...(recipient && { recipientId: recipient })
+            };
+
+            window.firebaseRefs.push(messagesRef, newMessage);
+        }
+
+        // Authentication
+        function showAuthModal() {
+            document.getElementById('auth-modal').classList.remove('hidden');
+        }
+
+        function hideAuthModal() {
+            document.getElementById('auth-modal').classList.add('hidden');
+        }
+
+        function handleAuth(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Simple authentication for demo
+            if (username && password) {
+                currentUser = {
+                    id: Date.now().toString(),
+                    username: username,
+                    isOnline: true
+                };
+                
+                localStorage.setItem('h7_user', JSON.stringify(currentUser));
+                hideAuthModal();
+                showChatApp();
+                initializeFirebase();
             }
         }
 
         function logout() {
+            localStorage.removeItem('h7_user');
             currentUser = null;
-            localStorage.removeItem('currentUser');
-            document.getElementById('appSection').style.display = 'none';
-            document.getElementById('authSection').style.display = 'flex';
-            document.getElementById('authCode').value = '';
+            showLandingPage();
         }
 
-        function showApp() {
-            document.getElementById('authSection').style.display = 'none';
-            document.getElementById('appSection').style.display = 'block';
-            updateCartCounter();
-            updateNotificationBadge();
+        // View switching
+        function showLandingPage() {
+            document.getElementById('landing-page').classList.remove('hidden');
+            document.getElementById('chat-app').classList.add('hidden');
         }
 
-        function showShop() {
-            document.getElementById('shopSection').style.display = 'block';
-            document.getElementById('adminSection').style.display = 'none';
-            document.getElementById('notificationsSection').style.display = 'none';
-            document.getElementById('heroSection').style.display = 'block';
+        function showChatApp() {
+            document.getElementById('landing-page').classList.add('hidden');
+            document.getElementById('chat-app').classList.remove('hidden');
+        }
+
+        function switchView(view) {
+            currentView = view;
             
-            document.getElementById('shopBtn').classList.add('active');
-            document.getElementById('adminBtn').classList.remove('active');
-            document.getElementById('notificationsBtn').classList.remove('active');
-            
-            renderProducts();
-        }
-
-        function showAdmin() {
-            if (currentUser && currentUser.type === 'owner') {
-                document.getElementById('shopSection').style.display = 'none';
-                document.getElementById('adminSection').style.display = 'block';
-                document.getElementById('notificationsSection').style.display = 'none';
-                document.getElementById('heroSection').style.display = 'none';
+            // Update button styles
+            document.getElementById('public-chat-btn').className = 
+                view === 'public' ? 
+                'flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors bg-blue-500 text-white' :
+                'flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors bg-gray-200 text-gray-700 hover:bg-gray-300';
                 
-                document.getElementById('shopBtn').classList.remove('active');
-                document.getElementById('adminBtn').classList.add('active');
-                document.getElementById('notificationsBtn').classList.remove('active');
-                
-                renderAdminProducts();
-            } else {
-                alert("Accès réservé au propriétaire !");
+            document.getElementById('private-chat-btn').className = 
+                view === 'private' ? 
+                'flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors bg-blue-500 text-white' :
+                'flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors bg-gray-200 text-gray-700 hover:bg-gray-300';
+            
+            // Show/hide chat areas
+            document.getElementById('public-chat').classList.toggle('hidden', view !== 'public');
+            document.getElementById('private-chat').classList.toggle('hidden', view !== 'private');
+        }
+
+        // Message handling
+        function sendMessage() {
+            const input = document.getElementById('message-input');
+            const content = input.value.trim();
+            
+            if (content) {
+                sendFirebaseMessage(content, currentView);
+                input.value = '';
             }
         }
 
-        function showNotifications() {
-            if (currentUser && currentUser.type === 'owner') {
-                document.getElementById('shopSection').style.display = 'none';
-                document.getElementById('adminSection').style.display = 'none';
-                document.getElementById('notificationsSection').style.display = 'block';
-                document.getElementById('heroSection').style.display = 'none';
-                
-                document.getElementById('shopBtn').classList.remove('active');
-                document.getElementById('adminBtn').classList.remove('active');
-                document.getElementById('notificationsBtn').classList.add('active');
-                
-                renderOrders();
-            } else {
-                alert("Vous n'avez pas accès aux notifications.");
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
             }
         }
 
-        function toggleMenu() {
-            document.getElementById('navMenu').classList.toggle('active');
-        }
-
-        function toggleCategory(element) {
-            const items = element.nextElementSibling;
-            const icon = element.querySelector('i');
+        function displayMessages() {
+            const container = document.getElementById('messages-container');
+            const publicMessages = messages.filter(msg => msg.type === 'public' || !msg.isPrivate);
             
-            items.classList.toggle('active');
-            icon.classList.toggle('fa-chevron-down');
-            icon.classList.toggle('fa-chevron-up');
-        }
-
-        function filterProducts(category, subCategory) {
-            currentCategory = category;
-            currentSubCategory = subCategory;
-            toggleMenu();
-            showShop();
-        }
-
-        function showLegalPage(page) {
-            toggleMenu();
-            document.getElementById(page + 'Page').style.display = 'block';
-        }
-
-        function hideLegalPages() {
-            document.querySelectorAll('.legal-page').forEach(page => {
-                page.style.display = 'none';
-            });
-        }
-
-        function showContactPage() {
-            document.getElementById('contactPage').style.display = 'flex';
-        }
-
-        function hideContactPage() {
-            document.getElementById('contactPage').style.display = 'none';
-        }
-
-        document.getElementById('productForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const productId = document.getElementById('productId').value;
-            const name = document.getElementById('productName').value;
-            const price = parseFloat(document.getElementById('productPrice').value);
-            const category = document.getElementById('productCategory').value;
-            const subCategory = document.getElementById('productSubCategory').value;
-            const imageInput = document.getElementById('productImage');
-            
-            let image = '';
-            if (imageInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    image = e.target.result;
-                    saveProduct(productId, name, price, image, category, subCategory);
-                };
-                reader.readAsDataURL(imageInput.files[0]);
-            } else {
-                saveProduct(productId, name, price, image, category, subCategory);
-            }
-        });
-
-        function saveProduct(id, name, price, image, category, subCategory) {
-            if (id) {
-                const index = products.findIndex(p => p.id == id);
-                products[index] = { 
-                    ...products[index], 
-                    name, 
-                    price, 
-                    image: image || products[index].image,
-                    category,
-                    subCategory
-                };
-            } else {
-                products.push({ 
-                    id: Date.now(), 
-                    name, 
-                    price, 
-                    image,
-                    category,
-                    subCategory
-                });
-            }
-            localStorage.setItem('products', JSON.stringify(products));
-            document.getElementById('productForm').reset();
-            renderAdminProducts();
-            renderProducts();
-        }
-
-        function deleteProduct(id) {
-            products = products.filter(p => p.id != id);
-            localStorage.setItem('products', JSON.stringify(products));
-            renderAdminProducts();
-            renderProducts();
-        }
-
-        function editProduct(id) {
-            const product = products.find(p => p.id == id);
-            document.getElementById('productId').value = product.id;
-            document.getElementById('productName').value = product.name;
-            document.getElementById('productPrice').value = product.price;
-            document.getElementById('productCategory').value = product.category;
-            document.getElementById('productSubCategory').value = product.subCategory;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function renderProducts() {
-            const container = document.getElementById('productList');
-            let filteredProducts = products;
-            
-            if (currentCategory) {
-                filteredProducts = filteredProducts.filter(p => p.category === currentCategory);
-            }
-            
-            if (currentSubCategory) {
-                filteredProducts = filteredProducts.filter(p => p.subCategory === currentSubCategory);
-            }
-            
-            container.innerHTML = filteredProducts.map(product => `
-                <div class="product-card">
-                    <div class="product-img-container">
-                        <span class="product-category">${product.subCategory}</span>
-                        <img src="${product.image}" class="product-img" alt="${product.name}" onerror="this.src='https://via.placeholder.com/300x400?text=Image+non+disponible'">
-                    </div>
-                    <div class="product-body">
-                        <h5 class="product-title">${product.name}</h5>
-                        <p class="product-price">${product.price.toFixed(2)} €</p>
-                        <button class="btn add-to-cart" onclick="addToCart(${product.id})">
-                            <i class="fas fa-cart-plus me-2"></i>Ajouter
-                        </button>
-                    </div>
-                </div>
-            `).join('');
-            
-            const title = document.querySelector('#shopSection .section-title');
-            if (currentCategory && currentSubCategory) {
-                title.textContent = `${currentSubCategory} ${currentCategory}`;
-            } else if (currentCategory) {
-                title.textContent = `Catégorie ${currentCategory}`;
-            } else {
-                title.textContent = 'Nos Produits';
-            }
-        }
-
-        function renderAdminProducts() {
-            const container = document.getElementById('adminProductList');
-            container.innerHTML = products.map(product => `
-                <tr>
-                    <td><img src="${product.image || 'https://via.placeholder.com/50?text=' + product.name}" width="50" height="50" style="object-fit: cover;" onerror="this.src='https://via.placeholder.com/50?text=Image+non+disponible'"></td>
-                    <td>${product.name}</td>
-                    <td>${product.price.toFixed(2)} €</td>
-                    <td>${product.category} / ${product.subCategory}</td>
-                    <td>
-                        <button class="btn btn-sm btn-warning me-2" onclick="editProduct(${product.id})">
-                            <i class="fas fa-edit me-1"></i>Éditer
-                        </button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteProduct(${product.id})">
-                            <i class="fas fa-trash me-1"></i>Supprimer
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function addToCart(productId) {
-            const product = products.find(p => p.id == productId);
-            const existingItem = cart.find(item => item.id == productId);
-            
-            if (existingItem) {
-                existingItem.quantity += 1;
-            } else {
-                cart.push({ ...product, quantity: 1 });
-            }
-            
-            localStorage.setItem('cart', JSON.stringify(cart));
-            updateCartCounter();
-            
-            // Notification en temps réel pour le propriétaire
-            if (currentUser && currentUser.type === 'owner') {
-                updateNotificationBadge();
-            }
-            
-            const btn = event.target;
-            btn.innerHTML = '<i class="fas fa-check me-2"></i>Ajouté !';
-            setTimeout(() => {
-                btn.innerHTML = '<i class="fas fa-cart-plus me-2"></i>Ajouter';
-            }, 1000);
-        }
-
-        function openCart() {
-            const modal = new bootstrap.Modal(document.getElementById('cartModal'));
-            const container = document.getElementById('cartItems');
-            
-            container.innerHTML = cart.map(item => `
-                <div class="cart-item">
-                    <img src="${item.image || 'https://via.placeholder.com/60?text=' + item.name}" class="cart-item-img" alt="${item.name}" onerror="this.src='https://via.placeholder.com/60?text=Image+non+disponible'">
-                    <div class="cart-item-info">
-                        <div class="cart-item-name">${item.name}</div>
-                        <div class="cart-item-price">${item.price.toFixed(2)} € x ${item.quantity}</div>
-                    </div>
-                    <button class="cart-item-remove" onclick="removeFromCart(${item.id})">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            `).join('');
-            
-            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            document.getElementById('cartTotalPrice').textContent = total.toFixed(2) + ' €';
-            
-            modal.show();
-        }
-
-        function removeFromCart(productId) {
-            cart = cart.filter(item => item.id != productId);
-            localStorage.setItem('cart', JSON.stringify(cart));
-            openCart();
-            updateCartCounter();
-        }
-
-        function checkout() {
-            if (cart.length === 0) {
-                alert("Votre panier est vide !");
-                return;
-            }
-
-            if (!currentUser) {
-                alert("Veuillez vous connecter pour passer commande.");
-                return;
-            }
-
-            const order = {
-                id: Date.now(),
-                items: [...cart],
-                total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
-                date: new Date().toLocaleString(),
-                clientName: currentUser.name,
-                clientCode: currentUser.code,
-                status: "En attente"
-            };
-
-            orders.push(order);
-            localStorage.setItem('orders', JSON.stringify(orders));
-            
-            cart = [];
-            localStorage.setItem('cart', JSON.stringify(cart));
-            
-            updateCartCounter();
-            updateNotificationBadge();
-            
-            alert("Commande validée ! Vous pouvez payer en espèces ou par carte à la livraison.");
-            document.getElementById('cartModal').querySelector('.btn-close').click();
-            
-            // Notification en temps réel pour le propriétaire
-            if (currentUser && currentUser.type === 'owner') {
-                renderOrders();
-            }
-        }
-
-        function renderOrders() {
-            const container = document.getElementById('ordersList');
-            const pendingOrders = orders.filter(order => order.status === "En attente");
-            
-            if (pendingOrders.length === 0) {
+            if (publicMessages.length === 0) {
                 container.innerHTML = `
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle me-2"></i>Aucune commande en attente de validation.
+                    <div class="text-center text-gray-500 py-8">
+                        <i class="fas fa-comments text-4xl mb-4 opacity-50"></i>
+                        <p>Aucun message pour le moment. Commencez la conversation !</p>
                     </div>
                 `;
-                return;
-            }
-
-            container.innerHTML = pendingOrders.map(order => `
-                <div class="order-card">
-                    <div class="order-header">
-                        <h5 class="order-title">Commande #${order.id}</h5>
-                        <span class="order-status">${order.status}</span>
+            } else {
+                container.innerHTML = publicMessages.map(msg => `
+                    <div class="chat-message flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50">
+                        <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+                            <span class="text-white text-sm font-medium">${msg.username.charAt(0).toUpperCase()}</span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center space-x-2 mb-1">
+                                <span class="font-medium text-gray-900">${msg.username}</span>
+                                <span class="text-xs text-gray-500">${formatTime(msg.timestamp)}</span>
+                            </div>
+                            <p class="text-gray-700">${msg.content}</p>
+                        </div>
                     </div>
-                    <div class="order-body">
-                        <div class="order-detail">
-                            <div class="order-detail-label">Client:</div>
-                            <div class="order-detail-value">${order.clientName} (${order.clientCode})</div>
-                        </div>
-                        <div class="order-detail">
-                            <div class="order-detail-label">Date:</div>
-                            <div class="order-detail-value">${order.date}</div>
-                        </div>
-                        <div class="order-items">
-                            <h6>Articles:</h6>
-                            ${order.items.map(item => `
-                                <div class="order-item">
-                                    <img src="${item.image || 'https://via.placeholder.com/60'}" class="order-item-img" alt="${item.name}" onerror="this.src='https://via.placeholder.com/60?text=Image+non+disponible'">
-                                    <div class="order-item-info">
-                                        <div class="order-item-name">${item.name}</div>
-                                        <div class="order-item-price">${item.price.toFixed(2)} € x ${item.quantity}</div>
-                                    </div>
+                `).join('');
+            }
+            
+            // Update message count
+            document.getElementById('message-count').textContent = `${publicMessages.length} message${publicMessages.length !== 1 ? 's' : ''}`;
+            
+            // Scroll to bottom
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function updateConnectionStatus() {
+            const statusEl = document.getElementById('connection-status');
+            const countEl = document.getElementById('online-count');
+            
+            statusEl.className = `w-3 h-3 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`;
+            countEl.textContent = isConnected ? '1 utilisateur en ligne' : '0 utilisateur en ligne';
+        }
+
+        // Modal system
+        function showModal(type) {
+            const modal = document.getElementById('generic-modal');
+            const title = document.getElementById('modal-title');
+            const content = document.getElementById('modal-content');
+            
+            const modalData = {
+                about: {
+                    title: 'À propos de H7 Social',
+                    content: `
+                        <div class="space-y-6">
+                            <p class="text-gray-700 leading-relaxed">
+                                H7 Social est une plateforme de communication moderne développée avec les dernières technologies web. 
+                                Notre mission est de connecter les utilisateurs du monde entier grâce à une interface intuitive et des fonctionnalités innovantes.
+                            </p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h3 class="font-semibold text-lg mb-3">Notre Vision</h3>
+                                    <p class="text-gray-600">Créer un espace numérique où chacun peut s'exprimer librement et se connecter avec des personnes partageant les mêmes intérêts.</p>
                                 </div>
-                            `).join('')}
+                                <div>
+                                    <h3 class="font-semibold text-lg mb-3">Nos Valeurs</h3>
+                                    <ul class="text-gray-600 space-y-1">
+                                        <li>• Respect et bienveillance</li>
+                                        <li>• Innovation constante</li>
+                                        <li>• Sécurité des données</li>
+                                        <li>• Accessibilité pour tous</li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="order-footer">
-                        <div class="order-total">Total: ${order.total.toFixed(2)} €</div>
-                        <button class="btn validate-btn" onclick="validateOrder(${order.id})">
-                            <i class="fas fa-check me-2"></i>Valider
-                        </button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function validateOrder(orderId) {
-            const orderIndex = orders.findIndex(o => o.id == orderId);
-            if (orderIndex !== -1) {
-                orders[orderIndex].status = "Validée";
-                localStorage.setItem('orders', JSON.stringify(orders));
-                renderOrders();
-                updateNotificationBadge();
-                
-                const btn = event.target;
-                btn.innerHTML = '<i class="fas fa-check-circle me-2"></i>Validée !';
-                btn.classList.remove('validate-btn');
-                btn.classList.add('btn-success');
-                setTimeout(() => {
-                    btn.style.display = 'none';
-                }, 1000);
-            }
-        }
-
-        function updateCartCounter() {
-            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-            document.getElementById('cartCounter').textContent = totalItems;
-        }
-
-        function updateNotificationBadge() {
-            if (currentUser && currentUser.type === 'owner') {
-                const pendingCount = orders.filter(o => o.status === "En attente").length;
-                const badge = document.getElementById('notificationBadge');
-                if (pendingCount > 0) {
-                    badge.textContent = pendingCount;
-                    badge.style.display = 'flex';
-                } else {
-                    badge.style.display = 'none';
+                    `
+                },
+                blog: {
+                    title: 'Blog H7 Social',
+                    content: `
+                        <div class="space-y-6">
+                            <article class="border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
+                                <div class="flex justify-between items-start mb-3">
+                                    <h3 class="text-xl font-semibold text-gray-900">Bienvenue sur H7 Social</h3>
+                                    <span class="text-sm text-gray-500">15 Août 2025</span>
+                                </div>
+                                <p class="text-gray-600 mb-3">Découvrez comment H7 Social révolutionne la communication en temps réel.</p>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-gray-500">Par Équipe H7</span>
+                                </div>
+                            </article>
+                            
+                            <article class="border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
+                                <div class="flex justify-between items-start mb-3">
+                                    <h3 class="text-xl font-semibold text-gray-900">Nouvelles fonctionnalités</h3>
+                                    <span class="text-sm text-gray-500">10 Août 2025</span>
+                                </div>
+                                <p class="text-gray-600 mb-3">Explorez les dernières améliorations apportées à la plateforme.</p>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-gray-500">Par Équipe H7</span>
+                                </div>
+                            </article>
+                        </div>
+                    `
+                },
+                contact: {
+                    title: 'Nous contacter',
+                    content: `
+                        <div class="space-y-6">
+                            <form class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Nom</label>
+                                    <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                    <input type="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                                    <textarea rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                                </div>
+                                <button type="submit" class="gradient-bg text-white px-6 py-2 rounded-lg hover-scale">
+                                    Envoyer le message
+                                </button>
+                            </form>
+                        </div>
+                    `
+                },
+                privacy: {
+                    title: 'Politique de confidentialité',
+                    content: `
+                        <div class="prose max-w-none">
+                            <p>Votre vie privée est importante pour nous. Cette politique explique comment nous collectons, utilisons et protégeons vos informations personnelles.</p>
+                            <h3>Collecte d'informations</h3>
+                            <p>Nous collectons uniquement les informations nécessaires au fonctionnement de notre service.</p>
+                            <h3>Utilisation des données</h3>
+                            <p>Vos données sont utilisées exclusivement pour améliorer votre expérience utilisateur.</p>
+                        </div>
+                    `
+                },
+                terms: {
+                    title: 'Conditions générales',
+                    content: `
+                        <div class="prose max-w-none">
+                            <p>En utilisant H7 Social, vous acceptez les conditions suivantes :</p>
+                            <h3>Utilisation du service</h3>
+                            <p>Vous vous engagez à utiliser notre plateforme de manière respectueuse et légale.</p>
+                            <h3>Responsabilités</h3>
+                            <p>Vous êtes responsable du contenu que vous publiez sur notre plateforme.</p>
+                        </div>
+                    `
+                },
+                cookies: {
+                    title: 'Politique des cookies',
+                    content: `
+                        <div class="prose max-w-none">
+                            <p>Nous utilisons des cookies pour améliorer votre expérience de navigation.</p>
+                            <h3>Types de cookies</h3>
+                            <p>Cookies essentiels, analytiques et de préférences.</p>
+                            <h3>Gestion des cookies</h3>
+                            <p>Vous pouvez gérer vos préférences de cookies dans les paramètres de votre navigateur.</p>
+                        </div>
+                    `
                 }
+            };
+            
+            const data = modalData[type] || { title: 'Information', content: '<p>Contenu non disponible.</p>' };
+            title.textContent = data.title;
+            content.innerHTML = data.content;
+            modal.classList.remove('hidden');
+        }
+
+        function hideModal() {
+            document.getElementById('generic-modal').classList.add('hidden');
+        }
+
+        // Initialize app
+        function initApp() {
+            const savedUser = localStorage.getItem('h7_user');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                showChatApp();
+                initializeFirebase();
+            } else {
+                showLandingPage();
             }
         }
+
+        // Start the app when page loads
+        document.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
 </html>
