@@ -585,7 +585,7 @@
                 username: currentUser.username,
                 isOnline: true,
                 isAdmin: currentUser.username.toLowerCase() === 'h7' || currentUser.username.toLowerCase() === 'admin',
-                profileImage: currentUser.profileImage || (currentUser.username.toLowerCase() === 'h7' ? 'https://seeklogo.com/images/C/cristiano-ronaldo-cr7-logo-D42A5A0A3E-seeklogo.com.png' : `https://images.unsplash.com/photo-${Math.floor(Math.random() * 1000000000)}-${Math.floor(Math.random() * 1000000000)}?w=150`),
+                profileImage: currentUser.profileImage || (currentUser.username.toLowerCase() === 'h7' ? 'https://printedman.com/cdn/shop/files/CR7Red.jpg?v=1694289458&width=1946' : `https://images.unsplash.com/photo-${Math.floor(Math.random() * 1000000000)}-${Math.floor(Math.random() * 1000000000)}?w=150`),
                 lastSeen: new Date().toISOString()
             };
             
@@ -860,7 +860,7 @@
             onlineContainer.innerHTML = onlineUsers.map(user => `
                 <div onclick="selectUser('${user.id}')" 
                      class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
-                    <img src="${user.profileImage || (user.username.toLowerCase() === 'h7' ? 'https://seeklogo.com/images/C/cristiano-ronaldo-cr7-logo-D42A5A0A3E-seeklogo.com.png' : `https://images.unsplash.com/photo-${Math.floor(Math.random() * 1000000000)}-${Math.floor(Math.random() * 1000000000)}?w=150`)}" alt="Profil ${user.username}" 
+                    <img src="${user.profileImage || (user.username.toLowerCase() === 'h7' ? 'https://printedman.com/cdn/shop/files/CR7Red.jpg?v=1694289458&width=1946' : `https://images.unsplash.com/photo-${Math.floor(Math.random() * 1000000000)}-${Math.floor(Math.random() * 1000000000)}?w=150`)}" alt="Profil ${user.username}" 
                          class="w-10 h-10 rounded-full object-cover ${user.username.toLowerCase() === 'h7' ? 'border-2 border-yellow-400' : ''}">
                     <div class="flex-1 min-w-0">
                         <p class="text-sm font-medium text-gray-900 truncate">
@@ -881,7 +881,7 @@
                 offlineContainer.innerHTML = offlineUsers.map(user => `
                     <div onclick="selectUser('${user.id}')" 
                          class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
-                        <img src="${user.profileImage || (user.username.toLowerCase() === 'h7' ? 'https://seeklogo.com/images/C/cristiano-ronaldo-cr7-logo-D42A5A0A3E-seeklogo.com.png' : `https://images.unsplash.com/photo-${Math.floor(Math.random() * 1000000000)}-${Math.floor(Math.random() * 1000000000)}?w=150`)}" alt="Profil ${user.username}" 
+                        <img src="${user.profileImage || (user.username.toLowerCase() === 'h7' ? 'https://printedman.com/cdn/shop/files/CR7Red.jpg?v=1694289458&width=1946' : `https://images.unsplash.com/photo-${Math.floor(Math.random() * 1000000000)}-${Math.floor(Math.random() * 1000000000)}?w=150`)}" alt="Profil ${user.username}" 
                              class="w-8 h-8 rounded-full object-cover opacity-60 ${user.username.toLowerCase() === 'h7' ? 'border-2 border-yellow-400' : ''}">
                         <div class="flex-1 min-w-0">
                             <p class="text-sm text-gray-500 truncate">${user.username}</p>
