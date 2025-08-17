@@ -18,30 +18,6 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Firebase -->
-    <script type="module">
-      import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-      import { getDatabase, ref, push, onValue, off, set } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
-      import { getAuth, GoogleAuthProvider } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-
-      const firebaseConfig = {
-        apiKey: "AIzaSyBmMSD2SwHt-zF_YZHPEs6-03IlLGnO1CM",
-        authDomain: "chat-2026-671bb.firebaseapp.com",
-        databaseURL: "https://chat-2026-671bb-default-rtdb.europe-west1.firebasedatabase.app",
-        projectId: "chat-2026-671bb",
-        storageBucket: "chat-2026-671bb.firebasestorage.app",
-        messagingSenderId: "767585260701",
-        appId: "1:767585260701:web:9159e8293d385415f87074",
-        measurementId: "G-8ZHZV3QQDH"
-      };
-
-      const app = initializeApp(firebaseConfig);
-      window.database = getDatabase(app);
-      window.auth = getAuth(app);
-      window.googleProvider = new GoogleAuthProvider();
-      window.firebaseRefs = { ref, push, onValue, off, set };
-    </script>
-    
     <style>
         :root {
             --primary: #3B82F6;
@@ -121,9 +97,78 @@
                 opacity: 1;
             }
         }
+
+        .avatar-upload-container {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .avatar-upload-button {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: var(--primary);
+            color: white;
+            border: 2px solid white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 10px;
+        }
+
+        .config-panel {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border: 1px solid #e5e7eb;
+            z-index: 1000;
+            max-width: 350px;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
+    <!-- Configuration Panel -->
+    <div id="config-panel" class="config-panel hidden">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="font-semibold text-gray-900">Configuration Firebase</h3>
+            <button onclick="toggleConfigPanel()" class="text-gray-500 hover:text-gray-700">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="space-y-3">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">API Key</label>
+                <input type="text" id="firebase-api-key" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Votre clé API Firebase">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Database URL</label>
+                <input type="text" id="firebase-db-url" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="URL de votre base de données">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Project ID</label>
+                <input type="text" id="firebase-project-id" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="ID du projet">
+            </div>
+            <button onclick="saveFirebaseConfig()" class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 text-sm">
+                Sauvegarder et Connecter
+            </button>
+            <p class="text-xs text-gray-500">Ces informations sont stockées localement dans votre navigateur</p>
+        </div>
+    </div>
+
+    <!-- Settings Button -->
+    <button onclick="toggleConfigPanel()" 
+            class="fixed top-4 left-4 z-50 bg-white p-3 rounded-full shadow-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+        <i class="fas fa-cog text-gray-600"></i>
+    </button>
+
     <!-- Application Container -->
     <div id="app" class="min-h-screen">
         <!-- Landing Page -->
@@ -290,8 +335,8 @@
                             <div class="flex items-center space-x-6 mt-4 md:mt-0">
                                 <span class="text-gray-400 text-sm">Développé avec ❤️ par l'équipe H7</span>
                                 <div class="flex items-center space-x-2">
-                                    <span class="w-2 h-2 bg-green-500 rounded-full"></span>
-                                    <span class="text-sm text-green-400">Serveurs opérationnels</span>
+                                    <span id="server-status" class="w-2 h-2 bg-gray-500 rounded-full"></span>
+                                    <span id="server-status-text" class="text-sm text-gray-400">Connexion en cours...</span>
                                 </div>
                             </div>
                         </div>
@@ -308,49 +353,63 @@
                     <div class="flex justify-between items-center h-16">
                         <!-- Logo and Brand -->
                         <div class="flex items-center space-x-4">
-                            <div class="w-10 h-10 gradient-bg rounded-lg flex items-center justify-center">
+                            <div class="w-10 h-10 gradient-bg rounded-full flex items-center justify-center">
                                 <i class="fas fa-comments text-white text-lg"></i>
                             </div>
                             <h1 class="text-xl font-bold text-gray-900">H7 Social</h1>
                             <div class="hidden md:flex items-center space-x-2 ml-8">
-                                <span id="connection-status" class="w-3 h-3 rounded-full bg-green-500"></span>
-                                <span id="online-count" class="text-sm text-gray-600">0 utilisateur en ligne</span>
+                                <span id="connection-status" class="w-3 h-3 rounded-full bg-gray-500"></span>
+                                <span id="connection-text" class="text-sm text-gray-600">Connexion...</span>
                             </div>
                         </div>
 
-                        <!-- Navigation Buttons -->
+                        <!-- User Profile and Controls -->
                         <div class="flex items-center space-x-4">
-                            <button id="public-chat-btn" onclick="switchView('public')" 
-                                    class="flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors bg-blue-500 text-white">
-                                <i class="fas fa-users"></i>
-                                <span class="hidden sm:inline">Chat Public</span>
-                            </button>
-                            <button id="private-chat-btn" onclick="switchView('private')" 
-                                    class="flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors bg-gray-200 text-gray-700 hover:bg-gray-300">
-                                <i class="fas fa-comment-dots"></i>
-                                <span class="hidden sm:inline">Messages Privés</span>
-                            </button>
+                            <!-- User Profile -->
+                            <div class="flex items-center space-x-3">
+                                <div class="avatar-upload-container">
+                                    <img id="current-user-avatar" src="" alt="Avatar" 
+                                         class="w-10 h-10 rounded-full object-cover border-2 border-gray-200">
+                                    <button onclick="openAvatarUpload()" class="avatar-upload-button" title="Changer l'avatar">
+                                        <i class="fas fa-camera"></i>
+                                    </button>
+                                    <input type="file" id="avatar-upload" class="hidden" accept="image/*" onchange="handleAvatarUpload(event)">
+                                </div>
+                                <div class="hidden md:block">
+                                    <p class="text-sm font-medium text-gray-900" id="current-username">Utilisateur</p>
+                                    <p class="text-xs text-gray-500" id="user-role">Membre</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Logout Button -->
                             <button onclick="logout()" 
-                                    class="flex items-center space-x-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+                                    class="text-gray-500 hover:text-red-500 transition-colors">
                                 <i class="fas fa-sign-out-alt"></i>
-                                <span class="hidden sm:inline">Déconnexion</span>
                             </button>
                         </div>
                     </div>
                 </div>
             </header>
 
-            <!-- Main Content -->
             <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
                 <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
                     <!-- Sidebar -->
                     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                        <h3 class="font-semibold text-lg mb-4 text-gray-900">Utilisateurs Connectés</h3>
-                        <div id="online-users" class="space-y-3"></div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-semibold text-lg text-gray-900">Utilisateurs Connectés</h3>
+                            <button onclick="refreshUsersList()" class="text-gray-500 hover:text-blue-500 transition-colors" title="Actualiser">
+                                <i class="fas fa-sync-alt text-sm"></i>
+                            </button>
+                        </div>
+                        <div id="online-users" class="space-y-3">
+                            <!-- Les utilisateurs connectés seront affichés ici -->
+                        </div>
                         
                         <div id="offline-users-section" class="mt-6 pt-4 border-t border-gray-200">
                             <h4 class="text-sm font-medium text-gray-700 mb-3">Utilisateurs Hors Ligne</h4>
-                            <div id="offline-users" class="space-y-2"></div>
+                            <div id="offline-users" class="space-y-2">
+                                <!-- Les utilisateurs hors ligne seront affichés ici -->
+                            </div>
                         </div>
                         
                         <!-- Quick Stats -->
@@ -358,12 +417,12 @@
                             <h4 class="font-semibold mb-3">Statistiques</h4>
                             <div class="space-y-2 text-sm">
                                 <div class="flex justify-between">
-                                    <span>Messages aujourd'hui:</span>
-                                    <span id="daily-messages">0</span>
-                                </div>
-                                <div class="flex justify-between">
                                     <span>Utilisateurs actifs:</span>
                                     <span id="active-users-count">0</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Messages aujourd'hui:</span>
+                                    <span id="daily-messages">0</span>
                                 </div>
                                 <div class="flex justify-between">
                                     <span>Fichiers partagés:</span>
@@ -372,586 +431,934 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Chat Area -->
-                    <div class="lg:col-span-3">
-                        <!-- Public Chat -->
-                        <div id="public-chat" class="bg-white rounded-xl shadow-sm border border-gray-200">
-                            <div class="border-b border-gray-200 p-6">
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <h2 class="text-xl font-semibold text-gray-900">Chat Public</h2>
-                                        <p class="text-sm text-gray-600">Discutez avec tous les membres connectés</p>
-                                    </div>
-                                    <div class="flex items-center space-x-2">
-                                        <span class="w-3 h-3 bg-green-500 rounded-full"></span>
-                                        <span id="message-count" class="text-sm text-gray-600">0 messages</span>
-                                    </div>
-                                </div>
+                    <div class="lg:col-span-3 space-y-6">
+                        <!-- Chat Tabs -->
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                            <div class="flex border-b border-gray-200 mb-6">
+                                <button onclick="switchChat('public')" 
+                                        class="chat-tab px-6 py-3 border-b-2 border-blue-500 text-blue-600 font-medium">
+                                    Chat Public
+                                </button>
+                                <button onclick="switchChat('private')" 
+                                        class="chat-tab px-6 py-3 border-b-2 border-transparent text-gray-500 hover:text-gray-700">
+                                    Messages Privés
+                                </button>
                             </div>
 
-                            <!-- Messages Container -->
-                            <div id="messages-container" class="h-96 overflow-y-auto p-6 space-y-4">
-                                <div class="text-center text-gray-500 py-8">
-                                    <i class="fas fa-comments text-4xl mb-4 opacity-50"></i>
-                                    <p>Aucun message pour le moment. Commencez la conversation !</p>
+                            <!-- Public Chat -->
+                            <div id="public-chat" class="space-y-6">
+                                <div class="bg-gray-50 rounded-lg p-4 h-96 overflow-y-auto" id="chat-messages">
+                                    <div class="text-center text-gray-500 py-8">
+                                        <i class="fas fa-comments text-4xl mb-4 opacity-50"></i>
+                                        <p>Aucun message pour le moment. Commencez la conversation !</p>
+                                    </div>
                                 </div>
-                            </div>
-
-                            <!-- Message Input -->
-                            <div class="border-t border-gray-200 p-4">
-                                <!-- Attachments preview -->
-                                <div id="attachments-preview" class="hidden mb-4 flex flex-wrap gap-2"></div>
                                 
-                                <div class="flex items-end space-x-4">
-                                    <div class="flex-1">
-                                        <textarea id="message-input" placeholder="Tapez votre message..." 
-                                                  class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                                                  rows="2" onkeypress="handleKeyPress(event)"></textarea>
+                                <!-- Message Input -->
+                                <div class="border-t border-gray-200 pt-6">
+                                    <div id="attachments-preview" class="hidden mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <span class="text-sm font-medium text-blue-800">Fichiers sélectionnés:</span>
+                                            <button onclick="clearAttachments()" class="text-blue-600 hover:text-blue-800">
+                                                <i class="fas fa-times text-sm"></i>
+                                            </button>
+                                        </div>
+                                        <div id="attachments-list" class="space-y-2"></div>
                                     </div>
-                                    <div class="flex flex-col space-y-2">
-                                        <input id="file-input" type="file" class="hidden" multiple 
-                                               accept="image/*,video/*,.pdf,.doc,.docx,.txt" onchange="handleFileSelect(event)">
-                                        <button onclick="document.getElementById('file-input').click()" 
-                                                class="p-3 text-gray-500 hover:text-blue-500 transition-colors">
-                                            <i id="file-icon" class="fas fa-paperclip text-lg"></i>
-                                        </button>
-                                        <button onclick="sendMessage()" 
-                                                class="gradient-bg text-white p-3 rounded-lg hover-scale">
-                                            <i class="fas fa-paper-plane"></i>
-                                        </button>
+                                    
+                                    <div class="flex space-x-4">
+                                        <div class="flex-1">
+                                            <textarea id="message-input" placeholder="Tapez votre message..." 
+                                                      class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                                                      rows="2" onkeypress="handleKeyPress(event)"></textarea>
+                                        </div>
+                                        <div class="flex flex-col space-y-2">
+                                            <input id="file-input" type="file" class="hidden" multiple 
+                                                   accept="image/*,video/*,.pdf,.doc,.docx,.txt" onchange="handleFileSelect(event)">
+                                            <button onclick="document.getElementById('file-input').click()" 
+                                                    class="p-3 text-gray-500 hover:text-blue-500 transition-colors" title="Joindre un fichier">
+                                                <i id="file-icon" class="fas fa-paperclip text-lg"></i>
+                                            </button>
+                                            <button onclick="sendMessage()" 
+                                                    class="gradient-bg text-white p-3 rounded-lg hover-scale" title="Envoyer le message">
+                                                <i class="fas fa-paper-plane"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Private Chat -->
-                        <div id="private-chat" class="hidden bg-white rounded-xl shadow-sm border border-gray-200 h-96 flex items-center justify-center">
-                            <div class="text-center text-gray-500">
-                                <i class="fas fa-user-friends text-4xl mb-4 opacity-50"></i>
-                                <p>Sélectionnez un utilisateur pour commencer une conversation privée</p>
+                            <!-- Private Chat -->
+                            <div id="private-chat" class="hidden">
+                                <div class="bg-gray-50 rounded-lg p-4 h-96 overflow-y-auto flex items-center justify-center">
+                                    <div class="text-center text-gray-500">
+                                        <i class="fas fa-user-friends text-4xl mb-4 opacity-50"></i>
+                                        <p>Sélectionnez un utilisateur pour commencer une conversation privée</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </main>
         </div>
+    </div>
 
-        <!-- Authentication Modal -->
-        <div id="auth-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-            <div class="absolute inset-0 bg-cover bg-center opacity-20" 
-                 style="background-image: url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080')"></div>
-            
-            <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md mx-4 relative z-10">
-                <div class="text-center mb-8">
-                    <div class="w-16 h-16 gradient-bg rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-comments text-white text-2xl"></i>
-                    </div>
-                    <h2 class="text-2xl font-bold text-gray-900 mb-2">H7 Social</h2>
-                    <p class="text-gray-600">Connectez-vous pour rejoindre la communauté</p>
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 gradient-bg rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-user text-white text-2xl"></i>
                 </div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Rejoindre H7 Social</h2>
+                <p class="text-gray-600">Connectez-vous ou créez un compte pour commencer à discuter</p>
+            </div>
 
-                <form id="auth-form" onsubmit="handleAuth(event)">
-                    <div class="space-y-6">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Nom d'utilisateur</label>
-                            <input type="text" id="username" placeholder="Votre nom d'utilisateur" required
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors">
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Code d'accès</label>
-                            <input type="password" id="password" placeholder="Votre code d'accès" required
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors">
-                        </div>
+            <div id="auth-tabs" class="flex mb-6 bg-gray-100 rounded-lg p-1">
+                <button onclick="switchAuthTab('login')" 
+                        class="auth-tab flex-1 py-2 px-4 rounded-md text-sm font-medium bg-white text-gray-900 shadow-sm">
+                    Connexion
+                </button>
+                <button onclick="switchAuthTab('register')" 
+                        class="auth-tab flex-1 py-2 px-4 rounded-md text-sm font-medium text-gray-500 hover:text-gray-700">
+                    Inscription
+                </button>
+            </div>
 
-                        <div id="confirm-password-field" class="hidden">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Confirmez le code</label>
-                            <input type="password" id="confirm-password" placeholder="Confirmez votre code"
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors">
-                        </div>
-
-                        <div id="profile-image-field" class="hidden">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Photo de profil (optionnel) ❤️</label>
-                            <div class="flex items-center space-x-4">
-                                <div id="profile-preview" class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
-                                    <i class="fas fa-user text-gray-400 text-xl"></i>
-                                </div>
-                                <div class="flex-1">
-                                    <input type="file" id="profile-image" accept="image/*" class="hidden" onchange="handleProfileImageSelect(event)">
-                                    <button type="button" onclick="document.getElementById('profile-image').click()" 
-                                            class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                                        <i class="fas fa-camera mr-2"></i>Choisir une photo
-                                    </button>
-                                    <p class="text-xs text-gray-500 mt-1">JPG, PNG ou GIF (max 5MB)</p>
-                                </div>
+            <form id="auth-form" onsubmit="handleAuth(event)">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Nom d'utilisateur</label>
+                        <input type="text" id="auth-username" required
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="Votre nom d'utilisateur">
+                    </div>
+                    
+                    <div id="password-field" class="hidden">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Mot de passe</label>
+                        <input type="password" id="auth-password"
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="Votre mot de passe">
+                    </div>
+                    
+                    <div id="avatar-selection" class="hidden">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Photo de profil (optionnelle)</label>
+                        <div class="flex justify-center mb-4">
+                            <div class="avatar-upload-container">
+                                <img id="preview-avatar" src="" alt="Aperçu" 
+                                     class="w-20 h-20 rounded-full object-cover border-4 border-gray-200 bg-gray-100">
+                                <button type="button" onclick="openRegistrationAvatarUpload()" class="avatar-upload-button" title="Choisir une photo">
+                                    <i class="fas fa-camera"></i>
+                                </button>
                             </div>
                         </div>
-
-                        <button type="submit" id="auth-btn"
-                                class="w-full gradient-bg text-white py-3 rounded-lg font-medium hover-scale">
-                            Se connecter
-                        </button>
+                        <input type="file" id="registration-avatar-upload" class="hidden" accept="image/*" onchange="handleRegistrationAvatarUpload(event)">
                     </div>
-                </form>
 
-                <div class="mt-6 text-center">
-                    <button id="toggle-auth" onclick="toggleAuthMode()" 
-                            class="text-blue-500 hover:text-blue-600 transition-colors">
-                        Pas de compte ? Créer un compte
+                    <button type="submit" id="auth-submit"
+                            class="w-full gradient-bg text-white py-3 rounded-lg font-semibold hover-scale">
+                        Se connecter
                     </button>
                 </div>
+            </form>
 
-                <button onclick="hideAuthModal()" 
-                        class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+            <div class="mt-6">
+                <div class="relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-300"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-white text-gray-500">Ou connectez-vous avec</span>
+                    </div>
+                </div>
+                
+                <button onclick="loginWithGoogle()" disabled
+                        class="mt-4 w-full border border-gray-300 bg-white text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-50 flex items-center justify-center space-x-2 opacity-50 cursor-not-allowed">
+                    <i class="fab fa-google text-red-500"></i>
+                    <span>Google (Configurez Firebase d'abord)</span>
+                </button>
+            </div>
+
+            <button onclick="closeAuthModal()" 
+                    class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- General Modal -->
+    <div id="general-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div class="bg-white rounded-2xl p-8 max-w-2xl w-full mx-4 max-h-96 overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h2 id="modal-title" class="text-2xl font-bold text-gray-900"></h2>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">
                     <i class="fas fa-times text-xl"></i>
                 </button>
             </div>
+            <div id="modal-content" class="text-gray-700"></div>
         </div>
-
-        <!-- Generic Modal -->
-        <div id="generic-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[80vh] mx-4 overflow-hidden">
-                <div class="flex items-center justify-between p-6 border-b border-gray-200">
-                    <h2 id="modal-title" class="text-2xl font-bold text-gray-900"></h2>
-                    <button onclick="hideModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
-                        <i class="fas fa-times text-xl"></i>
-                    </button>
-                </div>
-                
-                <div id="modal-content" class="overflow-y-auto p-6" style="max-height: calc(80vh - 120px);">
-                    <!-- Content will be inserted here -->
-                </div>
-            </div>
-        </div>
-        
-        <!-- Toast Container -->
-        <div id="toast-container"></div>
     </div>
 
-    <!-- JavaScript -->
-    <script>
-        // Global state
+    <script type="module">
+        // Configuration Firebase (cachée par défaut pour la sécurité)
+        let firebaseConfig = null;
+        let firebaseApp = null;
+        let database = null;
+        let auth = null;
+
+        // Variables globales
         let currentUser = null;
-        let isConnected = false;
         let messages = [];
+        let allUsers = [];
         let currentView = 'public';
         let attachments = [];
         let isLogin = true;
-        let allUsers = []; // Seuls les utilisateurs réellement connectés
+
+        // État de l'application
+        let isFirebaseConnected = false;
+        let connectionAttempts = 0;
+        const MAX_CONNECTION_ATTEMPTS = 3;
+
+        // Initialisation de l'application
+        window.addEventListener('DOMContentLoaded', function() {
+            loadFirebaseConfig();
+            initializeApp();
+        });
+
+        // Gestion de la configuration Firebase
+        window.toggleConfigPanel = function() {
+            const panel = document.getElementById('config-panel');
+            panel.classList.toggle('hidden');
+        };
+
+        window.saveFirebaseConfig = function() {
+            const apiKey = document.getElementById('firebase-api-key').value.trim();
+            const dbUrl = document.getElementById('firebase-db-url').value.trim();
+            const projectId = document.getElementById('firebase-project-id').value.trim();
+
+            if (!apiKey || !dbUrl || !projectId) {
+                showToast('Veuillez remplir tous les champs', 'error');
+                return;
+            }
+
+            const config = {
+                apiKey: apiKey,
+                authDomain: projectId + '.firebaseapp.com',
+                databaseURL: dbUrl,
+                projectId: projectId,
+                storageBucket: projectId + '.appspot.com',
+                messagingSenderId: '767585260701',
+                appId: '1:767585260701:web:9159e8293d385415f87074'
+            };
+
+            // Sauvegarder dans localStorage
+            localStorage.setItem('h7_firebase_config', JSON.stringify(config));
+            firebaseConfig = config;
+
+            // Initialiser Firebase
+            initializeFirebase();
+            toggleConfigPanel();
+        };
+
+        function loadFirebaseConfig() {
+            const savedConfig = localStorage.getItem('h7_firebase_config');
+            if (savedConfig) {
+                firebaseConfig = JSON.parse(savedConfig);
+                // Pré-remplir les champs
+                if (firebaseConfig.apiKey) {
+                    document.getElementById('firebase-api-key').value = firebaseConfig.apiKey;
+                    document.getElementById('firebase-db-url').value = firebaseConfig.databaseURL;
+                    document.getElementById('firebase-project-id').value = firebaseConfig.projectId;
+                }
+            }
+        }
+
+        function initializeApp() {
+            updateConnectionStatus('offline', 'Hors ligne');
+            
+            if (firebaseConfig) {
+                initializeFirebase();
+            } else {
+                showToast('Configuration Firebase requise. Cliquez sur l\'icône de paramètres.', 'error');
+                setTimeout(() => {
+                    document.getElementById('config-panel').classList.remove('hidden');
+                }, 2000);
+            }
+
+            // Initialiser avec une liste vide - seulement les vrais utilisateurs Firebase
+            allUsers = [];
+            updateUsersList();
+        }
+
+        async function initializeFirebase() {
+            if (!firebaseConfig) return;
+
+            try {
+                updateConnectionStatus('connecting', 'Connexion...');
+                
+                // Charger Firebase dynamiquement
+                const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js');
+                const { getDatabase, ref, push, onValue, off, set } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
+                const { getAuth, GoogleAuthProvider } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js');
+
+                firebaseApp = initializeApp(firebaseConfig);
+                database = getDatabase(firebaseApp);
+                auth = getAuth(firebaseApp);
+
+                // Stocker les références globalement
+                window.database = database;
+                window.auth = auth;
+                window.firebaseRefs = { ref, push, onValue, off, set };
+                window.googleProvider = new GoogleAuthProvider();
+
+                // Tester la connexion
+                const testRef = ref(database, '.info/connected');
+                onValue(testRef, (snapshot) => {
+                    if (snapshot.val() === true) {
+                        isFirebaseConnected = true;
+                        updateConnectionStatus('online', 'Connecté à Firebase');
+                        loadUsersFromFirebase();
+                        connectionAttempts = 0;
+                    } else {
+                        isFirebaseConnected = false;
+                        updateConnectionStatus('offline', 'Connexion Firebase perdue');
+                    }
+                });
+
+                // Activer le bouton Google
+                const googleBtn = document.querySelector('button[onclick="loginWithGoogle()"]');
+                if (googleBtn) {
+                    googleBtn.disabled = false;
+                    googleBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    googleBtn.innerHTML = '<i class="fab fa-google text-red-500"></i><span>Google</span>';
+                }
+
+            } catch (error) {
+                console.error('Erreur Firebase:', error);
+                connectionAttempts++;
+                
+                if (connectionAttempts < MAX_CONNECTION_ATTEMPTS) {
+                    showToast(`Tentative de reconnexion ${connectionAttempts}/${MAX_CONNECTION_ATTEMPTS}...`, 'error');
+                    setTimeout(() => initializeFirebase(), 2000);
+                } else {
+                    updateConnectionStatus('error', 'Erreur de configuration Firebase');
+                    showToast('Vérifiez votre configuration Firebase', 'error');
+                }
+            }
+        }
+
+        function loadUsersFromFirebase() {
+            if (!database) return;
+
+            const usersRef = window.firebaseRefs.ref(database, 'users');
+            window.firebaseRefs.onValue(usersRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    // Afficher uniquement les vrais utilisateurs de Firebase
+                    allUsers = Object.keys(data).map(key => ({
+                        id: key,
+                        ...data[key]
+                    }));
+                } else {
+                    // Aucun utilisateur dans Firebase = liste vide
+                    allUsers = [];
+                }
+                updateUsersList();
+            });
+        }
+
+        function updateConnectionStatus(status, text) {
+            const statusElement = document.getElementById('connection-status');
+            const textElement = document.getElementById('connection-text');
+            const serverStatus = document.getElementById('server-status');
+            const serverStatusText = document.getElementById('server-status-text');
+
+            const statusConfig = {
+                offline: { color: 'bg-gray-500', text: text || 'Hors ligne' },
+                connecting: { color: 'bg-yellow-500', text: text || 'Connexion...' },
+                online: { color: 'bg-green-500', text: text || 'En ligne' },
+                demo: { color: 'bg-blue-500', text: text || 'Mode démo' },
+                error: { color: 'bg-red-500', text: text || 'Erreur' }
+            };
+
+            const config = statusConfig[status] || statusConfig.offline;
+            
+            if (statusElement) {
+                statusElement.className = `w-3 h-3 rounded-full ${config.color}`;
+            }
+            if (textElement) {
+                textElement.textContent = config.text;
+            }
+            if (serverStatus) {
+                serverStatus.className = `w-2 h-2 rounded-full ${config.color}`;
+            }
+            if (serverStatusText) {
+                serverStatusText.textContent = config.text;
+            }
+        }
 
         // Function to get default avatar for users
         function getDefaultAvatar(username) {
             if (username.toLowerCase() === 'h7') {
                 return 'https://printedman.com/cdn/shop/files/CR7Red.jpg?v=1694289458&width=1946';
             }
-            // Generate a consistent avatar based on username using a reliable service
+            // Generate a consistent avatar based on username
             const seed = username.toLowerCase();
             return `https://api.dicebear.com/7.x/avataaars/svg?seed=${seed}&size=150`;
         }
 
-        // Firebase message handling
-        function initializeFirebase() {
-            if (!window.database || !currentUser) return;
-
-            const messagesRef = window.firebaseRefs.ref(window.database, 'messages');
-            const usersRef = window.firebaseRefs.ref(window.database, 'users');
-            
-            // Listen for new messages
-            window.firebaseRefs.onValue(messagesRef, (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    messages = Object.entries(data).map(([id, message]) => ({
-                        id,
-                        ...message,
-                        timestamp: new Date(message.createdAt || Date.now())
-                    }));
-                    
-                    messages.sort((a, b) => a.timestamp - b.timestamp);
-                    displayMessages();
-                } else {
-                    messages = [];
-                    displayMessages();
-                }
-            });
-
-            // Listen for connected users in real-time
-            window.firebaseRefs.onValue(usersRef, (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    allUsers = Object.entries(data).map(([id, user]) => ({
-                        id,
-                        ...user
-                    }));
-                } else {
-                    allUsers = [];
-                }
-                updateConnectionStatus();
-            });
-
-            // Add current user as online in Firebase
-            const currentUserRef = window.firebaseRefs.ref(window.database, `users/${currentUser.id}`);
-            const userData = {
-                username: currentUser.username,
-                isOnline: true,
-                isAdmin: currentUser.username.toLowerCase() === 'h7' || currentUser.username.toLowerCase() === 'admin',
-                profileImage: currentUser.profileImage || getDefaultAvatar(currentUser.username),
-                lastSeen: new Date().toISOString()
-            };
-            
-            // Set user as online
-            window.firebaseRefs.set(currentUserRef, userData);
-
-            // Handle page unload to set user offline
-            window.addEventListener('beforeunload', () => {
-                const offlineData = {
-                    ...userData,
-                    isOnline: false,
-                    lastSeen: new Date().toISOString()
-                };
-                window.firebaseRefs.set(currentUserRef, offlineData);
-            });
-            
-            isConnected = true;
-            updateConnectionStatus();
-        }
-
-        function sendFirebaseMessage(content, type = 'public', recipient = null) {
-            if (!window.database || !currentUser || (!content.trim() && attachments.length === 0)) return;
-
-            const messagesRef = window.firebaseRefs.ref(window.database, 'messages');
-            const newMessage = {
-                username: currentUser.username,
-                content: content.trim(),
-                createdAt: new Date().toISOString(),
-                type: type,
-                isPrivate: type === 'private',
-                authorId: currentUser.username,
-                ...(attachments.length > 0 && { attachments: [...attachments] }),
-                ...(recipient && { recipientId: recipient })
-            };
-
-            window.firebaseRefs.push(messagesRef, newMessage);
-        }
-
-        // Authentication
-        function showAuthModal() {
+        // Gestion de l'authentification
+        window.showAuthModal = function() {
             document.getElementById('auth-modal').classList.remove('hidden');
-        }
+        };
 
-        function hideAuthModal() {
+        window.closeAuthModal = function() {
             document.getElementById('auth-modal').classList.add('hidden');
-        }
-        
-        function toggleAuthMode() {
-            isLogin = !isLogin;
-            const confirmField = document.getElementById('confirm-password-field');
-            const profileField = document.getElementById('profile-image-field');
-            const authBtn = document.getElementById('auth-btn');
-            const toggleBtn = document.getElementById('toggle-auth');
-            const confirmInput = document.getElementById('confirm-password');
-            const passwordInput = document.getElementById('password');
-            
-            if (isLogin) {
-                confirmField.classList.add('hidden');
-                profileField.classList.add('hidden');
-                authBtn.textContent = 'Se connecter';
-                toggleBtn.textContent = 'Pas de compte ? Créer un compte';
-                confirmInput.removeAttribute('required');
-                passwordInput.setAttribute('minlength', '1');
-            } else {
-                confirmField.classList.remove('hidden');
-                profileField.classList.remove('hidden');
-                authBtn.textContent = 'Créer un compte';
-                toggleBtn.textContent = 'Déjà un compte ? Se connecter';
-                confirmInput.setAttribute('required', '');
-                passwordInput.setAttribute('minlength', '4');
-            }
-        }
+        };
 
-        let selectedProfileImage = null;
-        
-        function handleProfileImageSelect(event) {
-            const file = event.target.files[0];
-            if (!file) return;
+        window.switchAuthTab = function(tab) {
+            const tabs = document.querySelectorAll('.auth-tab');
+            const loginTab = tabs[0];
+            const registerTab = tabs[1];
+            const passwordField = document.getElementById('password-field');
+            const avatarSelection = document.getElementById('avatar-selection');
+            const submitButton = document.getElementById('auth-submit');
+
+            tabs.forEach(t => {
+                t.classList.remove('bg-white', 'text-gray-900', 'shadow-sm');
+                t.classList.add('text-gray-500', 'hover:text-gray-700');
+            });
+
+            if (tab === 'login') {
+                isLogin = true;
+                loginTab.classList.add('bg-white', 'text-gray-900', 'shadow-sm');
+                loginTab.classList.remove('text-gray-500', 'hover:text-gray-700');
+                passwordField.classList.add('hidden');
+                avatarSelection.classList.add('hidden');
+                submitButton.textContent = 'Se connecter';
+            } else {
+                isLogin = false;
+                registerTab.classList.add('bg-white', 'text-gray-900', 'shadow-sm');
+                registerTab.classList.remove('text-gray-500', 'hover:text-gray-700');
+                passwordField.classList.remove('hidden');
+                avatarSelection.classList.remove('hidden');
+                submitButton.textContent = 'S\'inscrire';
+                
+                // Définir un avatar par défaut pour l'aperçu
+                const previewAvatar = document.getElementById('preview-avatar');
+                previewAvatar.src = getDefaultAvatar('default');
+            }
+        };
+
+        window.handleAuth = function(event) {
+            event.preventDefault();
             
-            // Check file size (5MB max)
-            if (file.size > 5 * 1024 * 1024) {
-                showToast('La taille du fichier ne peut pas dépasser 5MB', 'error');
+            const username = document.getElementById('auth-username').value.trim();
+            const password = document.getElementById('auth-password').value;
+
+            if (!username) {
+                showToast('Le nom d\'utilisateur est requis', 'error');
                 return;
             }
+
+            if (!isLogin && !password) {
+                showToast('Le mot de passe est requis pour l\'inscription', 'error');
+                return;
+            }
+
+            // Créer l'utilisateur
+            const userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            const previewAvatar = document.getElementById('preview-avatar');
             
-            // Check file type
+            currentUser = {
+                id: userId,
+                username: username,
+                isAdmin: username.toLowerCase() === 'h7' || username.toLowerCase() === 'admin',
+                profileImage: previewAvatar.src || getDefaultAvatar(username)
+            };
+
+            // Mettre à jour l'interface utilisateur
+            document.getElementById('current-username').textContent = currentUser.username;
+            document.getElementById('user-role').textContent = currentUser.isAdmin ? 'Administrateur' : 'Membre';
+            document.getElementById('current-user-avatar').src = currentUser.profileImage;
+
+            // Ajouter l'utilisateur à la liste si Firebase est connecté
+            if (isFirebaseConnected && database) {
+                const userRef = window.firebaseRefs.ref(database, `users/${userId}`);
+                const userData = {
+                    username: currentUser.username,
+                    isOnline: true,
+                    isAdmin: currentUser.isAdmin,
+                    profileImage: currentUser.profileImage,
+                    lastSeen: new Date().toISOString()
+                };
+                
+                window.firebaseRefs.set(userRef, userData);
+            } else {
+                // Mode local/démo
+                const existingUserIndex = allUsers.findIndex(u => u.id === userId);
+                if (existingUserIndex >= 0) {
+                    allUsers[existingUserIndex] = { ...currentUser, isOnline: true };
+                } else {
+                    allUsers.push({ ...currentUser, isOnline: true });
+                }
+                updateUsersList();
+            }
+
+            // Fermer la modal et afficher le chat
+            closeAuthModal();
+            showChatApp();
+            
+            showToast(`Bienvenue ${currentUser.username}!`, 'success');
+        };
+
+        // Gestion de l'upload d'avatar
+        window.openAvatarUpload = function() {
+            document.getElementById('avatar-upload').click();
+        };
+
+        window.openRegistrationAvatarUpload = function() {
+            document.getElementById('registration-avatar-upload').click();
+        };
+
+        window.handleAvatarUpload = function(event) {
+            handleAvatarFile(event, 'current-user-avatar', true);
+        };
+
+        window.handleRegistrationAvatarUpload = function(event) {
+            handleAvatarFile(event, 'preview-avatar', false);
+        };
+
+        function handleAvatarFile(event, targetId, isCurrentUser) {
+            const file = event.target.files[0];
+            if (!file) return;
+
             if (!file.type.startsWith('image/')) {
                 showToast('Veuillez sélectionner une image valide', 'error');
                 return;
             }
-            
+
+            if (file.size > 5 * 1024 * 1024) { // 5MB
+                showToast('L\'image doit faire moins de 5MB', 'error');
+                return;
+            }
+
             const reader = new FileReader();
             reader.onload = function(e) {
-                selectedProfileImage = e.target.result;
-                const preview = document.getElementById('profile-preview');
-                preview.innerHTML = `<img src="${e.target.result}" alt="Aperçu" class="w-full h-full object-cover rounded-full">`;
+                const imageUrl = e.target.result;
+                document.getElementById(targetId).src = imageUrl;
+                
+                if (isCurrentUser && currentUser) {
+                    currentUser.profileImage = imageUrl;
+                    
+                    // Mettre à jour dans Firebase si connecté
+                    if (isFirebaseConnected && database) {
+                        const userRef = window.firebaseRefs.ref(database, `users/${currentUser.id}`);
+                        window.firebaseRefs.set(userRef, {
+                            username: currentUser.username,
+                            isOnline: true,
+                            isAdmin: currentUser.isAdmin,
+                            profileImage: imageUrl,
+                            lastSeen: new Date().toISOString()
+                        });
+                    }
+                    
+                    showToast('Avatar mis à jour avec succès', 'success');
+                }
             };
             reader.readAsDataURL(file);
-        }
-
-        function handleAuth(event) {
-            event.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirm-password').value;
-
-            // Validation for registration
-            if (!isLogin) {
-                if (password.length < 4) {
-                    showToast('Le code doit contenir au moins 4 caractères', 'error');
-                    return;
-                }
-                if (password !== confirmPassword) {
-                    showToast('Les codes ne correspondent pas', 'error');
-                    return;
-                }
-            }
-
-            // Simple authentication for demo
-            if (username && password) {
-                currentUser = {
-                    id: Date.now().toString(),
-                    username: username,
-                    isOnline: true,
-                    profileImage: selectedProfileImage
-                };
-                
-                localStorage.setItem('h7_user', JSON.stringify(currentUser));
-                showToast(isLogin ? 'Connexion réussie!' : 'Compte créé avec succès!', 'success');
-                hideAuthModal();
-                showChatApp();
-                initializeFirebase();
-            }
-        }
-
-        function logout() {
-            localStorage.removeItem('h7_user');
-            currentUser = null;
-            showLandingPage();
-        }
-
-        // View switching
-        function showLandingPage() {
-            document.getElementById('landing-page').classList.remove('hidden');
-            document.getElementById('chat-app').classList.add('hidden');
-        }
+        };
 
         function showChatApp() {
             document.getElementById('landing-page').classList.add('hidden');
             document.getElementById('chat-app').classList.remove('hidden');
-        }
-
-        function switchView(view) {
-            currentView = view;
             
-            // Update button styles
-            document.getElementById('public-chat-btn').className = 
-                view === 'public' ? 
-                'flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors bg-blue-500 text-white' :
-                'flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors bg-gray-200 text-gray-700 hover:bg-gray-300';
-                
-            document.getElementById('private-chat-btn').className = 
-                view === 'private' ? 
-                'flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors bg-blue-500 text-white' :
-                'flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors bg-gray-200 text-gray-700 hover:bg-gray-300';
-            
-            // Show/hide chat areas
-            document.getElementById('public-chat').classList.toggle('hidden', view !== 'public');
-            document.getElementById('private-chat').classList.toggle('hidden', view !== 'private');
-        }
-
-        // Message handling
-        function sendMessage() {
-            const input = document.getElementById('message-input');
-            const content = input.value.trim();
-            
-            if (content || attachments.length > 0) {
-                sendFirebaseMessage(content, currentView);
-                input.value = '';
-                attachments = [];
-                updateAttachmentsPreview();
+            if (isFirebaseConnected) {
+                initializeFirebaseChat();
             }
         }
 
-        function handleKeyPress(event) {
+        function initializeFirebaseChat() {
+            if (!database || !currentUser) return;
+
+            const messagesRef = window.firebaseRefs.ref(database, 'messages');
+            
+            // Écouter les nouveaux messages
+            window.firebaseRefs.onValue(messagesRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    messages = Object.keys(data).map(key => ({
+                        id: key,
+                        ...data[key]
+                    })).sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+                } else {
+                    messages = [];
+                }
+                updateMessages();
+            });
+
+            // Marquer l'utilisateur comme en ligne
+            const currentUserRef = window.firebaseRefs.ref(database, `users/${currentUser.id}`);
+            window.firebaseRefs.set(currentUserRef, {
+                username: currentUser.username,
+                isOnline: true,
+                isAdmin: currentUser.isAdmin,
+                profileImage: currentUser.profileImage,
+                lastSeen: new Date().toISOString()
+            });
+
+            // Gérer la déconnexion
+            window.addEventListener('beforeunload', () => {
+                if (database && currentUser) {
+                    window.firebaseRefs.set(currentUserRef, {
+                        username: currentUser.username,
+                        isOnline: false,
+                        isAdmin: currentUser.isAdmin,
+                        profileImage: currentUser.profileImage,
+                        lastSeen: new Date().toISOString()
+                    });
+                }
+            });
+        }
+
+        // Gestion des messages
+        window.handleKeyPress = function(event) {
             if (event.key === 'Enter' && !event.shiftKey) {
                 event.preventDefault();
                 sendMessage();
             }
-        }
+        };
 
-        function displayMessages() {
-            const container = document.getElementById('messages-container');
-            const publicMessages = messages.filter(msg => msg.type === 'public' || !msg.isPrivate);
+        window.sendMessage = function() {
+            const messageInput = document.getElementById('message-input');
+            const messageText = messageInput.value.trim();
+
+            if (!messageText && attachments.length === 0) return;
+            if (!currentUser) {
+                showToast('Vous devez être connecté pour envoyer un message', 'error');
+                return;
+            }
+
+            const message = {
+                id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                text: messageText,
+                username: currentUser.username,
+                userId: currentUser.id,
+                timestamp: new Date().toISOString(),
+                isAdmin: currentUser.isAdmin,
+                profileImage: currentUser.profileImage,
+                attachments: attachments.length > 0 ? [...attachments] : null
+            };
+
+            if (isFirebaseConnected && database) {
+                // Envoyer via Firebase
+                const messagesRef = window.firebaseRefs.ref(database, 'messages');
+                window.firebaseRefs.push(messagesRef, message);
+            } else {
+                // Mode local
+                messages.push(message);
+                updateMessages();
+            }
+
+            // Nettoyer le formulaire
+            messageInput.value = '';
+            clearAttachments();
+            messageInput.focus();
+        };
+
+        function updateMessages() {
+            const container = document.getElementById('chat-messages');
             
-            if (publicMessages.length === 0) {
+            if (messages.length === 0) {
                 container.innerHTML = `
                     <div class="text-center text-gray-500 py-8">
                         <i class="fas fa-comments text-4xl mb-4 opacity-50"></i>
                         <p>Aucun message pour le moment. Commencez la conversation !</p>
                     </div>
                 `;
-            } else {
-                container.innerHTML = publicMessages.map(msg => {
-                    // Find user info for avatar
-                    const user = allUsers.find(u => u.username === msg.username);
-                    const avatarUrl = user?.profileImage || getDefaultAvatar(msg.username);
-                    const isH7 = msg.username.toLowerCase() === 'h7';
-                    const isAdmin = user?.isAdmin || isH7;
-                    
-                    return `
-                    <div class="chat-message flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50">
-                        <img src="${avatarUrl}" alt="Avatar ${msg.username}" 
-                             class="w-8 h-8 rounded-full object-cover ${isH7 ? 'border-2 border-yellow-400' : ''}"
-                             onerror="this.outerHTML='<div class=\\'w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center\\'><span class=\\'text-white text-sm font-medium\\'>${msg.username.charAt(0).toUpperCase()}</span></div>'">
-                        <div class="flex-1 min-w-0">
+                return;
+            }
+
+            container.innerHTML = messages.map(msg => {
+                const messageTime = new Date(msg.timestamp);
+                const timeString = messageTime.toLocaleTimeString('fr-FR', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+
+                const attachmentsHtml = msg.attachments ? 
+                    msg.attachments.map(att => `
+                        <div class="mt-2 p-2 bg-blue-50 rounded border border-blue-200 text-sm">
+                            <i class="fas fa-paperclip mr-1"></i>
+                            <span class="text-blue-700">${att.name}</span>
+                            <span class="text-gray-500 ml-2">(${formatFileSize(att.size)})</span>
+                        </div>
+                    `).join('') : '';
+
+                return `
+                    <div class="chat-message flex space-x-3 mb-4">
+                        <img src="${msg.profileImage || getDefaultAvatar(msg.username)}" 
+                             alt="${msg.username}" 
+                             class="w-10 h-10 rounded-full object-cover ${msg.isAdmin ? 'border-2 border-yellow-400' : ''}"
+                             onerror="this.src='${getDefaultAvatar(msg.username)}'">
+                        <div class="flex-1">
                             <div class="flex items-center space-x-2 mb-1">
                                 <span class="font-medium text-gray-900">${msg.username}</span>
-                                ${isAdmin ? '<i class="fas fa-crown text-yellow-500 text-xs"></i>' : ''}
-                                <span class="text-xs text-gray-500">${formatTime(msg.timestamp)}</span>
+                                ${msg.isAdmin ? '<i class="fas fa-crown text-yellow-500 text-sm" title="Administrateur"></i>' : ''}
+                                <span class="text-xs text-gray-500">${timeString}</span>
                             </div>
-                            ${msg.content ? `<p class="text-gray-700 mb-2">${msg.content}</p>` : ''}
-                            ${msg.attachments && msg.attachments.length > 0 ? `
-                                <div class="flex flex-wrap gap-2">
-                                    ${msg.attachments.map((att, index) => `
-                                        <div class="flex items-center space-x-2 bg-gray-100 px-2 py-1 rounded text-sm">
-                                            <i class="fas ${
-                                                att.type.startsWith('image/') ? 'fa-image' :
-                                                att.type.includes('pdf') ? 'fa-file-pdf' :
-                                                att.type.startsWith('video/') ? 'fa-video' :
-                                                'fa-file'
-                                            } text-gray-600"></i>
-                                            <span class="text-gray-700">${att.name}</span>
-                                            <button onclick="downloadFile('${att.url}', '${att.name}')" 
-                                                    class="text-blue-500 hover:text-blue-700 ml-2">
-                                                <i class="fas fa-download text-xs"></i>
-                                            </button>
-                                        </div>
-                                    `).join('')}
-                                </div>
-                            ` : ''}
+                            <div class="text-gray-700 break-words">${msg.text}</div>
+                            ${attachmentsHtml}
                         </div>
                     </div>
-                `;}).join('');
-            }
-            
-            // Update message count
-            document.getElementById('message-count').textContent = `${publicMessages.length} message${publicMessages.length !== 1 ? 's' : ''}`;
-            
-            // Scroll to bottom
+                `;
+            }).join('');
+
             container.scrollTop = container.scrollHeight;
         }
 
-        function formatTime(timestamp) {
-            const date = new Date(timestamp);
-            return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-        }
-
-        function updateConnectionStatus() {
-            const statusEl = document.getElementById('connection-status');
-            const countEl = document.getElementById('online-count');
-            
-            const onlineCount = allUsers.filter(u => u.isOnline).length;
-            statusEl.className = `w-3 h-3 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`;
-            countEl.textContent = `${onlineCount} utilisateur${onlineCount > 1 ? 's' : ''} en ligne`;
-            
-            updateUsersList();
-        }
-        
+        // Gestion des utilisateurs
         function updateUsersList() {
             const onlineContainer = document.getElementById('online-users');
             const offlineContainer = document.getElementById('offline-users');
             const offlineSection = document.getElementById('offline-users-section');
             const activeCount = document.getElementById('active-users-count');
-            
+
             const onlineUsers = allUsers.filter(u => u.isOnline);
             const offlineUsers = allUsers.filter(u => !u.isOnline);
-            
-            // Update online users
-            onlineContainer.innerHTML = onlineUsers.map(user => {
-                const avatarUrl = user.profileImage || getDefaultAvatar(user.username);
-                return `
-                <div onclick="selectUser('${user.id}')" 
-                     class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
-                    <img src="${avatarUrl}" alt="Profil ${user.username}" 
-                         class="w-10 h-10 rounded-full object-cover ${user.username.toLowerCase() === 'h7' ? 'border-2 border-yellow-400' : ''}"
-                         onerror="this.src='${getDefaultAvatar(user.username)}'">
-                    <div class="flex-1 min-w-0">
-                        <p class="text-sm font-medium text-gray-900 truncate">
-                            ${user.username} ${user.isAdmin ? '(Admin) 👑' : ''}
-                        </p>
-                        <div class="flex items-center space-x-1">
-                            <span class="w-2 h-2 bg-green-500 rounded-full"></span>
-                            <span class="text-xs text-green-600">En ligne</span>
+
+            // Mettre à jour les utilisateurs en ligne
+            if (onlineUsers.length > 0) {
+                onlineContainer.innerHTML = onlineUsers.map(user => {
+                    const avatarUrl = user.profileImage || getDefaultAvatar(user.username);
+                    return `
+                        <div onclick="selectUser('${user.id}')" 
+                             class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
+                            <img src="${avatarUrl}" alt="Profil ${user.username}" 
+                                 class="w-10 h-10 rounded-full object-cover ${user.isAdmin ? 'border-2 border-yellow-400' : ''}"
+                                 onerror="this.src='${getDefaultAvatar(user.username)}'">
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-900 truncate">
+                                    ${user.username} ${user.isAdmin ? '(Admin) 👑' : ''}
+                                </p>
+                                <div class="flex items-center space-x-1">
+                                    <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                                    <span class="text-xs text-green-600">En ligne</span>
+                                </div>
+                            </div>
+                            ${user.isAdmin ? '<i class="fas fa-crown text-yellow-500"></i>' : ''}
                         </div>
-                    </div>
-                    ${user.isAdmin ? '<i class="fas fa-crown text-yellow-500"></i>' : ''}
-                </div>
-            `;}).join('');
-            
-            // Update offline users
+                    `;
+                }).join('');
+            } else {
+                // Message différent selon l'état de Firebase
+                if (!isFirebaseConnected) {
+                    onlineContainer.innerHTML = `
+                        <div class="text-center text-gray-500 py-6">
+                            <i class="fas fa-cog text-3xl mb-3 opacity-50"></i>
+                            <p class="text-sm font-medium mb-2">Firebase non configuré</p>
+                            <p class="text-xs">Cliquez sur l'icône paramètres pour configurer</p>
+                            <button onclick="toggleConfigPanel()" class="mt-3 px-4 py-2 bg-blue-500 text-white text-xs rounded-lg hover:bg-blue-600">
+                                Configurer maintenant
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    onlineContainer.innerHTML = `
+                        <div class="text-center text-gray-500 py-4">
+                            <i class="fas fa-user-friends text-2xl mb-2 opacity-50"></i>
+                            <p class="text-sm">Aucun utilisateur connecté</p>
+                            <p class="text-xs mt-1">Les utilisateurs apparaîtront ici une fois connectés</p>
+                        </div>
+                    `;
+                }
+            }
+
+            // Mettre à jour les utilisateurs hors ligne
             if (offlineUsers.length > 0) {
                 offlineSection.classList.remove('hidden');
                 offlineContainer.innerHTML = offlineUsers.map(user => {
                     const avatarUrl = user.profileImage || getDefaultAvatar(user.username);
                     return `
-                    <div onclick="selectUser('${user.id}')" 
-                         class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
-                        <img src="${avatarUrl}" alt="Profil ${user.username}" 
-                             class="w-8 h-8 rounded-full object-cover opacity-60 ${user.username.toLowerCase() === 'h7' ? 'border-2 border-yellow-400' : ''}"
-                             onerror="this.src='${getDefaultAvatar(user.username)}'">
-                        <div class="flex-1 min-w-0">
-                            <p class="text-sm text-gray-500 truncate">${user.username}</p>
-                            <div class="flex items-center space-x-1">
-                                <span class="w-2 h-2 bg-gray-400 rounded-full"></span>
-                                <span class="text-xs text-gray-400">Hors ligne</span>
+                        <div onclick="selectUser('${user.id}')" 
+                             class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
+                            <img src="${avatarUrl}" alt="Profil ${user.username}" 
+                                 class="w-8 h-8 rounded-full object-cover opacity-60 ${user.isAdmin ? 'border-2 border-yellow-400' : ''}"
+                                 onerror="this.src='${getDefaultAvatar(user.username)}'">
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm text-gray-500 truncate">${user.username}</p>
+                                <div class="flex items-center space-x-1">
+                                    <span class="w-2 h-2 bg-gray-400 rounded-full"></span>
+                                    <span class="text-xs text-gray-400">Hors ligne</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `;}).join('');
+                    `;
+                }).join('');
             } else {
                 offlineSection.classList.add('hidden');
             }
-            
-            // Update stats
+
+            // Mettre à jour les statistiques
             activeCount.textContent = onlineUsers.length;
             document.getElementById('daily-messages').textContent = messages.length;
             document.getElementById('shared-files').textContent = messages.filter(m => m.attachments && m.attachments.length > 0).length;
         }
-        
-        function selectUser(userId) {
-            const user = allUsers.find(u => u.id === userId);
-            if (user && user.isOnline) {
-                showToast(`Conversation privée avec ${user.username}`, 'info');
-                // Ici on pourrait ajouter la logique pour ouvrir le chat privé
+
+        window.refreshUsersList = function() {
+            if (isFirebaseConnected) {
+                loadUsersFromFirebase();
+                showToast('Liste des utilisateurs actualisée', 'success');
             } else {
-                showToast(`${user.username} est hors ligne`, 'error');
+                showToast('Veuillez configurer Firebase pour voir les utilisateurs réels', 'error');
             }
-        }
-        
-        function downloadFile(url, filename) {
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+        };
+
+        window.selectUser = function(userId) {
+            const user = allUsers.find(u => u.id === userId);
+            if (user) {
+                showToast(`Messages privés avec ${user.username} (à venir)`, 'info');
+            }
+        };
+
+        // Gestion des fichiers
+        window.handleFileSelect = function(event) {
+            const files = Array.from(event.target.files || []);
+            if (files.length === 0) return;
+
+            const fileIcon = document.getElementById('file-icon');
+            fileIcon.className = 'fas fa-spinner fa-spin text-lg';
+
+            files.forEach(file => {
+                // Simuler l'upload de fichier
+                const fileData = {
+                    name: file.name,
+                    type: file.type,
+                    size: file.size,
+                    url: URL.createObjectURL(file)
+                };
+                attachments.push(fileData);
+            });
+
+            updateAttachmentsPreview();
+            showToast(`${files.length} fichier${files.length > 1 ? 's' : ''} ajouté${files.length > 1 ? 's' : ''}`, 'success');
+
+            setTimeout(() => {
+                fileIcon.className = 'fas fa-paperclip text-lg';
+            }, 1000);
+        };
+
+        function updateAttachmentsPreview() {
+            const preview = document.getElementById('attachments-preview');
+            const list = document.getElementById('attachments-list');
+
+            if (attachments.length === 0) {
+                preview.classList.add('hidden');
+                return;
+            }
+
+            preview.classList.remove('hidden');
+            list.innerHTML = attachments.map((file, index) => `
+                <div class="flex items-center justify-between bg-white p-2 rounded border">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-file text-blue-500"></i>
+                        <span class="text-sm text-gray-700">${file.name}</span>
+                        <span class="text-xs text-gray-500">(${formatFileSize(file.size)})</span>
+                    </div>
+                    <button onclick="removeAttachment(${index})" class="text-red-500 hover:text-red-700">
+                        <i class="fas fa-times text-xs"></i>
+                    </button>
+                </div>
+            `).join('');
         }
 
-        // Modal system
-        function showModal(type) {
-            const modal = document.getElementById('generic-modal');
+        window.removeAttachment = function(index) {
+            attachments.splice(index, 1);
+            updateAttachmentsPreview();
+        };
+
+        window.clearAttachments = function() {
+            attachments = [];
+            updateAttachmentsPreview();
+        };
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Gestion des onglets de chat
+        window.switchChat = function(type) {
+            const tabs = document.querySelectorAll('.chat-tab');
+            const publicChat = document.getElementById('public-chat');
+            const privateChat = document.getElementById('private-chat');
+
+            tabs.forEach(tab => {
+                tab.classList.remove('border-blue-500', 'text-blue-600');
+                tab.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700');
+            });
+
+            if (type === 'public') {
+                tabs[0].classList.add('border-blue-500', 'text-blue-600');
+                tabs[0].classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700');
+                publicChat.classList.remove('hidden');
+                privateChat.classList.add('hidden');
+                currentView = 'public';
+            } else {
+                tabs[1].classList.add('border-blue-500', 'text-blue-600');
+                tabs[1].classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700');
+                publicChat.classList.add('hidden');
+                privateChat.classList.remove('hidden');
+                currentView = 'private';
+            }
+        };
+
+        // Gestion de la déconnexion
+        window.logout = function() {
+            if (currentUser && isFirebaseConnected && database) {
+                const userRef = window.firebaseRefs.ref(database, `users/${currentUser.id}`);
+                window.firebaseRefs.set(userRef, {
+                    username: currentUser.username,
+                    isOnline: false,
+                    isAdmin: currentUser.isAdmin,
+                    profileImage: currentUser.profileImage,
+                    lastSeen: new Date().toISOString()
+                });
+            }
+
+            currentUser = null;
+            messages = [];
+            attachments = [];
+            
+            document.getElementById('chat-app').classList.add('hidden');
+            document.getElementById('landing-page').classList.remove('hidden');
+            
+            showToast('Déconnexion réussie', 'success');
+        };
+
+        // Authentification Google
+        window.loginWithGoogle = function() {
+            if (!isFirebaseConnected || !auth) {
+                showToast('Firebase n\'est pas configuré', 'error');
+                return;
+            }
+            
+            showToast('Connexion Google (à implémenter)', 'info');
+        };
+
+        // Gestion des modales
+        window.showModal = function(type) {
+            const modal = document.getElementById('general-modal');
             const title = document.getElementById('modal-title');
             const content = document.getElementById('modal-content');
-            
-            const modalData = {
+
+            const modals = {
                 about: {
                     title: 'À propos de H7 Social',
                     content: `
@@ -966,186 +1373,181 @@
                                     <p class="text-gray-600">Créer un espace numérique où chacun peut s'exprimer librement et se connecter avec des personnes partageant les mêmes intérêts.</p>
                                 </div>
                                 <div>
-                                    <h3 class="font-semibold text-lg mb-3">Nos Valeurs</h3>
-                                    <ul class="text-gray-600 space-y-1">
-                                        <li>• Respect et bienveillance</li>
-                                        <li>• Innovation constante</li>
-                                        <li>• Sécurité des données</li>
-                                        <li>• Accessibilité pour tous</li>
-                                    </ul>
+                                    <h3 class="font-semibold text-lg mb-3">Notre Mission</h3>
+                                    <p class="text-gray-600">Faciliter la communication en temps réel avec des outils simples, sécurisés et accessibles à tous.</p>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                },
+                features: {
+                    title: 'Fonctionnalités',
+                    content: `
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-4">
+                                <h3 class="font-semibold text-lg">Communication</h3>
+                                <ul class="space-y-2">
+                                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Chat public en temps réel</li>
+                                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Messages privés</li>
+                                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Partage de fichiers</li>
+                                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Émojis et réactions</li>
+                                </ul>
+                            </div>
+                            <div class="space-y-4">
+                                <h3 class="font-semibold text-lg">Sécurité</h3>
+                                <ul class="space-y-2">
+                                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Connexion sécurisée</li>
+                                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Modération automatique</li>
+                                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Contrôle de confidentialité</li>
+                                    <li class="flex items-center"><i class="fas check text-green-500 mr-2"></i> Backup automatique</li>
+                                </ul>
+                            </div>
+                        </div>
+                    `
+                },
+                help: {
+                    title: 'Centre d\'aide',
+                    content: `
+                        <div class="space-y-6">
+                            <div>
+                                <h3 class="font-semibold text-lg mb-3">Questions Fréquentes</h3>
+                                <div class="space-y-4">
+                                    <div class="border-l-4 border-blue-500 pl-4">
+                                        <h4 class="font-medium">Comment configurer Firebase ?</h4>
+                                        <p class="text-gray-600 text-sm mt-1">Cliquez sur l'icône de paramètres en haut à gauche et entrez vos informations Firebase.</p>
+                                    </div>
+                                    <div class="border-l-4 border-blue-500 pl-4">
+                                        <h4 class="font-medium">Comment changer mon avatar ?</h4>
+                                        <p class="text-gray-600 text-sm mt-1">Cliquez sur l'icône de caméra sur votre avatar pour télécharger une nouvelle photo.</p>
+                                    </div>
+                                    <div class="border-l-4 border-blue-500 pl-4">
+                                        <h4 class="font-medium">Comment envoyer un fichier ?</h4>
+                                        <p class="text-gray-600 text-sm mt-1">Cliquez sur l'icône de trombone à côté du champ de message.</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     `
                 },
                 blog: {
-                    title: 'Blog H7 Social',
+                    title: 'Blog',
                     content: `
                         <div class="space-y-6">
-                            <article class="border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
-                                <div class="flex justify-between items-start mb-3">
-                                    <h3 class="text-xl font-semibold text-gray-900">Bienvenue sur H7 Social</h3>
-                                    <span class="text-sm text-gray-500">15 Août 2025</span>
-                                </div>
-                                <p class="text-gray-600 mb-3">Découvrez comment H7 Social révolutionne la communication en temps réel.</p>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-sm text-gray-500">Par Équipe H7</span>
-                                </div>
+                            <article class="border-l-4 border-blue-500 pl-6">
+                                <h3 class="font-semibold text-lg">Nouvelles Fonctionnalités 2025</h3>
+                                <p class="text-sm text-gray-500 mb-2">15 Janvier 2025</p>
+                                <p class="text-gray-700">Découvrez les dernières améliorations apportées à H7 Social, incluant les appels vidéo, les groupes privés et bien plus encore...</p>
                             </article>
-                            
-                            <article class="border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
-                                <div class="flex justify-between items-start mb-3">
-                                    <h3 class="text-xl font-semibold text-gray-900">Nouvelles fonctionnalités</h3>
-                                    <span class="text-sm text-gray-500">10 Août 2025</span>
-                                </div>
-                                <p class="text-gray-600 mb-3">Explorez les dernières améliorations apportées à la plateforme.</p>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-sm text-gray-500">Par Équipe H7</span>
-                                </div>
+                            <article class="border-l-4 border-green-500 pl-6">
+                                <h3 class="font-semibold text-lg">Guide de Configuration Firebase</h3>
+                                <p class="text-sm text-gray-500 mb-2">10 Janvier 2025</p>
+                                <p class="text-gray-700">Un tutoriel complet pour configurer votre propre instance Firebase et héberger H7 Social...</p>
                             </article>
-                        </div>
-                    `
-                },
-                contact: {
-                    title: 'Nous contacter',
-                    content: `
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <!-- Contact Form -->
-                            <div>
-                                <h3 class="text-lg font-semibold mb-4">Envoyez-nous un message</h3>
-                                <form onsubmit="submitContactForm(event)" class="space-y-4">
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">Nom complet</label>
-                                        <input type="text" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                                        <input type="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">Sujet</label>
-                                        <input type="text" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">Message</label>
-                                        <textarea rows="4" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
-                                    </div>
-                                    <button type="submit" class="w-full gradient-bg text-white py-3 rounded-lg font-medium hover-scale">
-                                        Envoyer le message
-                                    </button>
-                                </form>
-                            </div>
-
-                            <!-- Contact Info -->
-                            <div>
-                                <h3 class="text-lg font-semibold mb-4">Autres moyens de contact</h3>
-                                <div class="space-y-6">
-                                    <div class="flex items-start space-x-3">
-                                        <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
-                                            <i class="fas fa-envelope text-white"></i>
-                                        </div>
-                                        <div>
-                                            <h4 class="font-medium">Email</h4>
-                                            <p class="text-gray-600">contact@h7social.com</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="flex items-start space-x-3">
-                                        <div class="w-10 h-10 bg-yellow-500 rounded-lg flex items-center justify-center">
-                                            <i class="fab fa-snapchat-ghost text-white"></i>
-                                        </div>
-                                        <div>
-                                            <h4 class="font-medium">Snapchat</h4>
-                                            <a href="https://t.snapchat.com/XuhVH62f" target="_blank" rel="noopener noreferrer"
-                                               class="text-blue-500 hover:text-blue-600">Contactez-nous sur Snapchat</a>
-                                        </div>
-                                    </div>
-
-                                    <div class="flex items-start space-x-3">
-                                        <div class="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
-                                            <i class="fas fa-clock text-white"></i>
-                                        </div>
-                                        <div>
-                                            <h4 class="font-medium">Horaires</h4>
-                                            <p class="text-gray-600">Lun-Ven: 9h-18h<br>Sam-Dim: 10h-16h</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="p-4 gradient-bg rounded-lg text-white">
-                                        <h4 class="font-medium mb-2">Support Premium</h4>
-                                        <p class="text-sm opacity-90">Réponse garantie en moins de 2h pour les utilisateurs premium.</p>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     `
                 },
                 privacy: {
-                    title: 'Politique de confidentialité',
+                    title: 'Politique de Confidentialité',
                     content: `
-                        <div class="prose max-w-none">
-                            <p>Votre vie privée est importante pour nous. Cette politique explique comment nous collectons, utilisons et protégeons vos informations personnelles.</p>
-                            <h3>Collecte d'informations</h3>
-                            <p>Nous collectons uniquement les informations nécessaires au fonctionnement de notre service.</p>
-                            <h3>Utilisation des données</h3>
-                            <p>Vos données sont utilisées exclusivement pour améliorer votre expérience utilisateur.</p>
+                        <div class="space-y-4 text-sm">
+                            <p>Dernière mise à jour : Janvier 2025</p>
+                            <h3 class="font-semibold">Collecte des données</h3>
+                            <p>Nous collectons uniquement les informations nécessaires au fonctionnement du service : nom d'utilisateur, messages et fichiers partagés.</p>
+                            <h3 class="font-semibold">Utilisation des données</h3>
+                            <p>Vos données sont utilisées exclusivement pour fournir et améliorer nos services de communication.</p>
+                            <h3 class="font-semibold">Partage des données</h3>
+                            <p>Nous ne partageons vos données avec aucun tiers sans votre consentement explicite.</p>
                         </div>
                     `
                 },
                 terms: {
-                    title: 'Conditions générales',
+                    title: 'Conditions Générales de Vente',
                     content: `
-                        <div class="prose max-w-none">
-                            <p>En utilisant H7 Social, vous acceptez les conditions suivantes :</p>
-                            <h3>Utilisation du service</h3>
-                            <p>Vous vous engagez à utiliser notre plateforme de manière respectueuse et légale.</p>
-                            <h3>Responsabilités</h3>
-                            <p>Vous êtes responsable du contenu que vous publiez sur notre plateforme.</p>
+                        <div class="space-y-4 text-sm">
+                            <p>Dernière mise à jour : Janvier 2025</p>
+                            <h3 class="font-semibold">Utilisation du service</h3>
+                            <p>L'utilisation de H7 Social est soumise au respect des présentes conditions et de notre politique de confidentialité.</p>
+                            <h3 class="font-semibold">Responsabilités</h3>
+                            <p>Les utilisateurs sont responsables du contenu qu'ils partagent et s'engagent à respecter les autres membres de la communauté.</p>
+                            <h3 class="font-semibold">Modifications</h3>
+                            <p>Nous nous réservons le droit de modifier ces conditions à tout moment avec un préavis de 30 jours.</p>
                         </div>
                     `
                 },
                 cookies: {
-                    title: 'Politique des cookies',
+                    title: 'Politique des Cookies',
                     content: `
-                        <div class="prose max-w-none">
-                            <p>Nous utilisons des cookies pour améliorer votre expérience de navigation.</p>
-                            <h3>Types de cookies</h3>
-                            <p>Cookies essentiels, analytiques et de préférences.</p>
-                            <h3>Gestion des cookies</h3>
-                            <p>Vous pouvez gérer vos préférences de cookies dans les paramètres de votre navigateur.</p>
+                        <div class="space-y-4 text-sm">
+                            <p>Dernière mise à jour : Janvier 2025</p>
+                            <h3 class="font-semibold">Types de cookies</h3>
+                            <p>Nous utilisons des cookies de session pour maintenir votre connexion et des cookies de préférences pour vos paramètres.</p>
+                            <h3 class="font-semibold">Gestion des cookies</h3>
+                            <p>Vous pouvez désactiver les cookies dans votre navigateur, mais cela peut affecter certaines fonctionnalités.</p>
+                            <h3 class="font-semibold">Cookies tiers</h3>
+                            <p>Firebase peut utiliser ses propres cookies pour l'authentification et le stockage des données.</p>
+                        </div>
+                    `
+                },
+                contact: {
+                    title: 'Nous Contacter',
+                    content: `
+                        <div class="space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h3 class="font-semibold text-lg mb-3">Support Technique</h3>
+                                    <p class="text-gray-600 mb-4">Pour toute question technique ou problème d'utilisation.</p>
+                                    <div class="space-y-2">
+                                        <p class="flex items-center"><i class="fas fa-envelope mr-2 text-blue-500"></i> support@h7social.com</p>
+                                        <p class="flex items-center"><i class="fas fa-clock mr-2 text-blue-500"></i> Lun-Ven 9h-18h</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-lg mb-3">Équipe H7</h3>
+                                    <p class="text-gray-600 mb-4">Pour les partenariats et questions générales.</p>
+                                    <div class="space-y-2">
+                                        <p class="flex items-center"><i class="fas fa-envelope mr-2 text-blue-500"></i> contact@h7social.com</p>
+                                        <p class="flex items-center"><i class="fab fa-snapchat mr-2 text-yellow-500"></i> @h7social</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-4 gradient-bg rounded-lg text-white">
+                                <h4 class="font-medium mb-2">Support Premium</h4>
+                                <p class="text-sm opacity-90">Réponse garantie en moins de 2h pour les utilisateurs premium.</p>
+                            </div>
                         </div>
                     `
                 }
             };
-            
-            const data = modalData[type] || { title: 'Information', content: '<p>Contenu non disponible.</p>' };
-            title.textContent = data.title;
-            content.innerHTML = data.content;
-            modal.classList.remove('hidden');
-        }
 
-        function hideModal() {
-            document.getElementById('generic-modal').classList.add('hidden');
-        }
-        
-        // Toast notifications
+            const modalData = modals[type] || modals.about;
+            title.textContent = modalData.title;
+            content.innerHTML = modalData.content;
+            modal.classList.remove('hidden');
+        };
+
+        window.closeModal = function() {
+            document.getElementById('general-modal').classList.add('hidden');
+        };
+
+        // Utilitaires
         function showToast(message, type = 'info') {
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
             toast.innerHTML = `
-                <div class="flex items-center space-x-2">
-                    <i class="fas ${
-                        type === 'error' ? 'fa-exclamation-circle text-red-500' :
-                        type === 'success' ? 'fa-check-circle text-green-500' :
-                        'fa-info-circle text-blue-500'
-                    }"></i>
-                    <span class="text-gray-800">${message}</span>
-                    <button onclick="this.parentElement.parentElement.remove()" class="text-gray-400 hover:text-gray-600 ml-2">
+                <div class="flex items-start space-x-3">
+                    <i class="fas fa-${type === 'success' ? 'check-circle text-green-500' : 
+                                     type === 'error' ? 'exclamation-circle text-red-500' : 
+                                     'info-circle text-blue-500'} mt-0.5"></i>
+                    <div>
+                        <p class="font-medium text-gray-900">${message}</p>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" class="text-gray-400 hover:text-gray-600">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
             `;
-            
+
             document.body.appendChild(toast);
             
             setTimeout(() => {
@@ -1154,87 +1556,14 @@
                 }
             }, 5000);
         }
-        
-        // File handling
-        function handleFileSelect(event) {
-            const files = Array.from(event.target.files || []);
-            if (files.length === 0) return;
-            
-            const fileIcon = document.getElementById('file-icon');
-            fileIcon.className = 'fas fa-spinner fa-spin text-lg';
-            
-            files.forEach(file => {
-                // Simulate file upload for demo
-                const fileData = {
-                    name: file.name,
-                    type: file.type,
-                    size: file.size,
-                    url: URL.createObjectURL(file)
-                };
-                attachments.push(fileData);
-            });
-            
-            updateAttachmentsPreview();
-            showToast(`${files.length} fichier${files.length > 1 ? 's' : ''} ajouté${files.length > 1 ? 's' : ''}`, 'success');
-            
-            fileIcon.className = 'fas fa-paperclip text-lg';
-            event.target.value = '';
-        }
-        
-        function updateAttachmentsPreview() {
-            const preview = document.getElementById('attachments-preview');
-            
-            if (attachments.length === 0) {
-                preview.classList.add('hidden');
-                preview.innerHTML = '';
-                return;
-            }
-            
-            preview.classList.remove('hidden');
-            preview.innerHTML = attachments.map((attachment, index) => `
-                <div class="flex items-center space-x-2 bg-gray-100 px-3 py-2 rounded-lg">
-                    <i class="fas ${
-                        attachment.type.startsWith('image/') ? 'fa-image' :
-                        attachment.type.includes('pdf') ? 'fa-file-pdf' :
-                        attachment.type.startsWith('video/') ? 'fa-video' :
-                        'fa-file'
-                    } text-gray-600"></i>
-                    <span class="text-sm text-gray-700">${attachment.name}</span>
-                    <button onclick="removeAttachment(${index})" class="text-red-500 hover:text-red-700">
-                        <i class="fas fa-times text-xs"></i>
-                    </button>
-                </div>
-            `).join('');
-        }
-        
-        function removeAttachment(index) {
-            attachments.splice(index, 1);
-            updateAttachmentsPreview();
-        }
 
-        // Initialize app
-        function initApp() {
-            const savedUser = localStorage.getItem('h7_user');
-            if (savedUser) {
-                currentUser = JSON.parse(savedUser);
-                
-                // User will be added automatically via Firebase real-time listener
-                
-                showChatApp();
-                initializeFirebase();
-            } else {
-                showLandingPage();
+        // Fermer les modales avec Escape
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeAuthModal();
+                closeModal();
             }
-        }
-        
-        function submitContactForm(event) {
-            event.preventDefault();
-            showToast('Message envoyé ! Nous vous répondrons dans les plus brefs délais.', 'success');
-            hideModal();
-        }
-
-        // Start the app when page loads
-        document.addEventListener('DOMContentLoaded', initApp);
+        });
     </script>
 </body>
 </html>
