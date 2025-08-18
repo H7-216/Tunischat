@@ -1032,6 +1032,75 @@
             }
         };
 
+        window.handlePrivateKeyPress = function(event, userId) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendPrivateMessage(userId);
+            }
+        };
+
+        window.sendPrivateMessage = function(userId) {
+            const messageInput = document.getElementById(`private-message-input-${userId}`);
+            const messageText = messageInput.value.trim();
+            
+            if (!messageText) return;
+            if (!currentUser) {
+                showToast('Vous devez être connecté pour envoyer un message', 'error');
+                return;
+            }
+
+            const targetUser = allUsers.find(u => u.id === userId);
+            if (!targetUser) {
+                showToast('Utilisateur introuvable', 'error');
+                return;
+            }
+
+            const message = {
+                id: 'private_msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                text: messageText,
+                from: currentUser.username,
+                fromId: currentUser.id,
+                to: targetUser.username,
+                toId: userId,
+                timestamp: new Date().toISOString(),
+                isPrivate: true,
+                profileImage: currentUser.profileImage
+            };
+
+            // Afficher le message dans l'interface
+            const messagesContainer = document.getElementById(`private-messages-${userId}`);
+            const messageTime = new Date(message.timestamp);
+            const timeString = messageTime.toLocaleTimeString('fr-FR', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+
+            // Remplacer le message d'accueil s'il existe
+            if (messagesContainer.innerHTML.includes('Début de votre conversation')) {
+                messagesContainer.innerHTML = '';
+            }
+
+            messagesContainer.innerHTML += `
+                <div class="chat-message flex justify-end mb-4">
+                    <div class="bg-blue-500 text-white px-4 py-2 rounded-lg max-w-xs">
+                        <div class="text-sm">${message.text}</div>
+                        <div class="text-xs opacity-75 mt-1">${timeString}</div>
+                    </div>
+                </div>
+            `;
+
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            messageInput.value = '';
+            
+            // En réalité, ici vous devriez envoyer le message via Firebase
+            if (isFirebaseConnected && database) {
+                const privateMessagesRef = window.firebaseRefs.ref(database, `privateMessages/${currentUser.id}_${userId}`);
+                window.firebaseRefs.push(privateMessagesRef, message);
+            }
+
+            showToast(`Message envoyé à ${targetUser.username}`, 'success');
+        };
+
         window.sendMessage = function() {
             const messageInput = document.getElementById('message-input');
             const messageText = messageInput.value.trim();
@@ -1091,15 +1160,35 @@
 
                 const attachmentsHtml = msg.attachments ? 
                     msg.attachments.map(att => `
-                        <div class="mt-2 p-2 bg-blue-50 rounded border border-blue-200 text-sm">
-                            <i class="fas fa-paperclip mr-1"></i>
-                            <span class="text-blue-700">${att.name}</span>
-                            <span class="text-gray-500 ml-2">(${formatFileSize(att.size)})</span>
+                        <div class="mt-2 p-2 bg-blue-50 rounded border border-blue-200 text-sm flex items-center justify-between">
+                            <div class="flex items-center">
+                                <i class="fas fa-paperclip mr-2"></i>
+                                <span class="text-blue-700">${att.name}</span>
+                                <span class="text-gray-500 ml-2">(${formatFileSize(att.size)})</span>
+                            </div>
+                            <button onclick="downloadAttachment('${att.url}', '${att.name}')" 
+                                    class="text-blue-600 hover:text-blue-800 ml-2" title="Télécharger">
+                                <i class="fas fa-download"></i>
+                            </button>
                         </div>
                     `).join('') : '';
 
+                const isOwner = currentUser && msg.userId === currentUser.id;
+                const canEdit = isOwner || (currentUser && currentUser.isAdmin);
+
+                const actionsHtml = canEdit ? `
+                    <div class="opacity-0 group-hover:opacity-100 transition-opacity flex space-x-2 ml-2">
+                        ${isOwner ? `<button onclick="editMessage('${msg.id}')" class="text-gray-400 hover:text-blue-500" title="Éditer">
+                            <i class="fas fa-edit text-sm"></i>
+                        </button>` : ''}
+                        <button onclick="deleteMessage('${msg.id}')" class="text-gray-400 hover:text-red-500" title="Supprimer">
+                            <i class="fas fa-trash text-sm"></i>
+                        </button>
+                    </div>
+                ` : '';
+
                 return `
-                    <div class="chat-message flex space-x-3 mb-4">
+                    <div class="chat-message group flex space-x-3 mb-4 hover:bg-gray-50 p-2 rounded-lg transition-colors">
                         <img src="${msg.profileImage || getDefaultAvatar(msg.username)}" 
                              alt="${msg.username}" 
                              class="w-10 h-10 rounded-full object-cover ${msg.isAdmin ? 'border-2 border-yellow-400' : ''}"
@@ -1109,8 +1198,9 @@
                                 <span class="font-medium text-gray-900">${msg.username}</span>
                                 ${msg.isAdmin ? '<i class="fas fa-crown text-yellow-500 text-sm" title="Administrateur"></i>' : ''}
                                 <span class="text-xs text-gray-500">${timeString}</span>
+                                ${actionsHtml}
                             </div>
-                            <div class="text-gray-700 break-words">${msg.text}</div>
+                            <div class="text-gray-700 break-words" id="message-content-${msg.id}">${msg.text}</div>
                             ${attachmentsHtml}
                         </div>
                     </div>
@@ -1220,7 +1310,50 @@
         window.selectUser = function(userId) {
             const user = allUsers.find(u => u.id === userId);
             if (user) {
-                showToast(`Messages privés avec ${user.username} (à venir)`, 'info');
+                // Basculer vers l'onglet messages privés
+                switchChat('private');
+                
+                // Afficher l'interface de chat privé avec cet utilisateur
+                const privateChat = document.getElementById('private-chat');
+                const avatarUrl = user.profileImage || getDefaultAvatar(user.username);
+                
+                privateChat.innerHTML = `
+                    <div class="flex items-center space-x-3 mb-4 p-4 bg-gray-50 rounded-lg">
+                        <img src="${avatarUrl}" alt="${user.username}" 
+                             class="w-12 h-12 rounded-full object-cover ${user.isAdmin ? 'border-2 border-yellow-400' : ''}"
+                             onerror="this.src='${getDefaultAvatar(user.username)}'">
+                        <div>
+                            <h3 class="font-semibold text-gray-900">${user.username} ${user.isAdmin ? '👑' : ''}</h3>
+                            <p class="text-sm text-gray-500">${user.isOnline ? 'En ligne' : 'Hors ligne'}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-lg p-4 h-80 overflow-y-auto mb-4" id="private-messages-${userId}">
+                        <div class="text-center text-gray-500 py-8">
+                            <i class="fas fa-comment-dots text-4xl mb-4 opacity-50"></i>
+                            <p>Début de votre conversation avec ${user.username}</p>
+                            <p class="text-sm mt-2">Les messages privés apparaîtront ici</p>
+                        </div>
+                    </div>
+                    
+                    <div class="border-t border-gray-200 pt-4">
+                        <div class="flex space-x-4">
+                            <div class="flex-1">
+                                <textarea id="private-message-input-${userId}" placeholder="Message privé à ${user.username}..." 
+                                          class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                                          rows="2" onkeypress="handlePrivateKeyPress(event, '${userId}')"></textarea>
+                            </div>
+                            <div class="flex flex-col space-y-2">
+                                <button onclick="sendPrivateMessage('${userId}')" 
+                                        class="gradient-bg text-white p-3 rounded-lg hover-scale" title="Envoyer le message privé">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                showToast(`Conversation privée avec ${user.username} ouverte`, 'success');
             }
         };
 
@@ -1492,28 +1625,102 @@
                     title: 'Nous Contacter',
                     content: `
                         <div class="space-y-6">
+                            <!-- Formulaire de contact -->
+                            <div class="bg-gray-50 rounded-xl p-6">
+                                <h3 class="font-semibold text-lg mb-4">Envoyez-nous un message</h3>
+                                <form onsubmit="handleContactForm(event)" class="space-y-4">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Nom</label>
+                                            <input type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Votre nom">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                            <input type="email" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="votre@email.com">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Sujet</label>
+                                        <select required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                            <option value="">Choisissez un sujet</option>
+                                            <option value="support">Support technique</option>
+                                            <option value="bug">Signaler un bug</option>
+                                            <option value="feature">Demande de fonctionnalité</option>
+                                            <option value="partnership">Partenariat</option>
+                                            <option value="other">Autre</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                                        <textarea required rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Décrivez votre demande..."></textarea>
+                                    </div>
+                                    <button type="submit" class="w-full gradient-bg text-white py-3 rounded-lg font-semibold hover-scale">
+                                        Envoyer le message
+                                    </button>
+                                </form>
+                            </div>
+
+                            <!-- Informations de contact -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <h3 class="font-semibold text-lg mb-3">Support Technique</h3>
+                                <div class="bg-white rounded-xl p-6 border border-gray-200">
+                                    <h3 class="font-semibold text-lg mb-3 flex items-center">
+                                        <i class="fas fa-headset mr-2 text-blue-500"></i>
+                                        Support Technique
+                                    </h3>
                                     <p class="text-gray-600 mb-4">Pour toute question technique ou problème d'utilisation.</p>
-                                    <div class="space-y-2">
-                                        <p class="flex items-center"><i class="fas fa-envelope mr-2 text-blue-500"></i> support@h7social.com</p>
-                                        <p class="flex items-center"><i class="fas fa-clock mr-2 text-blue-500"></i> Lun-Ven 9h-18h</p>
+                                    <div class="space-y-3">
+                                        <a href="mailto:support@h7social.com" class="flex items-center text-blue-600 hover:text-blue-800 transition-colors">
+                                            <i class="fas fa-envelope mr-3 w-5"></i> 
+                                            support@h7social.com
+                                        </a>
+                                        <p class="flex items-center text-gray-600">
+                                            <i class="fas fa-clock mr-3 w-5"></i> 
+                                            Lun-Ven 9h-18h (GMT+1)
+                                        </p>
+                                        <p class="flex items-center text-green-600">
+                                            <i class="fas fa-phone mr-3 w-5"></i> 
+                                            Réponse en moins de 24h
+                                        </p>
                                     </div>
                                 </div>
-                                <div>
-                                    <h3 class="font-semibold text-lg mb-3">Équipe H7</h3>
+                                
+                                <div class="bg-white rounded-xl p-6 border border-gray-200">
+                                    <h3 class="font-semibold text-lg mb-3 flex items-center">
+                                        <i class="fas fa-users mr-2 text-purple-500"></i>
+                                        Équipe H7
+                                    </h3>
                                     <p class="text-gray-600 mb-4">Pour les partenariats et questions générales.</p>
-                                    <div class="space-y-2">
-                                        <p class="flex items-center"><i class="fas fa-envelope mr-2 text-blue-500"></i> contact@h7social.com</p>
-                                        <p class="flex items-center"><i class="fab fa-snapchat mr-2 text-yellow-500"></i> @h7social</p>
+                                    <div class="space-y-3">
+                                        <a href="mailto:contact@h7social.com" class="flex items-center text-blue-600 hover:text-blue-800 transition-colors">
+                                            <i class="fas fa-envelope mr-3 w-5"></i> 
+                                            contact@h7social.com
+                                        </a>
+                                        <a href="https://t.snapchat.com/XuhVH62f" target="_blank" rel="noopener noreferrer" class="flex items-center text-yellow-600 hover:text-yellow-800 transition-colors">
+                                            <i class="fab fa-snapchat-ghost mr-3 w-5"></i> 
+                                            Suivez-nous sur Snapchat
+                                        </a>
+                                        <p class="flex items-center text-gray-600">
+                                            <i class="fas fa-globe mr-3 w-5"></i> 
+                                            Disponible 24/7
+                                        </p>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="p-4 gradient-bg rounded-lg text-white">
-                                <h4 class="font-medium mb-2">Support Premium</h4>
-                                <p class="text-sm opacity-90">Réponse garantie en moins de 2h pour les utilisateurs premium.</p>
+                            <!-- Support Premium -->
+                            <div class="p-6 gradient-bg rounded-xl text-white">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h4 class="font-semibold text-lg mb-2 flex items-center">
+                                            <i class="fas fa-crown mr-2"></i>
+                                            Support Premium
+                                        </h4>
+                                        <p class="text-sm opacity-90">Réponse garantie en moins de 2h + support prioritaire</p>
+                                    </div>
+                                    <button onclick="showToast('Fonctionnalité premium à venir!', 'info')" class="bg-white bg-opacity-20 text-white px-4 py-2 rounded-lg hover:bg-opacity-30 transition-colors">
+                                        En savoir plus
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     `
@@ -1556,6 +1763,114 @@
                 }
             }, 5000);
         }
+
+        // Fonctions pour les messages
+        window.downloadAttachment = function(url, filename) {
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast(`Téléchargement de ${filename} démarré`, 'success');
+        };
+
+        window.editMessage = function(messageId) {
+            const message = messages.find(m => m.id === messageId);
+            if (!message) return;
+
+            const contentElement = document.getElementById(`message-content-${messageId}`);
+            const originalText = message.text;
+
+            // Remplacer le contenu par un input
+            contentElement.innerHTML = `
+                <div class="flex items-center space-x-2">
+                    <input type="text" id="edit-input-${messageId}" value="${originalText}" 
+                           class="flex-1 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button onclick="saveMessageEdit('${messageId}')" class="text-green-600 hover:text-green-800" title="Sauvegarder">
+                        <i class="fas fa-check"></i>
+                    </button>
+                    <button onclick="cancelMessageEdit('${messageId}', '${originalText}')" class="text-gray-600 hover:text-gray-800" title="Annuler">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+
+            document.getElementById(`edit-input-${messageId}`).focus();
+        };
+
+        window.saveMessageEdit = function(messageId) {
+            const newText = document.getElementById(`edit-input-${messageId}`).value.trim();
+            if (!newText) {
+                showToast('Le message ne peut pas être vide', 'error');
+                return;
+            }
+
+            const messageIndex = messages.findIndex(m => m.id === messageId);
+            if (messageIndex >= 0) {
+                messages[messageIndex].text = newText;
+                messages[messageIndex].edited = true;
+                messages[messageIndex].editedAt = new Date().toISOString();
+
+                // Mettre à jour dans Firebase si connecté
+                if (isFirebaseConnected && database) {
+                    const messageRef = window.firebaseRefs.ref(database, `messages/${messageId}`);
+                    window.firebaseRefs.set(messageRef, messages[messageIndex]);
+                }
+
+                updateMessages();
+                showToast('Message modifié avec succès', 'success');
+            }
+        };
+
+        window.cancelMessageEdit = function(messageId, originalText) {
+            const contentElement = document.getElementById(`message-content-${messageId}`);
+            contentElement.innerHTML = originalText;
+        };
+
+        window.deleteMessage = function(messageId) {
+            if (!confirm('Êtes-vous sûr de vouloir supprimer ce message ?')) return;
+
+            const messageIndex = messages.findIndex(m => m.id === messageId);
+            if (messageIndex >= 0) {
+                messages.splice(messageIndex, 1);
+
+                // Supprimer de Firebase si connecté
+                if (isFirebaseConnected && database) {
+                    const messageRef = window.firebaseRefs.ref(database, `messages/${messageId}`);
+                    window.firebaseRefs.set(messageRef, null);
+                }
+
+                updateMessages();
+                showToast('Message supprimé', 'success');
+            }
+        };
+
+        // Fonction pour le formulaire de contact
+        window.handleContactForm = function(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const data = {
+                name: formData.get('name') || event.target.querySelector('input[type="text"]').value,
+                email: formData.get('email') || event.target.querySelector('input[type="email"]').value,
+                subject: formData.get('subject') || event.target.querySelector('select').value,
+                message: formData.get('message') || event.target.querySelector('textarea').value,
+                timestamp: new Date().toISOString()
+            };
+
+            // Simuler l'envoi du formulaire
+            console.log('Données du formulaire de contact:', data);
+            
+            // Réinitialiser le formulaire
+            event.target.reset();
+            
+            showToast('Votre message a été envoyé avec succès! Nous vous répondrons bientôt.', 'success');
+            
+            // Fermer la modal après 2 secondes
+            setTimeout(() => {
+                closeModal();
+            }, 2000);
+        };
 
         // Fermer les modales avec Escape
         document.addEventListener('keydown', function(event) {
