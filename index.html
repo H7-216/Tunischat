@@ -449,6 +449,15 @@
 
                             <!-- Public Chat -->
                             <div id="public-chat" class="space-y-6">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h3 class="text-lg font-semibold text-gray-800">Discussion Publique</h3>
+                                    <!-- Bouton admin H7 pour vider tout le chat -->
+                                    <button id="admin-clear-chat" onclick="adminClearAllMessages()" 
+                                            class="bg-red-600 text-white px-3 py-1.5 rounded-lg hover:bg-red-700 text-sm hidden" 
+                                            title="Supprimer tous les messages (Admin H7 uniquement)">
+                                        <i class="fas fa-trash-alt mr-1"></i> Vider le chat
+                                    </button>
+                                </div>
                                 <div class="bg-gray-50 rounded-lg p-4 h-96 overflow-y-auto" id="chat-messages">
                                     <div class="text-center text-gray-500 py-8">
                                         <i class="fas fa-comments text-4xl mb-4 opacity-50"></i>
@@ -911,6 +920,7 @@
             // Fermer la modal et afficher le chat
             closeAuthModal();
             showChatApp();
+            updateAdminControls(); // Afficher les contrôles admin si c'est H7
             
             showToast(`Bienvenue ${currentUser.username}!`, 'success');
         };
@@ -1174,16 +1184,17 @@
                     `).join('') : '';
 
                 const isOwner = currentUser && msg.userId === currentUser.id;
-                const canEdit = isOwner || (currentUser && currentUser.isAdmin);
+                const canEdit = isOwner;
+                const canDelete = currentUser && currentUser.isAdmin && currentUser.username === 'H7';
 
-                const actionsHtml = canEdit ? `
+                const actionsHtml = (canEdit || canDelete) ? `
                     <div class="opacity-0 group-hover:opacity-100 transition-opacity flex space-x-2 ml-2">
-                        ${isOwner ? `<button onclick="editMessage('${msg.id}')" class="text-gray-400 hover:text-blue-500" title="Éditer">
+                        ${canEdit ? `<button onclick="editMessage('${msg.id}')" class="text-gray-400 hover:text-blue-500" title="Éditer">
                             <i class="fas fa-edit text-sm"></i>
                         </button>` : ''}
-                        <button onclick="deleteMessage('${msg.id}')" class="text-gray-400 hover:text-red-500" title="Supprimer">
+                        ${canDelete ? `<button onclick="deleteMessage('${msg.id}')" class="text-red-500 hover:text-red-700" title="Supprimer (Admin uniquement)">
                             <i class="fas fa-trash text-sm"></i>
-                        </button>
+                        </button>` : ''}
                     </div>
                 ` : '';
 
@@ -1267,30 +1278,9 @@
                 }
             }
 
-            // Mettre à jour les utilisateurs hors ligne
-            if (offlineUsers.length > 0) {
-                offlineSection.classList.remove('hidden');
-                offlineContainer.innerHTML = offlineUsers.map(user => {
-                    const avatarUrl = user.profileImage || getDefaultAvatar(user.username);
-                    return `
-                        <div onclick="selectUser('${user.id}')" 
-                             class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
-                            <img src="${avatarUrl}" alt="Profil ${user.username}" 
-                                 class="w-8 h-8 rounded-full object-cover opacity-60 ${user.isAdmin ? 'border-2 border-yellow-400' : ''}"
-                                 onerror="this.src='${getDefaultAvatar(user.username)}'">
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm text-gray-500 truncate">${user.username}</p>
-                                <div class="flex items-center space-x-1">
-                                    <span class="w-2 h-2 bg-gray-400 rounded-full"></span>
-                                    <span class="text-xs text-gray-400">Hors ligne</span>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            } else {
-                offlineSection.classList.add('hidden');
-            }
+            // Cacher complètement la section des utilisateurs hors ligne
+            // Les utilisateurs déconnectés ne doivent plus apparaître dans la liste
+            offlineSection.classList.add('hidden');
 
             // Mettre à jour les statistiques
             activeCount.textContent = onlineUsers.length;
@@ -1870,6 +1860,49 @@
             setTimeout(() => {
                 closeModal();
             }, 2000);
+        };
+
+        // Fonction spéciale pour l'admin H7 - Vider tout le chat
+        window.adminClearAllMessages = function() {
+            if (!currentUser || !currentUser.isAdmin || currentUser.username !== 'H7') {
+                showToast('Seul l\'administrateur H7 peut effectuer cette action!', 'error');
+                return;
+            }
+
+            if (!confirm('⚠️ ATTENTION ⚠️\n\nVous êtes sur le point de supprimer TOUS les messages du chat public.\nCette action est IRRÉVERSIBLE!\n\nÊtes-vous absolument sûr de vouloir continuer?')) {
+                return;
+            }
+
+            // Double confirmation pour une action aussi critique
+            if (!confirm('Dernière confirmation:\n\nTous les messages de tous les utilisateurs seront définitivement supprimés.\n\nConfirmer la suppression complète?')) {
+                return;
+            }
+
+            // Vider les messages localement
+            messages = [];
+            
+            // Supprimer tous les messages de Firebase si connecté
+            if (isFirebaseConnected && database) {
+                const messagesRef = window.firebaseRefs.ref(database, 'messages');
+                window.firebaseRefs.set(messagesRef, null);
+            }
+
+            // Mettre à jour l'interface
+            updateMessages();
+            
+            showToast('🧹 Tous les messages ont été supprimés par l\'administrateur H7', 'success');
+            
+            console.log(`[ADMIN ACTION] Chat entièrement vidé par ${currentUser.username} à ${new Date().toISOString()}`);
+        };
+
+        // Afficher le bouton admin uniquement pour H7
+        function updateAdminControls() {
+            const adminButton = document.getElementById('admin-clear-chat');
+            if (currentUser && currentUser.isAdmin && currentUser.username === 'H7') {
+                adminButton.classList.remove('hidden');
+            } else {
+                adminButton.classList.add('hidden');
+            }
         };
 
         // Fermer les modales avec Escape
