@@ -283,561 +283,277 @@
 
                         <!-- Quick Links -->
                         <div>
-                            <h4 class="font-semibold text-lg mb-4">Liens Rapides</h4>
+                            <h4 class="text-lg font-semibold mb-4">Liens Rapides</h4>
                             <ul class="space-y-2">
-                                <li>
-                                    <button onclick="showModal('about')" 
-                                            class="text-gray-300 hover:text-white transition-colors flex items-center">
-                                        <i class="fas fa-info-circle mr-2"></i>À propos de nous
-                                    </button>
-                                </li>
-                                <li>
-                                    <button onclick="showModal('features')" 
-                                            class="text-gray-300 hover:text-white transition-colors flex items-center">
-                                        <i class="fas fa-star mr-2"></i>Fonctionnalités
-                                    </button>
-                                </li>
-                                <li>
-                                    <button onclick="showModal('help')" 
-                                            class="text-gray-300 hover:text-white transition-colors flex items-center">
-                                        <i class="fas fa-question-circle mr-2"></i>Centre d'aide
-                                    </button>
-                                </li>
-                                <li>
-                                    <button onclick="showModal('blog')" 
-                                            class="text-gray-300 hover:text-white transition-colors flex items-center">
-                                        <i class="fas fa-blog mr-2"></i>Blog
-                                    </button>
-                                </li>
+                                <li><a href="#" class="text-gray-300 hover:text-white transition-colors">À propos</a></li>
+                                <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Fonctionnalités</a></li>
+                                <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Support</a></li>
+                                <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Contact</a></li>
                             </ul>
                         </div>
 
-                        <!-- Legal Links -->
+                        <!-- Legal -->
                         <div>
-                            <h4 class="font-semibold text-lg mb-4">Légal</h4>
+                            <h4 class="text-lg font-semibold mb-4">Légal</h4>
                             <ul class="space-y-2">
-                                <li>
-                                    <button onclick="showModal('privacy')" 
-                                            class="text-gray-300 hover:text-white transition-colors flex items-center">
-                                        <i class="fas fa-shield-alt mr-2"></i>Confidentialité
-                                    </button>
-                                </li>
-                                <li>
-                                    <button onclick="showModal('terms')" 
-                                            class="text-gray-300 hover:text-white transition-colors flex items-center">
-                                        <i class="fas fa-file-contract mr-2"></i>CGV
-                                    </button>
-                                </li>
-                                <li>
-                                    <button onclick="showModal('cookies')" 
-                                            class="text-gray-300 hover:text-white transition-colors flex items-center">
-                                        <i class="fas fa-cookie-bite mr-2"></i>Cookies
-                                    </button>
-                                </li>
-                                <li>
-                                    <button onclick="showModal('contact')" 
-                                            class="text-gray-300 hover:text-white transition-colors flex items-center">
-                                        <i class="fas fa-envelope mr-2"></i>Nous contacter
-                                    </button>
-                                </li>
+                                <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Confidentialité</a></li>
+                                <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Conditions</a></li>
+                                <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Cookies</a></li>
                             </ul>
                         </div>
                     </div>
-                </div>
 
-                <!-- Bottom Bar -->
-                <div class="border-t border-gray-800">
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                        <div class="flex flex-col md:flex-row justify-between items-center">
-                            <p class="text-gray-400 text-sm">
-                                © 2025 H7 Social. Tous droits réservés.
-                            </p>
-                            <div class="flex items-center space-x-6 mt-4 md:mt-0">
-                                <span class="text-gray-400 text-sm">Développé avec ❤️ par l'équipe H7</span>
-                                <div class="flex items-center space-x-2">
-                                    <span id="server-status" class="w-2 h-2 bg-gray-500 rounded-full"></span>
-                                    <span id="server-status-text" class="text-sm text-gray-400">Connexion en cours...</span>
-                                </div>
-                            </div>
-                        </div>
+                    <!-- Bottom Border -->
+                    <div class="border-t border-gray-800 mt-8 pt-8 text-center">
+                        <p class="text-gray-400">&copy; 2024 H7 Social. Tous droits réservés.</p>
                     </div>
                 </div>
             </footer>
         </div>
 
-        <!-- Chat Application -->
-        <div id="chat-app" class="hidden min-h-screen bg-gray-50">
-            <!-- Header -->
-            <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="flex justify-between items-center h-16">
-                        <!-- Logo and Brand -->
-                        <div class="flex items-center space-x-4">
-                            <div class="w-10 h-10 gradient-bg rounded-full flex items-center justify-center">
-                                <i class="fas fa-comments text-white text-lg"></i>
-                            </div>
-                            <h1 class="text-xl font-bold text-gray-900">H7 Social</h1>
-                            <div class="hidden md:flex items-center space-x-2 ml-8">
-                                <span id="connection-status" class="w-3 h-3 rounded-full bg-gray-500"></span>
-                                <span id="connection-text" class="text-sm text-gray-600">Connexion...</span>
-                            </div>
-                        </div>
-
-                        <!-- User Profile and Controls -->
-                        <div class="flex items-center space-x-4">
-                            <!-- User Profile -->
-                            <div class="flex items-center space-x-3">
-                                <div class="avatar-upload-container">
-                                    <img id="current-user-avatar" src="" alt="Avatar" 
-                                         class="w-10 h-10 rounded-full object-cover border-2 border-gray-200">
-                                    <button onclick="openAvatarUpload()" class="avatar-upload-button" title="Changer l'avatar">
-                                        <i class="fas fa-camera"></i>
-                                    </button>
-                                    <input type="file" id="avatar-upload" class="hidden" accept="image/*" onchange="handleAvatarUpload(event)">
-                                </div>
-                                <div class="hidden md:block">
-                                    <p class="text-sm font-medium text-gray-900" id="current-username">Utilisateur</p>
-                                    <p class="text-xs text-gray-500" id="user-role">Membre</p>
-                                </div>
-                            </div>
-                            
-                            <!-- Logout Button -->
-                            <button onclick="logout()" 
-                                    class="text-gray-500 hover:text-red-500 transition-colors">
-                                <i class="fas fa-sign-out-alt"></i>
-                            </button>
-                        </div>
+        <!-- Auth Modal -->
+        <div id="auth-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+            <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 gradient-bg rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-user text-white text-2xl"></i>
                     </div>
+                    <h2 class="text-2xl font-bold text-gray-900 mb-2">Rejoindre H7 Social</h2>
+                    <p class="text-gray-600">Connectez-vous ou créez un compte pour commencer à discuter</p>
                 </div>
-            </header>
 
-            <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                    <!-- Sidebar -->
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-semibold text-lg text-gray-900">Utilisateurs Connectés</h3>
-                            <button onclick="refreshUsersList()" class="text-gray-500 hover:text-blue-500 transition-colors" title="Actualiser">
-                                <i class="fas fa-sync-alt text-sm"></i>
-                            </button>
-                        </div>
-                        <div id="online-users" class="space-y-3">
-                            <!-- Les utilisateurs connectés seront affichés ici -->
-                        </div>
-                        
-                        <div id="offline-users-section" class="mt-6 pt-4 border-t border-gray-200">
-                            <h4 class="text-sm font-medium text-gray-700 mb-3">Utilisateurs Hors Ligne</h4>
-                            <div id="offline-users" class="space-y-2">
-                                <!-- Les utilisateurs hors ligne seront affichés ici -->
-                            </div>
-                        </div>
-                        
-                        <!-- Quick Stats -->
-                        <div class="mt-6 gradient-bg rounded-xl p-6 text-white">
-                            <h4 class="font-semibold mb-3">Statistiques</h4>
-                            <div class="space-y-2 text-sm">
-                                <div class="flex justify-between">
-                                    <span>Utilisateurs actifs:</span>
-                                    <span id="active-users-count">0</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span>Messages aujourd'hui:</span>
-                                    <span id="daily-messages">0</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span>Fichiers partagés:</span>
-                                    <span id="shared-files">0</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Chat Area -->
-                    <div class="lg:col-span-3 space-y-6">
-                        <!-- Chat Tabs -->
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                            <div class="flex border-b border-gray-200 mb-6">
-                                <button onclick="switchChat('public')" 
-                                        class="chat-tab px-6 py-3 border-b-2 border-blue-500 text-blue-600 font-medium">
-                                    Chat Public
-                                </button>
-                                <button onclick="switchChat('private')" 
-                                        class="chat-tab px-6 py-3 border-b-2 border-transparent text-gray-500 hover:text-gray-700">
-                                    Messages Privés
-                                </button>
-                            </div>
-
-                            <!-- Public Chat -->
-                            <div id="public-chat" class="space-y-6">
-                                <div class="flex items-center justify-between mb-2">
-                                    <h3 class="text-lg font-semibold text-gray-800">Discussion Publique</h3>
-                                    <!-- Bouton admin H7 pour vider tout le chat -->
-                                    <button id="admin-clear-chat" onclick="adminClearAllMessages()" 
-                                            class="bg-red-600 text-white px-3 py-1.5 rounded-lg hover:bg-red-700 text-sm hidden" 
-                                            title="Vider tous les messages (Admin uniquement)">
-                                        <i class="fas fa-trash mr-1"></i>Vider le chat
-                                    </button>
-                                </div>
-                                
-                                <div class="bg-gray-50 rounded-lg p-4 h-80 overflow-y-auto border border-gray-200" id="chat-messages">
-                                    <!-- Les messages du chat public seront affichés ici -->
-                                    <div class="text-center text-gray-500 py-8">
-                                        <i class="fas fa-comments text-4xl mb-4 opacity-50"></i>
-                                        <p>Aucun message pour le moment. Commencez la conversation !</p>
-                                    </div>
-                                </div>
-                                
-                                <!-- Zone de fichiers joints -->
-                                <div id="attachments-preview" class="hidden bg-blue-50 border border-blue-200 rounded-lg p-3">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <span class="text-sm font-medium text-blue-700">Fichiers attachés :</span>
-                                        <button onclick="clearAttachments()" class="text-blue-600 hover:text-blue-800 text-sm">
-                                            <i class="fas fa-times"></i> Tout supprimer
-                                        </button>
-                                    </div>
-                                    <div id="attachments-list" class="space-y-2">
-                                        <!-- Liste des fichiers attachés -->
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Private Chat -->
-                            <div id="private-chat" class="hidden space-y-6">
-                                <div class="text-center text-gray-500 py-12">
-                                    <i class="fas fa-user-friends text-4xl mb-4 opacity-50"></i>
-                                    <h3 class="text-lg font-medium mb-2">Messages Privés</h3>
-                                    <p>Cliquez sur un utilisateur dans la liste pour démarrer une conversation privée</p>
-                                </div>
-                            </div>
-
-                            <!-- Message Input Area -->
-                            <div class="border-t border-gray-200 pt-4">
-                                <div class="flex space-x-4 items-end">
-                                    <div class="flex-1">
-                                        <textarea id="message-input" placeholder="Tapez votre message..." 
-                                                  class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                                                  rows="3" onkeypress="handleKeyPress(event)"></textarea>
-                                    </div>
-                                    <div class="flex flex-col space-y-2">
-                                        <button onclick="sendMessage()" 
-                                                class="gradient-bg text-white p-3 rounded-lg hover-scale" title="Envoyer le message">
-                                            <i class="fas fa-paper-plane"></i>
-                                        </button>
-                                        <label for="file-input" class="bg-gray-200 text-gray-600 p-3 rounded-lg hover:bg-gray-300 cursor-pointer" title="Joindre un fichier">
-                                            <i id="file-icon" class="fas fa-paperclip text-lg"></i>
-                                        </label>
-                                        <input type="file" id="file-input" class="hidden" multiple onchange="handleFileSelect(event)">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </main>
-        </div>
-    </div>
-
-    <!-- Auth Modal -->
-    <div id="auth-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
-        <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl">
-            <div class="text-center mb-6">
-                <div class="w-16 h-16 gradient-bg rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-user text-white text-2xl"></i>
-                </div>
-                <h2 class="text-2xl font-bold text-gray-900 mb-2">Rejoindre H7 Social</h2>
-                <p class="text-gray-600">Connectez-vous ou créez un compte pour commencer à discuter</p>
-            </div>
-
-            <div id="auth-tabs" class="flex mb-6 bg-gray-100 rounded-lg p-1">
-                <button onclick="switchAuthTab('login')" 
-                        class="auth-tab flex-1 py-2 px-4 rounded-md text-sm font-medium bg-white text-gray-900 shadow-sm">
-                    Connexion
-                </button>
-                <button onclick="switchAuthTab('register')" 
-                        class="auth-tab flex-1 py-2 px-4 rounded-md text-sm font-medium text-gray-500 hover:text-gray-700">
-                    Inscription
-                </button>
-            </div>
-
-            <form id="auth-form" onsubmit="handleAuth(event)">
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Nom d'utilisateur</label>
-                        <input type="text" id="auth-username" required
-                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                               placeholder="Votre nom d'utilisateur">
-                    </div>
-                    
-                    <div id="password-field" class="hidden">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Mot de passe</label>
-                        <input type="password" id="auth-password"
-                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                               placeholder="Votre mot de passe">
-                    </div>
-                    
-                    <div id="avatar-selection" class="hidden">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Photo de profil (optionnelle)</label>
-                        <div class="flex justify-center mb-4">
-                            <div class="avatar-upload-container">
-                                <img id="preview-avatar" src="" alt="Aperçu" 
-                                     class="w-20 h-20 rounded-full object-cover border-4 border-gray-200 bg-gray-100">
-                                <button type="button" onclick="openRegistrationAvatarUpload()" class="avatar-upload-button" title="Choisir une photo">
-                                    <i class="fas fa-camera"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <input type="file" id="registration-avatar-upload" class="hidden" accept="image/*" onchange="handleRegistrationAvatarUpload(event)">
-                    </div>
-
-                    <button type="submit" id="auth-submit"
-                            class="w-full gradient-bg text-white py-3 rounded-lg font-semibold hover-scale">
-                        Se connecter
+                <div id="auth-tabs" class="flex mb-6 bg-gray-100 rounded-lg p-1">
+                    <button onclick="switchAuthTab('login')" 
+                            class="auth-tab flex-1 py-2 px-4 rounded-md text-sm font-medium bg-white text-gray-900 shadow-sm">
+                        Connexion
+                    </button>
+                    <button onclick="switchAuthTab('register')" 
+                            class="auth-tab flex-1 py-2 px-4 rounded-md text-sm font-medium text-gray-500 hover:text-gray-700">
+                        Inscription
                     </button>
                 </div>
-            </form>
 
-            <div class="mt-6">
-                <div class="relative">
-                    <div class="absolute inset-0 flex items-center">
-                        <div class="w-full border-t border-gray-300"></div>
+                <form id="auth-form" onsubmit="handleAuth(event)">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nom d'utilisateur</label>
+                            <input type="text" id="auth-username" required
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                   placeholder="Votre nom d'utilisateur">
+                        </div>
+                        
+                        <div id="password-field" class="hidden">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Mot de passe</label>
+                            <input type="password" id="auth-password"
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                   placeholder="Votre mot de passe">
+                        </div>
                     </div>
-                    <div class="relative flex justify-center text-sm">
-                        <span class="px-2 bg-white text-gray-500">Ou connectez-vous avec</span>
+                    
+                    <button type="submit" id="auth-submit" class="w-full gradient-bg text-white py-3 px-4 rounded-lg mt-6 font-semibold">
+                        Se connecter
+                    </button>
+                </form>
+
+                <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main App -->
+        <div id="main-app" class="hidden h-screen flex">
+            <!-- Sidebar -->
+            <div class="w-80 bg-white border-r border-gray-200 flex flex-col">
+                <!-- User Profile -->
+                <div class="p-6 border-b border-gray-200">
+                    <div class="flex items-center space-x-4">
+                        <div class="avatar-upload-container">
+                            <div id="user-avatar" class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                                ?
+                            </div>
+                            <button onclick="triggerAvatarUpload()" class="avatar-upload-button">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                            <input type="file" id="avatar-upload" accept="image/*" style="display: none;" onchange="uploadAvatar(event)">
+                        </div>
+                        <div class="flex-1">
+                            <h3 id="user-display-name" class="font-semibold text-gray-900">Utilisateur</h3>
+                            <p class="text-sm text-gray-500">En ligne</p>
+                        </div>
+                        <button onclick="logoutUser()" class="text-gray-400 hover:text-red-500 transition-colors">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
                     </div>
                 </div>
-                
-                <button onclick="loginWithGoogle()" disabled
-                        class="mt-4 w-full border border-gray-300 bg-white text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-50 flex items-center justify-center space-x-2 opacity-50 cursor-not-allowed">
-                    <i class="fab fa-google text-red-500"></i>
-                    <span>Google (Configurez Firebase d'abord)</span>
-                </button>
+
+                <!-- Navigation -->
+                <div class="p-4 border-b border-gray-200">
+                    <div class="space-y-2">
+                        <button onclick="showPublicChat()" id="public-chat-btn" class="w-full text-left p-3 rounded-lg hover:bg-gray-100 flex items-center space-x-3 bg-blue-50 text-blue-600">
+                            <i class="fas fa-users"></i>
+                            <span>Chat Public</span>
+                        </button>
+                        <button onclick="showPrivateChats()" id="private-chats-btn" class="w-full text-left p-3 rounded-lg hover:bg-gray-100 flex items-center space-x-3">
+                            <i class="fas fa-comment-dots"></i>
+                            <span>Messages Privés</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Online Users / Private Chats -->
+                <div class="flex-1 overflow-y-auto">
+                    <!-- Online Users (for public chat) -->
+                    <div id="online-users-section" class="p-4">
+                        <h4 class="font-medium text-gray-900 mb-3">Utilisateurs en ligne</h4>
+                        <div id="online-users-list" class="space-y-2">
+                            <!-- Users will be populated here -->
+                        </div>
+                    </div>
+
+                    <!-- Private Conversations -->
+                    <div id="private-conversations-section" class="p-4 hidden">
+                        <h4 class="font-medium text-gray-900 mb-3">Conversations</h4>
+                        <div id="conversations-list" class="space-y-2">
+                            <!-- Conversations will be populated here -->
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <button onclick="closeAuthModal()" 
-                    class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
-                <i class="fas fa-times text-xl"></i>
-            </button>
+            <!-- Chat Area -->
+            <div class="flex-1 flex flex-col">
+                <!-- Chat Header -->
+                <div class="bg-white border-b border-gray-200 p-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 id="chat-title" class="text-xl font-semibold text-gray-900">Chat Public</h2>
+                            <p id="chat-subtitle" class="text-sm text-gray-500">Discutez avec la communauté</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Messages Container -->
+                <div class="flex-1 overflow-y-auto p-4 bg-gray-50">
+                    <div id="messages-container" class="space-y-4">
+                        <!-- Messages will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Message Input -->
+                <div class="bg-white border-t border-gray-200 p-4">
+                    <div class="flex space-x-4">
+                        <input type="text" id="message-input" 
+                               class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+                               placeholder="Tapez votre message..."
+                               onkeypress="handleMessageKeyPress(event)">
+                        <button onclick="sendMessage()" class="gradient-bg text-white px-6 py-2 rounded-lg font-semibold">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- General Modal -->
-    <div id="general-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-        <div class="bg-white rounded-2xl p-8 max-w-2xl w-full mx-4 max-h-96 overflow-y-auto">
-            <div class="flex justify-between items-center mb-6">
-                <h2 id="modal-title" class="text-2xl font-bold text-gray-900"></h2>
-                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
-            </div>
-            <div id="modal-content" class="text-gray-700"></div>
-        </div>
-    </div>
-
+    <!-- Firebase SDKs -->
     <script type="module">
-        // Configuration Firebase (cachée par défaut pour la sécurité)
-        let firebaseConfig = null;
-        let firebaseApp = null;
-        let database = null;
-        let auth = null;
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getDatabase, ref, set, push, onValue, remove, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
 
-        // Variables globales
+        // Global variables
+        let app = null;
+        let database = null;
+        let storage = null;
         let currentUser = null;
-        let messages = [];
-        let allUsers = [];
-        let currentView = 'public';
-        let attachments = [];
+        let currentChat = 'public';
+        let currentPrivateChat = null;
+        let messagesListeners = {};
         let isLogin = true;
 
-        // État de l'application
-        let isFirebaseConnected = false;
-        let connectionAttempts = 0;
-        const MAX_CONNECTION_ATTEMPTS = 3;
+        // Initialize Firebase
+        function initFirebase(config) {
+            try {
+                app = initializeApp(config);
+                database = getDatabase(app);
+                storage = getStorage(app);
+                console.log('Firebase initialized successfully');
+                return true;
+            } catch (error) {
+                console.error('Firebase initialization error:', error);
+                showToast('Erreur de configuration Firebase: ' + error.message, 'error');
+                return false;
+            }
+        }
 
-        // Initialisation de l'application
-        window.addEventListener('DOMContentLoaded', function() {
-            loadFirebaseConfig();
-            initializeApp();
-        });
+        // Configuration management
+        function loadFirebaseConfig() {
+            const saved = localStorage.getItem('h7social_firebase_config');
+            if (saved) {
+                try {
+                    const config = JSON.parse(saved);
+                    document.getElementById('firebase-api-key').value = config.apiKey || '';
+                    document.getElementById('firebase-db-url').value = config.databaseURL || '';
+                    document.getElementById('firebase-project-id').value = config.projectId || '';
+                    return config;
+                } catch (error) {
+                    console.error('Error loading config:', error);
+                }
+            }
+            return null;
+        }
 
-        // Gestion de la configuration Firebase
-        window.toggleConfigPanel = function() {
-            const panel = document.getElementById('config-panel');
-            panel.classList.toggle('hidden');
-        };
-
-        window.saveFirebaseConfig = function() {
+        function saveFirebaseConfig() {
             const apiKey = document.getElementById('firebase-api-key').value.trim();
-            const dbUrl = document.getElementById('firebase-db-url').value.trim();
+            const databaseURL = document.getElementById('firebase-db-url').value.trim();
             const projectId = document.getElementById('firebase-project-id').value.trim();
 
-            if (!apiKey || !dbUrl || !projectId) {
-                showToast('Veuillez remplir tous les champs', 'error');
+            if (!apiKey || !databaseURL || !projectId) {
+                showToast('Tous les champs sont requis', 'error');
                 return;
             }
 
             const config = {
                 apiKey: apiKey,
-                authDomain: projectId + '.firebaseapp.com',
-                databaseURL: dbUrl,
+                authDomain: `${projectId}.firebaseapp.com`,
+                databaseURL: databaseURL,
                 projectId: projectId,
-                storageBucket: projectId + '.appspot.com',
-                messagingSenderId: '767585260701',
-                appId: '1:767585260701:web:9159e8293d385415f87074'
+                storageBucket: `${projectId}.appspot.com`,
+                messagingSenderId: "123456789",
+                appId: "1:123456789:web:abc123def456"
             };
 
-            // Sauvegarder dans localStorage
-            localStorage.setItem('h7_firebase_config', JSON.stringify(config));
-            firebaseConfig = config;
-
-            // Initialiser Firebase
-            initializeFirebase();
-            toggleConfigPanel();
-        };
-
-        function loadFirebaseConfig() {
-            const saved = localStorage.getItem('h7_firebase_config');
-            if (saved) {
-                try {
-                    firebaseConfig = JSON.parse(saved);
-                    document.getElementById('firebase-api-key').value = firebaseConfig.apiKey || '';
-                    document.getElementById('firebase-db-url').value = firebaseConfig.databaseURL || '';
-                    document.getElementById('firebase-project-id').value = firebaseConfig.projectId || '';
-                } catch (e) {
-                    console.error('Erreur lors du chargement de la configuration:', e);
-                }
+            localStorage.setItem('h7social_firebase_config', JSON.stringify(config));
+            
+            if (initFirebase(config)) {
+                toggleConfigPanel();
+                showToast('Configuration sauvegardée avec succès!', 'success');
             }
         }
 
-        function initializeApp() {
-            showToast('H7 Social démarre...', 'info');
-            
-            // Mettre à jour l'état du serveur
-            updateServerStatus('connecting');
-            
-            if (firebaseConfig) {
-                initializeFirebase();
-            } else {
-                updateServerStatus('error');
-                showToast('Configuration Firebase requise', 'error');
-            }
-
-            // Ajouter les utilisateurs de test
-            allUsers = generateTestUsers();
-            updateUsersList();
+        function toggleConfigPanel() {
+            const panel = document.getElementById('config-panel');
+            panel.classList.toggle('hidden');
         }
 
-        async function initializeFirebase() {
-            if (!firebaseConfig) {
-                showToast('Configuration Firebase manquante', 'error');
-                return;
-            }
-
-            try {
-                updateServerStatus('connecting');
-                
-                // Charger Firebase de façon dynamique
-                const { initializeApp } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js');
-                const { getDatabase, ref, set, push, onValue, off } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js');
-                const { getAuth, signInAnonymously, onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js');
-
-                // Sauvegarder les références pour usage global
-                window.firebaseRefs = { ref, set, push, onValue, off };
-
-                firebaseApp = initializeApp(firebaseConfig);
-                database = getDatabase(firebaseApp);
-                auth = getAuth(firebaseApp);
-
-                isFirebaseConnected = true;
-                updateServerStatus('connected');
-                showToast('Firebase connecté avec succès!', 'success');
-
-                // Activer le bouton Google
-                const googleBtn = document.querySelector('button[onclick="loginWithGoogle()"]');
-                if (googleBtn) {
-                    googleBtn.disabled = false;
-                    googleBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                    googleBtn.querySelector('span').textContent = 'Continuer avec Google';
-                }
-
-            } catch (error) {
-                console.error('Erreur Firebase:', error);
-                isFirebaseConnected = false;
-                updateServerStatus('error');
-                
-                connectionAttempts++;
-                if (connectionAttempts < MAX_CONNECTION_ATTEMPTS) {
-                    showToast(`Tentative de reconnexion ${connectionAttempts}/${MAX_CONNECTION_ATTEMPTS}...`, 'error');
-                    setTimeout(() => initializeFirebase(), 3000);
-                } else {
-                    showToast('Impossible de se connecter à Firebase. Vérifiez votre configuration.', 'error');
-                }
-            }
+        // User management
+        function generateUserId() {
+            return 'user_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
         }
 
-        function updateServerStatus(status) {
-            const indicator = document.getElementById('server-status');
-            const text = document.getElementById('server-status-text');
-            const connectionIndicator = document.getElementById('connection-status');
-            const connectionText = document.getElementById('connection-text');
-
-            const statusConfig = {
-                connecting: { color: 'bg-yellow-500', text: 'Connexion...' },
-                connected: { color: 'bg-green-500', text: 'En ligne' },
-                error: { color: 'bg-red-500', text: 'Hors ligne' }
-            };
-
-            const config = statusConfig[status];
-            
-            if (indicator && text) {
-                indicator.className = `w-2 h-2 rounded-full ${config.color}`;
-                text.textContent = config.text;
+        function hashPassword(password) {
+            // Simple hash function for demo purposes
+            let hash = 0;
+            for (let i = 0; i < password.length; i++) {
+                const char = password.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
             }
-            
-            if (connectionIndicator && connectionText) {
-                connectionIndicator.className = `w-3 h-3 rounded-full ${config.color}`;
-                connectionText.textContent = config.text;
-            }
+            return Math.abs(hash).toString();
         }
 
-        // Gestion de l'authentification
-        window.showAuthModal = function() {
-            document.getElementById('auth-modal').classList.remove('hidden');
-            document.getElementById('auth-username').focus();
-        };
-
-        window.closeAuthModal = function() {
-            document.getElementById('auth-modal').classList.add('hidden');
-        };
-
-        window.switchAuthTab = function(tab) {
-            const tabs = document.querySelectorAll('.auth-tab');
-            const passwordField = document.getElementById('password-field');
-            const avatarSelection = document.getElementById('avatar-selection');
-            const submitBtn = document.getElementById('auth-submit');
-            
-            tabs.forEach(t => {
-                t.classList.remove('bg-white', 'text-gray-900', 'shadow-sm');
-                t.classList.add('text-gray-500', 'hover:text-gray-700');
-            });
-
-            isLogin = tab === 'login';
-            
-            if (isLogin) {
-                tabs[0].classList.add('bg-white', 'text-gray-900', 'shadow-sm');
-                tabs[0].classList.remove('text-gray-500', 'hover:text-gray-700');
-                passwordField.classList.add('hidden');
-                avatarSelection.classList.add('hidden');
-                submitBtn.textContent = 'Se connecter';
-            } else {
-                tabs[1].classList.add('bg-white', 'text-gray-900', 'shadow-sm');
-                tabs[1].classList.remove('text-gray-500', 'hover:text-gray-700');
-                passwordField.classList.remove('hidden');
-                avatarSelection.classList.remove('hidden');
-                submitBtn.textContent = 'Créer un compte';
-            }
-        };
-
-        window.handleAuth = function(event) {
+        async function handleAuth(event) {
             event.preventDefault();
             
             const username = document.getElementById('auth-username').value.trim();
@@ -853,1268 +569,517 @@
                 return;
             }
 
-            // Simuler l'authentification
-            const avatarPreview = document.getElementById('preview-avatar');
-            const userAvatar = avatarPreview && avatarPreview.src && !avatarPreview.src.includes('data:image') ? 
-                avatarPreview.src : getDefaultAvatar(username);
-
-            currentUser = {
-                id: 'user_' + Date.now(),
-                username: username,
-                isAdmin: username.toLowerCase() === 'h7',
-                isOnline: true,
-                profileImage: userAvatar
-            };
-
-            // Si Firebase est connecté, sauvegarder l'utilisateur
-            if (isFirebaseConnected && database) {
-                const userRef = window.firebaseRefs.ref(database, `users/${currentUser.id}`);
-                window.firebaseRefs.set(userRef, {
-                    username: currentUser.username,
-                    isOnline: true,
-                    isAdmin: currentUser.isAdmin,
-                    profileImage: currentUser.profileImage,
-                    lastSeen: new Date().toISOString()
-                });
-            }
-
-            // Mettre à jour l'interface
-            document.getElementById('current-username').textContent = username;
-            document.getElementById('current-user-avatar').src = userAvatar;
-            document.getElementById('user-role').textContent = currentUser.isAdmin ? 'Administrateur 👑' : 'Membre';
-
-            // Afficher/masquer les fonctions admin
-            if (currentUser.isAdmin && currentUser.username.toLowerCase() === 'h7') {
-                document.getElementById('admin-clear-chat').classList.remove('hidden');
-            }
-
-            // Ajouter à la liste locale
-            const existingUserIndex = allUsers.findIndex(u => u.username === username);
-            if (existingUserIndex >= 0) {
-                allUsers[existingUserIndex] = currentUser;
-            } else {
-                allUsers.push(currentUser);
-            }
-
-            updateUsersList();
-            closeAuthModal();
-            showChatApp();
-            
-            showToast(`Bienvenue ${username}!`, 'success');
-        };
-
-        // Gestion de l'avatar de création de compte
-        window.openRegistrationAvatarUpload = function() {
-            document.getElementById('registration-avatar-upload').click();
-        };
-
-        window.handleRegistrationAvatarUpload = function(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            if (file.size > 5 * 1024 * 1024) {
-                showToast('L\'image doit faire moins de 5MB', 'error');
+            if (!database) {
+                showToast('Veuillez configurer Firebase d\'abord', 'error');
                 return;
             }
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const preview = document.getElementById('preview-avatar');
-                preview.src = e.target.result;
-                preview.style.display = 'block';
-            };
-            reader.readAsDataURL(file);
-        };
-
-        // Avatar de l'utilisateur connecté
-        window.openAvatarUpload = function() {
-            document.getElementById('avatar-upload').click();
-        };
-
-        window.handleAvatarUpload = function(event) {
-            const file = event.target.files[0];
-            if (!file || !currentUser) return;
-
-            if (file.size > 5 * 1024 * 1024) {
-                showToast('L\'image doit faire moins de 5MB', 'error');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                currentUser.profileImage = e.target.result;
-                document.getElementById('current-user-avatar').src = e.target.result;
-                
-                // Mettre à jour dans la liste des utilisateurs
-                const userIndex = allUsers.findIndex(u => u.id === currentUser.id);
-                if (userIndex >= 0) {
-                    allUsers[userIndex].profileImage = e.target.result;
-                }
-                
-                updateUsersList();
-                
-                // Sauvegarder dans Firebase si connecté
-                if (isFirebaseConnected && database) {
-                    const userRef = window.firebaseRefs.ref(database, `users/${currentUser.id}`);
-                    window.firebaseRefs.set(userRef, {
-                        username: currentUser.username,
-                        isOnline: true,
-                        isAdmin: currentUser.isAdmin,
-                        profileImage: currentUser.profileImage,
-                        lastSeen: new Date().toISOString()
+            try {
+                if (isLogin) {
+                    // Mode connexion - juste avec le nom d'utilisateur
+                    const usersRef = ref(database, 'users');
+                    const snapshot = await new Promise((resolve) => {
+                        onValue(usersRef, resolve, { onlyOnce: true });
                     });
-                }
-                
-                showToast('Avatar mis à jour avec succès', 'success');
-            };
-            reader.readAsDataURL(file);
-        };
 
-        function showChatApp() {
-            document.getElementById('landing-page').classList.add('hidden');
-            document.getElementById('chat-app').classList.remove('hidden');
-            
-            if (isFirebaseConnected) {
-                initializeFirebaseChat();
-            }
-        }
+                    const users = snapshot.val() || {};
+                    const userEntry = Object.entries(users).find(([id, user]) => 
+                        user.username === username
+                    );
 
-        function initializeFirebaseChat() {
-            if (!database || !currentUser) return;
+                    if (!userEntry) {
+                        showToast('Nom d\'utilisateur introuvable', 'error');
+                        return;
+                    }
 
-            const messagesRef = window.firebaseRefs.ref(database, 'messages');
-            
-            // Écouter les nouveaux messages
-            window.firebaseRefs.onValue(messagesRef, (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    messages = Object.keys(data).map(key => ({
-                        id: key,
-                        ...data[key]
-                    })).sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+                    const [userId, userData] = userEntry;
+                    currentUser = { ...userData, id: userId };
+                    
+                    // Update last seen
+                    await set(ref(database, `users/${userId}/lastSeen`), serverTimestamp());
+                    
+                    localStorage.setItem('h7social_current_user', JSON.stringify(currentUser));
+                    
+                    showToast('Connexion réussie!', 'success');
+                    showMainApp();
+                    closeAuthModal();
+                    
                 } else {
-                    messages = [];
-                }
-                updateMessages();
-            });
-
-            // Marquer l'utilisateur comme en ligne
-            const currentUserRef = window.firebaseRefs.ref(database, `users/${currentUser.id}`);
-            window.firebaseRefs.set(currentUserRef, {
-                username: currentUser.username,
-                isOnline: true,
-                isAdmin: currentUser.isAdmin,
-                profileImage: currentUser.profileImage,
-                lastSeen: new Date().toISOString()
-            });
-
-            // Gérer la déconnexion
-            window.addEventListener('beforeunload', () => {
-                if (database && currentUser) {
-                    window.firebaseRefs.set(currentUserRef, {
-                        username: currentUser.username,
-                        isOnline: false,
-                        isAdmin: currentUser.isAdmin,
-                        profileImage: currentUser.profileImage,
-                        lastSeen: new Date().toISOString()
+                    // Mode inscription - avec mot de passe
+                    const usersRef = ref(database, 'users');
+                    const snapshot = await new Promise((resolve) => {
+                        onValue(usersRef, resolve, { onlyOnce: true });
                     });
+
+                    const users = snapshot.val() || {};
+                    const existingUser = Object.values(users).find(user => user.username === username);
+                    
+                    if (existingUser) {
+                        showToast('Ce nom d\'utilisateur est déjà pris', 'error');
+                        return;
+                    }
+
+                    // Create new user
+                    const userId = generateUserId();
+                    const hashedPassword = hashPassword(password);
+                    
+                    const userData = {
+                        userId: userId,
+                        username: username,
+                        password: hashedPassword,
+                        avatar: null,
+                        createdAt: serverTimestamp(),
+                        lastSeen: serverTimestamp()
+                    };
+
+                    await set(ref(database, `users/${userId}`), userData);
+                    
+                    currentUser = { ...userData, id: userId };
+                    localStorage.setItem('h7social_current_user', JSON.stringify(currentUser));
+                    
+                    showToast('Compte créé avec succès!', 'success');
+                    showMainApp();
+                    closeAuthModal();
                 }
-            });
+                
+            } catch (error) {
+                console.error('Auth error:', error);
+                showToast('Erreur d\'authentification: ' + error.message, 'error');
+            }
         }
 
-        // Gestion des messages
-        window.handleKeyPress = function(event) {
-            if (event.key === 'Enter' && !event.shiftKey) {
-                event.preventDefault();
+        function logoutUser() {
+            if (currentUser && database) {
+                // Remove from online users
+                remove(ref(database, `online_users/${currentUser.id}`));
+            }
+            
+            currentUser = null;
+            localStorage.removeItem('h7social_current_user');
+            
+            // Clean up listeners
+            Object.values(messagesListeners).forEach(unsubscribe => {
+                if (typeof unsubscribe === 'function') {
+                    unsubscribe();
+                }
+            });
+            messagesListeners = {};
+            
+            showLandingPage();
+            showToast('Déconnecté avec succès', 'success');
+        }
+
+        // Admin function to force disconnect a user
+        async function forceDisconnectUser(userId) {
+            if (!database || !currentUser) return;
+            
+            // Only allow admin H7 to disconnect users
+            if (currentUser.username !== 'H7') {
+                showToast('Accès non autorisé', 'error');
+                return;
+            }
+
+            if (confirm('Êtes-vous sûr de vouloir déconnecter cet utilisateur?')) {
+                try {
+                    // Remove user from online users
+                    await remove(ref(database, `online_users/${userId}`));
+                    
+                    // Optionally, you could also set a flag to force logout on their next action
+                    await set(ref(database, `force_logout/${userId}`), {
+                        timestamp: serverTimestamp(),
+                        by: currentUser.username
+                    });
+                    
+                    showToast('Utilisateur déconnecté avec succès', 'success');
+                } catch (error) {
+                    console.error('Error force disconnecting user:', error);
+                    showToast('Erreur lors de la déconnexion forcée', 'error');
+                }
+            }
+        }
+
+        // UI Management
+        function showLandingPage() {
+            document.getElementById('landing-page').classList.remove('hidden');
+            document.getElementById('main-app').classList.add('hidden');
+        }
+
+        function showMainApp() {
+            document.getElementById('landing-page').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
+            
+            if (currentUser) {
+                document.getElementById('user-display-name').textContent = currentUser.username;
+                updateUserAvatar();
+                
+                // Set user as online
+                if (database) {
+                    set(ref(database, `online_users/${currentUser.id}`), {
+                        username: currentUser.username,
+                        avatar: currentUser.avatar,
+                        timestamp: serverTimestamp()
+                    });
+                }
+                
+                // Start listening to messages and users
+                setupMessageListeners();
+                setupOnlineUsersListener();
+            }
+        }
+
+        function showAuthModal() {
+            document.getElementById('auth-modal').classList.remove('hidden');
+            document.getElementById('auth-username').focus();
+        }
+
+        function closeAuthModal() {
+            document.getElementById('auth-modal').classList.add('hidden');
+        }
+
+        function switchAuthTab(tab) {
+            const tabs = document.querySelectorAll('.auth-tab');
+            const passwordField = document.getElementById('password-field');
+            const submitBtn = document.getElementById('auth-submit');
+            
+            tabs.forEach(t => {
+                t.classList.remove('bg-white', 'text-gray-900', 'shadow-sm');
+                t.classList.add('text-gray-500', 'hover:text-gray-700');
+            });
+
+            isLogin = tab === 'login';
+            
+            if (isLogin) {
+                tabs[0].classList.add('bg-white', 'text-gray-900', 'shadow-sm');
+                tabs[0].classList.remove('text-gray-500', 'hover:text-gray-700');
+                passwordField.classList.add('hidden');
+                submitBtn.textContent = 'Se connecter';
+            } else {
+                tabs[1].classList.add('bg-white', 'text-gray-900', 'shadow-sm');
+                tabs[1].classList.remove('text-gray-500', 'hover:text-gray-700');
+                passwordField.classList.remove('hidden');
+                submitBtn.textContent = 'Créer un compte';
+            }
+        }
+
+        // Chat management
+        function showPublicChat() {
+            currentChat = 'public';
+            currentPrivateChat = null;
+            
+            document.getElementById('public-chat-btn').classList.add('bg-blue-50', 'text-blue-600');
+            document.getElementById('private-chats-btn').classList.remove('bg-blue-50', 'text-blue-600');
+            
+            document.getElementById('online-users-section').classList.remove('hidden');
+            document.getElementById('private-conversations-section').classList.add('hidden');
+            
+            document.getElementById('chat-title').textContent = 'Chat Public';
+            document.getElementById('chat-subtitle').textContent = 'Discutez avec la communauté';
+            
+            setupMessageListeners();
+        }
+
+        function showPrivateChats() {
+            currentChat = 'private';
+            
+            document.getElementById('private-chats-btn').classList.add('bg-blue-50', 'text-blue-600');
+            document.getElementById('public-chat-btn').classList.remove('bg-blue-50', 'text-blue-600');
+            
+            document.getElementById('online-users-section').classList.add('hidden');
+            document.getElementById('private-conversations-section').classList.remove('hidden');
+            
+            if (!currentPrivateChat) {
+                document.getElementById('chat-title').textContent = 'Messages Privés';
+                document.getElementById('chat-subtitle').textContent = 'Sélectionnez une conversation';
+                document.getElementById('messages-container').innerHTML = '<div class="text-center text-gray-500 mt-8">Sélectionnez une conversation pour commencer à discuter</div>';
+            }
+            
+            setupPrivateConversationsListener();
+        }
+
+        function startPrivateChat(userId, username) {
+            if (!currentUser || userId === currentUser.id) return;
+            
+            const chatId = [currentUser.id, userId].sort().join('_');
+            currentPrivateChat = { id: chatId, userId: userId, username: username };
+            
+            document.getElementById('chat-title').textContent = username;
+            document.getElementById('chat-subtitle').textContent = 'Conversation privée';
+            
+            setupMessageListeners();
+        }
+
+        // Message handling
+        async function sendMessage() {
+            if (!database || !currentUser) return;
+            
+            const input = document.getElementById('message-input');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            try {
+                const messageData = {
+                    text: message,
+                    userId: currentUser.id,
+                    username: currentUser.username,
+                    avatar: currentUser.avatar,
+                    timestamp: serverTimestamp()
+                };
+                
+                let messagesRef;
+                if (currentChat === 'public') {
+                    messagesRef = ref(database, 'public_messages');
+                } else if (currentPrivateChat) {
+                    messagesRef = ref(database, `private_messages/${currentPrivateChat.id}`);
+                } else {
+                    return;
+                }
+                
+                await push(messagesRef, messageData);
+                input.value = '';
+                
+            } catch (error) {
+                console.error('Error sending message:', error);
+                showToast('Erreur lors de l\'envoi du message', 'error');
+            }
+        }
+
+        function handleMessageKeyPress(event) {
+            if (event.key === 'Enter') {
                 sendMessage();
             }
-        };
+        }
 
-        window.handlePrivateKeyPress = function(event, userId) {
-            if (event.key === 'Enter' && !event.shiftKey) {
-                event.preventDefault();
-                sendPrivateMessage(userId);
-            }
-        };
-
-        window.sendPrivateMessage = function(userId) {
-            const messageInput = document.getElementById(`private-message-input-${userId}`);
-            const messageText = messageInput.value.trim();
-            
-            if (!messageText) return;
-            if (!currentUser) {
-                showToast('Vous devez être connecté pour envoyer un message', 'error');
-                return;
-            }
-
-            const targetUser = allUsers.find(u => u.id === userId);
-            if (!targetUser) {
-                showToast('Utilisateur introuvable', 'error');
-                return;
-            }
-
-            const message = {
-                id: 'private_msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-                text: messageText,
-                from: currentUser.username,
-                fromId: currentUser.id,
-                to: targetUser.username,
-                toId: userId,
-                timestamp: new Date().toISOString(),
-                isPrivate: true,
-                profileImage: currentUser.profileImage
-            };
-
-            // Afficher le message dans l'interface
-            const messagesContainer = document.getElementById(`private-messages-${userId}`);
-            const messageTime = new Date(message.timestamp);
-            const timeString = messageTime.toLocaleTimeString('fr-FR', { 
-                hour: '2-digit', 
-                minute: '2-digit' 
+        function setupMessageListeners() {
+            // Clean up existing listeners
+            Object.values(messagesListeners).forEach(unsubscribe => {
+                if (typeof unsubscribe === 'function') {
+                    unsubscribe();
+                }
             });
-
-            // Remplacer le message d'accueil s'il existe
-            if (messagesContainer.innerHTML.includes('Début de votre conversation')) {
-                messagesContainer.innerHTML = '';
-            }
-
-            messagesContainer.innerHTML += `
-                <div class="chat-message flex justify-end mb-4">
-                    <div class="bg-blue-500 text-white px-4 py-2 rounded-lg max-w-xs">
-                        <div class="text-sm">${message.text}</div>
-                        <div class="text-xs opacity-75 mt-1">${timeString}</div>
-                    </div>
-                </div>
-            `;
-
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            messageInput.value = '';
+            messagesListeners = {};
             
-            // En réalité, ici vous devriez envoyer le message via Firebase
-            if (isFirebaseConnected && database) {
-                const privateMessagesRef = window.firebaseRefs.ref(database, `privateMessages/${currentUser.id}_${userId}`);
-                window.firebaseRefs.push(privateMessagesRef, message);
-            }
-
-            showToast(`Message envoyé à ${targetUser.username}`, 'success');
-        };
-
-        window.sendMessage = function() {
-            const messageInput = document.getElementById('message-input');
-            const messageText = messageInput.value.trim();
-
-            if (!messageText && attachments.length === 0) return;
-            if (!currentUser) {
-                showToast('Vous devez être connecté pour envoyer un message', 'error');
-                return;
-            }
-
-            const message = {
-                id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-                text: messageText,
-                username: currentUser.username,
-                userId: currentUser.id,
-                timestamp: new Date().toISOString(),
-                isAdmin: currentUser.isAdmin,
-                profileImage: currentUser.profileImage,
-                attachments: attachments.length > 0 ? [...attachments] : null
-            };
-
-            if (isFirebaseConnected && database) {
-                // Envoyer via Firebase
-                const messagesRef = window.firebaseRefs.ref(database, 'messages');
-                window.firebaseRefs.push(messagesRef, message);
+            if (!database) return;
+            
+            let messagesRef;
+            if (currentChat === 'public') {
+                messagesRef = ref(database, 'public_messages');
+            } else if (currentPrivateChat) {
+                messagesRef = ref(database, `private_messages/${currentPrivateChat.id}`);
             } else {
-                // Mode local
-                messages.push(message);
-                updateMessages();
-            }
-
-            // Nettoyer le formulaire
-            messageInput.value = '';
-            clearAttachments();
-            messageInput.focus();
-        };
-
-        function updateMessages() {
-            const container = document.getElementById('chat-messages');
-            
-            if (messages.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center text-gray-500 py-8">
-                        <i class="fas fa-comments text-4xl mb-4 opacity-50"></i>
-                        <p>Aucun message pour le moment. Commencez la conversation !</p>
-                    </div>
-                `;
                 return;
             }
+            
+            const unsubscribe = onValue(messagesRef, (snapshot) => {
+                const messages = snapshot.val() || {};
+                displayMessages(Object.entries(messages).map(([id, msg]) => ({id, ...msg})));
+            });
+            
+            messagesListeners[currentChat === 'public' ? 'public' : currentPrivateChat.id] = unsubscribe;
+        }
 
+        function displayMessages(messages) {
+            const container = document.getElementById('messages-container');
+            
+            // Sort messages by timestamp
+            messages.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+            
             container.innerHTML = messages.map(msg => {
-                const messageTime = new Date(msg.timestamp);
-                const timeString = messageTime.toLocaleTimeString('fr-FR', { 
-                    hour: '2-digit', 
-                    minute: '2-digit' 
-                });
-
-                const attachmentsHtml = msg.attachments ? 
-                    msg.attachments.map(att => `
-                        <div class="mt-2 p-2 bg-blue-50 rounded border border-blue-200 text-sm flex items-center justify-between">
-                            <div class="flex items-center">
-                                <i class="fas fa-paperclip mr-2"></i>
-                                <span class="text-blue-700">${att.name}</span>
-                                <span class="text-gray-500 ml-2">(${formatFileSize(att.size)})</span>
-                            </div>
-                            <button onclick="downloadAttachment('${att.url}', '${att.name}')" 
-                                    class="text-blue-600 hover:text-blue-800 ml-2" title="Télécharger">
-                                <i class="fas fa-download"></i>
-                            </button>
-                        </div>
-                    `).join('') : '';
-
-                const isOwner = currentUser && msg.userId === currentUser.id;
-                const canEdit = isOwner;
-                const canDelete = currentUser && currentUser.isAdmin && currentUser.username === 'H7';
-
-                const actionsHtml = (canEdit || canDelete) ? `
-                    <div class="opacity-0 group-hover:opacity-100 transition-opacity flex space-x-2 ml-2">
-                        ${canEdit ? `<button onclick="editMessage('${msg.id}')" class="text-gray-400 hover:text-blue-500" title="Éditer">
-                            <i class="fas fa-edit text-sm"></i>
-                        </button>` : ''}
-                        ${canDelete ? `<button onclick="deleteMessage('${msg.id}')" class="text-red-500 hover:text-red-700" title="Supprimer (Admin uniquement)">
-                            <i class="fas fa-trash text-sm"></i>
-                        </button>` : ''}
-                    </div>
-                ` : '';
-
+                const isOwn = msg.userId === currentUser?.id;
+                const avatarHtml = msg.avatar 
+                    ? `<img src="${msg.avatar}" class="w-8 h-8 rounded-full object-cover" alt="${msg.username}">`
+                    : `<div class="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center text-white text-sm font-bold">${msg.username?.charAt(0).toUpperCase()}</div>`;
+                
+                const time = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString('fr-FR', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }) : '';
+                
                 return `
-                    <div class="chat-message group flex space-x-3 mb-4 hover:bg-gray-50 p-2 rounded-lg transition-colors">
-                        <img src="${msg.profileImage || getDefaultAvatar(msg.username)}" 
-                             alt="${msg.username}" 
-                             class="w-10 h-10 rounded-full object-cover ${msg.isAdmin ? 'border-2 border-yellow-400' : ''}"
-                             onerror="this.src='${getDefaultAvatar(msg.username)}'">
-                        <div class="flex-1">
-                            <div class="flex items-center space-x-2 mb-1">
-                                <span class="font-medium text-gray-900">${msg.username}</span>
-                                ${msg.isAdmin ? '<i class="fas fa-crown text-yellow-500 text-sm" title="Administrateur"></i>' : ''}
-                                <span class="text-xs text-gray-500">${timeString}</span>
-                                ${actionsHtml}
+                    <div class="chat-message flex ${isOwn ? 'justify-end' : 'justify-start'} space-x-3">
+                        ${!isOwn ? `<div class="flex-shrink-0">${avatarHtml}</div>` : ''}
+                        <div class="max-w-xs lg:max-w-md ${isOwn ? 'order-1' : ''}">
+                            ${!isOwn ? `<div class="text-sm font-medium text-gray-900 mb-1">${msg.username}</div>` : ''}
+                            <div class="${isOwn ? 'bg-blue-500 text-white' : 'bg-white'} rounded-lg px-4 py-2 shadow">
+                                ${msg.text}
                             </div>
-                            <div class="text-gray-700 break-words" id="message-content-${msg.id}">${msg.text}</div>
-                            ${attachmentsHtml}
+                            <div class="text-xs text-gray-500 mt-1 ${isOwn ? 'text-right' : ''}">${time}</div>
                         </div>
+                        ${isOwn ? `<div class="flex-shrink-0">${avatarHtml}</div>` : ''}
                     </div>
                 `;
             }).join('');
-
+            
+            // Scroll to bottom
             container.scrollTop = container.scrollHeight;
         }
 
-        // Gestion des utilisateurs
-        function updateUsersList() {
-            const onlineContainer = document.getElementById('online-users');
-            const offlineContainer = document.getElementById('offline-users');
-            const offlineSection = document.getElementById('offline-users-section');
-            const activeCount = document.getElementById('active-users-count');
+        function setupOnlineUsersListener() {
+            if (!database) return;
+            
+            const onlineUsersRef = ref(database, 'online_users');
+            onValue(onlineUsersRef, (snapshot) => {
+                const onlineUsers = snapshot.val() || {};
+                displayOnlineUsers(Object.entries(onlineUsers).map(([id, user]) => ({id, ...user})));
+            });
+        }
 
-            const onlineUsers = allUsers.filter(u => u.isOnline);
-            const offlineUsers = allUsers.filter(u => !u.isOnline);
-
-            // Mettre à jour les utilisateurs en ligne
-            if (onlineUsers.length > 0) {
-                onlineContainer.innerHTML = onlineUsers.map(user => {
-                    const avatarUrl = user.profileImage || getDefaultAvatar(user.username);
-                    const isAdminH7 = currentUser && currentUser.isAdmin && currentUser.username === 'H7';
-                    const disconnectButton = isAdminH7 && user.id !== currentUser.id ? 
-                        `<button onclick="forceDisconnectUser('${user.id}')" 
-                                 class="admin-disconnect-btn" 
-                                 title="Déconnecter cet utilisateur (Admin H7 uniquement)">
+        function displayOnlineUsers(users) {
+            const container = document.getElementById('online-users-list');
+            
+            container.innerHTML = users
+                .filter(user => user.id !== currentUser?.id)
+                .map(user => {
+                    const avatarHtml = user.avatar 
+                        ? `<img src="${user.avatar}" class="w-8 h-8 rounded-full object-cover" alt="${user.username}">`
+                        : `<div class="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center text-white text-sm font-bold">${user.username?.charAt(0).toUpperCase()}</div>`;
+                    
+                    // Show admin disconnect button only for H7 admin
+                    const adminButton = (currentUser?.username === 'H7') ? 
+                        `<button onclick="forceDisconnectUser('${user.id}')" class="admin-disconnect-btn ml-2">
                             <i class="fas fa-sign-out-alt"></i>
                         </button>` : '';
                     
                     return `
-                        <div onclick="selectUser('${user.id}')" 
-                             class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
+                        <div class="flex items-center justify-between p-2 hover:bg-gray-100 rounded-lg cursor-pointer" onclick="startPrivateChat('${user.id}', '${user.username}')">
                             <div class="flex items-center space-x-3">
-                                <img src="${avatarUrl}" alt="Profil ${user.username}" 
-                                     class="w-10 h-10 rounded-full object-cover ${user.isAdmin ? 'border-2 border-yellow-400' : ''}"
-                                     onerror="this.src='${getDefaultAvatar(user.username)}'">
-                                <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-medium text-gray-900 truncate">
-                                        ${user.username} ${user.isAdmin ? '(Admin) 👑' : ''}
-                                    </p>
-                                    <div class="flex items-center space-x-1">
-                                        <span class="w-2 h-2 bg-green-500 rounded-full"></span>
-                                        <span class="text-xs text-green-600">En ligne</span>
+                                ${avatarHtml}
+                                <div>
+                                    <div class="font-medium text-gray-900">${user.username}</div>
+                                    <div class="text-sm text-green-500 flex items-center">
+                                        <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                                        En ligne
                                     </div>
                                 </div>
                             </div>
-                            <div class="flex items-center space-x-2">
-                                ${user.isAdmin ? '<i class="fas fa-crown text-yellow-500"></i>' : ''}
-                                ${disconnectButton}
-                            </div>
+                            ${adminButton}
                         </div>
                     `;
                 }).join('');
-            } else {
-                // Message différent selon l'état de Firebase
-                if (!isFirebaseConnected) {
-                    onlineContainer.innerHTML = `
-                        <div class="text-center text-gray-500 py-6">
-                            <i class="fas fa-cog text-3xl mb-3 opacity-50"></i>
-                            <p class="text-sm font-medium mb-2">Firebase non configuré</p>
-                            <p class="text-xs">Cliquez sur l'icône paramètres pour configurer</p>
-                            <button onclick="toggleConfigPanel()" class="mt-3 px-4 py-2 bg-blue-500 text-white text-xs rounded-lg hover:bg-blue-600">
-                                Configurer maintenant
-                            </button>
-                        </div>
-                    `;
-                } else {
-                    onlineContainer.innerHTML = `
-                        <div class="text-center text-gray-500 py-4">
-                            <i class="fas fa-user-friends text-2xl mb-2 opacity-50"></i>
-                            <p class="text-sm">Aucun utilisateur connecté</p>
-                            <p class="text-xs mt-1">Les utilisateurs apparaîtront ici une fois connectés</p>
-                        </div>
-                    `;
-                }
-            }
-
-            // Cacher complètement la section des utilisateurs hors ligne
-            // Les utilisateurs déconnectés ne doivent plus apparaître dans la liste
-            offlineSection.classList.add('hidden');
-
-            // Mettre à jour les statistiques
-            activeCount.textContent = onlineUsers.length;
-            document.getElementById('daily-messages').textContent = messages.length;
-            document.getElementById('shared-files').textContent = messages.filter(m => m.attachments && m.attachments.length > 0).length;
-        }
-
-        // Fonction pour déconnecter un utilisateur (Admin H7 uniquement)
-        window.forceDisconnectUser = function(userId) {
-            if (!currentUser || !currentUser.isAdmin || currentUser.username !== 'H7') {
-                showToast('Action non autorisée', 'error');
-                return;
-            }
-
-            const user = allUsers.find(u => u.id === userId);
-            if (!user) {
-                showToast('Utilisateur introuvable', 'error');
-                return;
-            }
-
-            if (confirm(`Êtes-vous sûr de vouloir déconnecter ${user.username} ?`)) {
-                // Marquer l'utilisateur comme hors ligne
-                const userIndex = allUsers.findIndex(u => u.id === userId);
-                if (userIndex >= 0) {
-                    allUsers[userIndex].isOnline = false;
-                }
-
-                // Si Firebase est connecté, mettre à jour dans la base
-                if (isFirebaseConnected && database) {
-                    const userRef = window.firebaseRefs.ref(database, `users/${userId}`);
-                    window.firebaseRefs.set(userRef, {
-                        username: user.username,
-                        isOnline: false,
-                        isAdmin: user.isAdmin,
-                        profileImage: user.profileImage,
-                        lastSeen: new Date().toISOString(),
-                        forcedDisconnect: true,
-                        disconnectedBy: currentUser.username
-                    });
-                }
-
-                updateUsersList();
-                showToast(`${user.username} a été déconnecté`, 'success');
-            }
-        };
-
-        window.refreshUsersList = function() {
-            if (isFirebaseConnected) {
-                loadUsersFromFirebase();
-                showToast('Liste des utilisateurs actualisée', 'success');
-            } else {
-                showToast('Veuillez configurer Firebase pour voir les utilisateurs réels', 'error');
-            }
-        };
-
-        window.selectUser = function(userId) {
-            const user = allUsers.find(u => u.id === userId);
-            if (user) {
-                // Basculer vers l'onglet messages privés
-                switchChat('private');
-                
-                // Afficher l'interface de chat privé avec cet utilisateur
-                const privateChat = document.getElementById('private-chat');
-                const avatarUrl = user.profileImage || getDefaultAvatar(user.username);
-                
-                privateChat.innerHTML = `
-                    <div class="flex items-center space-x-3 mb-4 p-4 bg-gray-50 rounded-lg">
-                        <img src="${avatarUrl}" alt="${user.username}" 
-                             class="w-12 h-12 rounded-full object-cover ${user.isAdmin ? 'border-2 border-yellow-400' : ''}"
-                             onerror="this.src='${getDefaultAvatar(user.username)}'">
-                        <div>
-                            <h3 class="font-semibold text-gray-900">${user.username} ${user.isAdmin ? '👑' : ''}</h3>
-                            <p class="text-sm text-gray-500">${user.isOnline ? 'En ligne' : 'Hors ligne'}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-gray-50 rounded-lg p-4 h-80 overflow-y-auto mb-4" id="private-messages-${userId}">
-                        <div class="text-center text-gray-500 py-8">
-                            <i class="fas fa-comment-dots text-4xl mb-4 opacity-50"></i>
-                            <p>Début de votre conversation avec ${user.username}</p>
-                            <p class="text-sm mt-2">Les messages privés apparaîtront ici</p>
-                        </div>
-                    </div>
-                    
-                    <div class="border-t border-gray-200 pt-4">
-                        <div class="flex space-x-4">
-                            <div class="flex-1">
-                                <textarea id="private-message-input-${userId}" placeholder="Message privé à ${user.username}..." 
-                                          class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                                          rows="2" onkeypress="handlePrivateKeyPress(event, '${userId}')"></textarea>
-                            </div>
-                            <div class="flex flex-col space-y-2">
-                                <button onclick="sendPrivateMessage('${userId}')" 
-                                        class="gradient-bg text-white p-3 rounded-lg hover-scale" title="Envoyer le message privé">
-                                    <i class="fas fa-paper-plane"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-                showToast(`Conversation privée avec ${user.username} ouverte`, 'success');
-            }
-        };
-
-        // Gestion des fichiers
-        window.handleFileSelect = function(event) {
-            const files = Array.from(event.target.files || []);
-            if (files.length === 0) return;
-
-            const fileIcon = document.getElementById('file-icon');
-            fileIcon.className = 'fas fa-spinner fa-spin text-lg';
-
-            files.forEach(file => {
-                // Simuler l'upload de fichier
-                const fileData = {
-                    name: file.name,
-                    type: file.type,
-                    size: file.size,
-                    url: URL.createObjectURL(file)
-                };
-                attachments.push(fileData);
-            });
-
-            updateAttachmentsPreview();
-            showToast(`${files.length} fichier${files.length > 1 ? 's' : ''} ajouté${files.length > 1 ? 's' : ''}`, 'success');
-
-            setTimeout(() => {
-                fileIcon.className = 'fas fa-paperclip text-lg';
-            }, 1000);
-        };
-
-        function updateAttachmentsPreview() {
-            const preview = document.getElementById('attachments-preview');
-            const list = document.getElementById('attachments-list');
-
-            if (attachments.length === 0) {
-                preview.classList.add('hidden');
-                return;
-            }
-
-            preview.classList.remove('hidden');
-            list.innerHTML = attachments.map((file, index) => `
-                <div class="flex items-center justify-between bg-white p-2 rounded border">
-                    <div class="flex items-center space-x-2">
-                        <i class="fas fa-file text-blue-500"></i>
-                        <span class="text-sm text-gray-700">${file.name}</span>
-                        <span class="text-xs text-gray-500">(${formatFileSize(file.size)})</span>
-                    </div>
-                    <button onclick="removeAttachment(${index})" class="text-red-500 hover:text-red-700">
-                        <i class="fas fa-times text-xs"></i>
-                    </button>
-                </div>
-            `).join('');
-        }
-
-        window.removeAttachment = function(index) {
-            attachments.splice(index, 1);
-            updateAttachmentsPreview();
-        };
-
-        window.clearAttachments = function() {
-            attachments = [];
-            updateAttachmentsPreview();
-        };
-
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        }
-
-        // Gestion des onglets de chat
-        window.switchChat = function(type) {
-            const tabs = document.querySelectorAll('.chat-tab');
-            const publicChat = document.getElementById('public-chat');
-            const privateChat = document.getElementById('private-chat');
-
-            tabs.forEach(tab => {
-                tab.classList.remove('border-blue-500', 'text-blue-600');
-                tab.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700');
-            });
-
-            if (type === 'public') {
-                tabs[0].classList.add('border-blue-500', 'text-blue-600');
-                tabs[0].classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700');
-                publicChat.classList.remove('hidden');
-                privateChat.classList.add('hidden');
-                currentView = 'public';
-            } else {
-                tabs[1].classList.add('border-blue-500', 'text-blue-600');
-                tabs[1].classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700');
-                publicChat.classList.add('hidden');
-                privateChat.classList.remove('hidden');
-                currentView = 'private';
-            }
-        };
-
-        // Gestion de la déconnexion
-        window.logout = function() {
-            if (currentUser && isFirebaseConnected && database) {
-                const userRef = window.firebaseRefs.ref(database, `users/${currentUser.id}`);
-                window.firebaseRefs.set(userRef, {
-                    username: currentUser.username,
-                    isOnline: false,
-                    isAdmin: currentUser.isAdmin,
-                    profileImage: currentUser.profileImage,
-                    lastSeen: new Date().toISOString()
-                });
-            }
-
-            currentUser = null;
-            messages = [];
-            attachments = [];
             
-            document.getElementById('chat-app').classList.add('hidden');
-            document.getElementById('landing-page').classList.remove('hidden');
-            
-            showToast('Déconnexion réussie', 'success');
-        };
+            if (users.length === 0) {
+                container.innerHTML = '<div class="text-center text-gray-500 py-4">Aucun utilisateur en ligne</div>';
+            }
+        }
 
-        // Authentification Google
-        window.loginWithGoogle = function() {
-            if (!isFirebaseConnected || !auth) {
-                showToast('Firebase n\'est pas configuré', 'error');
+        function setupPrivateConversationsListener() {
+            // This would typically load recent private conversations
+            // For now, we'll keep it simple and show that functionality exists
+            const container = document.getElementById('conversations-list');
+            container.innerHTML = '<div class="text-center text-gray-500 py-4">Vos conversations apparaîtront ici</div>';
+        }
+
+        // Avatar management
+        function updateUserAvatar() {
+            const avatarElement = document.getElementById('user-avatar');
+            if (currentUser?.avatar) {
+                avatarElement.innerHTML = `<img src="${currentUser.avatar}" class="w-12 h-12 rounded-full object-cover" alt="${currentUser.username}">`;
+            } else {
+                avatarElement.innerHTML = currentUser?.username?.charAt(0).toUpperCase() || '?';
+            }
+        }
+
+        function triggerAvatarUpload() {
+            document.getElementById('avatar-upload').click();
+        }
+
+        async function uploadAvatar(event) {
+            if (!storage || !currentUser) return;
+            
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            if (!file.type.startsWith('image/')) {
+                showToast('Veuillez sélectionner une image', 'error');
                 return;
             }
             
-            showToast('Connexion Google (à implémenter)', 'info');
-        };
-
-        // Gestion des modales
-        window.showModal = function(type) {
-            const modal = document.getElementById('general-modal');
-            const title = document.getElementById('modal-title');
-            const content = document.getElementById('modal-content');
-
-            const modalContent = {
-                about: {
-                    title: 'À propos de H7 Social',
-                    content: `
-                        <div class="space-y-4">
-                            <p class="text-gray-600">
-                                H7 Social est une plateforme de communication moderne développée pour connecter les utilisateurs en temps réel. 
-                                Notre mission est de faciliter l'échange, le partage et la collaboration au sein d'une communauté dynamique.
-                            </p>
-                            <div class="bg-blue-50 p-4 rounded-lg">
-                                <h4 class="font-semibold text-blue-900 mb-2">🎯 Objectifs principaux</h4>
-                                <ul class="text-blue-800 space-y-1 text-sm">
-                                    <li>• Faciliter la communication en temps réel</li>
-                                    <li>• Créer une expérience utilisateur intuitive</li>
-                                    <li>• Assurer la sécurité des données</li>
-                                    <li>• Favoriser l'échange entre utilisateurs</li>
-                                </ul>
-                            </div>
-                            <div class="bg-green-50 p-4 rounded-lg">
-                                <h4 class="font-semibold text-green-900 mb-2">⚡ Technologies utilisées</h4>
-                                <ul class="text-green-800 space-y-1 text-sm">
-                                    <li>• Firebase pour la base de données temps réel</li>
-                                    <li>• Interface responsive avec Tailwind CSS</li>
-                                    <li>• JavaScript moderne (ES6+)</li>
-                                    <li>• Système d'authentification sécurisé</li>
-                                </ul>
-                            </div>
-                        </div>
-                    `
-                },
-                features: {
-                    title: 'Fonctionnalités de H7 Social',
-                    content: `
-                        <div class="space-y-6">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="bg-blue-50 p-4 rounded-lg">
-                                    <h4 class="font-semibold text-blue-900 mb-2 flex items-center">
-                                        <i class="fas fa-users mr-2"></i>Chat Public
-                                    </h4>
-                                    <p class="text-blue-800 text-sm">Participez aux discussions de groupe en temps réel avec tous les membres de la communauté.</p>
-                                </div>
-                                <div class="bg-purple-50 p-4 rounded-lg">
-                                    <h4 class="font-semibold text-purple-900 mb-2 flex items-center">
-                                        <i class="fas fa-comment-dots mr-2"></i>Messages Privés
-                                    </h4>
-                                    <p class="text-purple-800 text-sm">Échangez en privé avec vos contacts de manière sécurisée et confidentielle.</p>
-                                </div>
-                                <div class="bg-green-50 p-4 rounded-lg">
-                                    <h4 class="font-semibold text-green-900 mb-2 flex items-center">
-                                        <i class="fas fa-paperclip mr-2"></i>Partage de Fichiers
-                                    </h4>
-                                    <p class="text-green-800 text-sm">Partagez documents, images et autres fichiers facilement avec la communauté.</p>
-                                </div>
-                                <div class="bg-yellow-50 p-4 rounded-lg">
-                                    <h4 class="font-semibold text-yellow-900 mb-2 flex items-center">
-                                        <i class="fas fa-crown mr-2"></i>Système Admin
-                                    </h4>
-                                    <p class="text-yellow-800 text-sm">Outils de modération avancés pour maintenir un environnement sain.</p>
-                                </div>
-                            </div>
-                            <div class="bg-gray-50 p-4 rounded-lg">
-                                <h4 class="font-semibold text-gray-900 mb-2">🔮 Fonctionnalités à venir</h4>
-                                <ul class="text-gray-700 space-y-1 text-sm">
-                                    <li>• Appels vidéo intégrés</li>
-                                    <li>• Système de notifications push</li>
-                                    <li>• Thèmes personnalisables</li>
-                                    <li>• Intégration avec d'autres plateformes</li>
-                                </ul>
-                            </div>
-                        </div>
-                    `
-                },
-                help: {
-                    title: 'Centre d\'aide',
-                    content: `
-                        <div class="space-y-6">
-                            <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg">
-                                <h4 class="font-semibold text-blue-900 mb-2">🚀 Premiers pas</h4>
-                                <ol class="text-blue-800 space-y-1 text-sm list-decimal list-inside">
-                                    <li>Configurez Firebase en cliquant sur l'icône paramètres</li>
-                                    <li>Créez votre compte ou connectez-vous</li>
-                                    <li>Personnalisez votre profil et avatar</li>
-                                    <li>Commencez à discuter dans le chat public</li>
-                                </ol>
-                            </div>
-                            
-                            <div class="space-y-4">
-                                <h4 class="font-semibold text-gray-900">❓ Questions fréquentes</h4>
-                                
-                                <div class="bg-gray-50 p-3 rounded">
-                                    <h5 class="font-medium text-gray-800 mb-1">Comment envoyer un message privé ?</h5>
-                                    <p class="text-gray-600 text-sm">Cliquez sur un utilisateur dans la liste des connectés, puis basculez sur l'onglet "Messages Privés".</p>
-                                </div>
-                                
-                                <div class="bg-gray-50 p-3 rounded">
-                                    <h5 class="font-medium text-gray-800 mb-1">Comment joindre un fichier ?</h5>
-                                    <p class="text-gray-600 text-sm">Utilisez l'icône trombone à côté du bouton d'envoi pour sélectionner vos fichiers.</p>
-                                </div>
-                                
-                                <div class="bg-gray-50 p-3 rounded">
-                                    <h5 class="font-medium text-gray-800 mb-1">Pourquoi Firebase ?</h5>
-                                    <p class="text-gray-600 text-sm">Firebase permet la synchronisation en temps réel entre tous les utilisateurs connectés.</p>
-                                </div>
-                            </div>
-                            
-                            <div class="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
-                                <h4 class="font-semibold text-yellow-900 mb-2">💡 Conseils d'utilisation</h4>
-                                <ul class="text-yellow-800 space-y-1 text-sm">
-                                    <li>• Utilisez Entrée pour envoyer rapidement vos messages</li>
-                                    <li>• Maintenez un comportement respectueux</li>
-                                    <li>• N'hésitez pas à personnaliser votre avatar</li>
-                                    <li>• Les administrateurs ont une couronne dorée 👑</li>
-                                </ul>
-                            </div>
-                        </div>
-                    `
-                },
-                blog: {
-                    title: 'Blog H7 Social',
-                    content: `
-                        <div class="space-y-6">
-                            <div class="border-b border-gray-200 pb-4">
-                                <h4 class="font-semibold text-gray-900 mb-2">📅 Dernières actualités</h4>
-                                <p class="text-gray-600 text-sm">Restez informés des dernières mises à jour et nouveautés de la plateforme.</p>
-                            </div>
-                            
-                            <article class="border border-gray-200 rounded-lg p-4">
-                                <div class="flex items-center space-x-2 mb-2">
-                                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Nouveau</span>
-                                    <span class="text-gray-500 text-sm">25 Août 2025</span>
-                                </div>
-                                <h5 class="font-semibold text-gray-900 mb-2">🎉 Lancement de H7 Social v1.0</h5>
-                                <p class="text-gray-600 text-sm mb-3">
-                                    Nous sommes fiers de vous présenter la première version stable de H7 Social ! 
-                                    Cette version inclut toutes les fonctionnalités de base pour une expérience de chat moderne.
-                                </p>
-                                <div class="text-sm text-gray-500">
-                                    <span class="font-medium">Nouvelles fonctionnalités :</span> Chat temps réel, Messages privés, Partage de fichiers
-                                </div>
-                            </article>
-                            
-                            <article class="border border-gray-200 rounded-lg p-4">
-                                <div class="flex items-center space-x-2 mb-2">
-                                    <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">Mise à jour</span>
-                                    <span class="text-gray-500 text-sm">20 Août 2025</span>
-                                </div>
-                                <h5 class="font-semibold text-gray-900 mb-2">🔧 Améliorations de performance</h5>
-                                <p class="text-gray-600 text-sm">
-                                    Optimisation des temps de chargement et amélioration de la stabilité de la connexion Firebase.
-                                </p>
-                            </article>
-                            
-                            <article class="border border-gray-200 rounded-lg p-4">
-                                <div class="flex items-center space-x-2 mb-2">
-                                    <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded">Annonce</span>
-                                    <span class="text-gray-500 text-sm">15 Août 2025</span>
-                                </div>
-                                <h5 class="font-semibold text-gray-900 mb-2">🚀 Projet H7 Social officiellement lancé</h5>
-                                <p class="text-gray-600 text-sm">
-                                    Début du développement de H7 Social avec pour objectif de créer une plateforme de communication moderne et intuitive.
-                                </p>
-                            </article>
-                        </div>
-                    `
-                },
-                privacy: {
-                    title: 'Politique de confidentialité',
-                    content: `
-                        <div class="space-y-6">
-                            <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg">
-                                <h4 class="font-semibold text-blue-900 mb-2">🔒 Vos données sont protégées</h4>
-                                <p class="text-blue-800 text-sm">
-                                    H7 Social s'engage à protéger votre vie privée et vos données personnelles selon les standards les plus élevés.
-                                </p>
-                            </div>
-                            
-                            <div class="space-y-4">
-                                <div>
-                                    <h4 class="font-semibold text-gray-900 mb-2">📊 Données collectées</h4>
-                                    <ul class="text-gray-600 space-y-1 text-sm list-disc list-inside">
-                                        <li>Nom d'utilisateur choisi lors de l'inscription</li>
-                                        <li>Messages envoyés dans les chats publics</li>
-                                        <li>Avatar personnalisé (optionnel)</li>
-                                        <li>Informations de connexion (horodatage)</li>
-                                    </ul>
-                                </div>
-                                
-                                <div>
-                                    <h4 class="font-semibold text-gray-900 mb-2">🎯 Utilisation des données</h4>
-                                    <ul class="text-gray-600 space-y-1 text-sm list-disc list-inside">
-                                        <li>Fournir le service de chat en temps réel</li>
-                                        <li>Personnaliser votre expérience utilisateur</li>
-                                        <li>Assurer la sécurité de la plateforme</li>
-                                        <li>Améliorer nos services</li>
-                                    </ul>
-                                </div>
-                                
-                                <div>
-                                    <h4 class="font-semibold text-gray-900 mb-2">🛡️ Protection des données</h4>
-                                    <ul class="text-gray-600 space-y-1 text-sm list-disc list-inside">
-                                        <li>Chiffrement des données en transit</li>
-                                        <li>Stockage sécurisé via Firebase</li>
-                                        <li>Accès restreint aux données personnelles</li>
-                                        <li>Aucune vente de données à des tiers</li>
-                                    </ul>
-                                </div>
-                                
-                                <div>
-                                    <h4 class="font-semibold text-gray-900 mb-2">⚖️ Vos droits</h4>
-                                    <ul class="text-gray-600 space-y-1 text-sm list-disc list-inside">
-                                        <li>Droit d'accès à vos données</li>
-                                        <li>Droit de rectification</li>
-                                        <li>Droit à l'effacement</li>
-                                        <li>Droit à la portabilité</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            
-                            <div class="bg-gray-50 p-4 rounded-lg">
-                                <p class="text-gray-600 text-sm">
-                                    <strong>Contact :</strong> Pour toute question concernant vos données personnelles, 
-                                    contactez-nous à <a href="mailto:privacy@h7social.com" class="text-blue-600 hover:underline">privacy@h7social.com</a>
-                                </p>
-                            </div>
-                        </div>
-                    `
-                },
-                terms: {
-                    title: 'Conditions générales d\'utilisation',
-                    content: `
-                        <div class="space-y-6">
-                            <div class="bg-green-50 border border-green-200 p-4 rounded-lg">
-                                <h4 class="font-semibold text-green-900 mb-2">✅ Acceptation des conditions</h4>
-                                <p class="text-green-800 text-sm">
-                                    En utilisant H7 Social, vous acceptez ces conditions d'utilisation dans leur intégralité.
-                                </p>
-                            </div>
-                            
-                            <div class="space-y-4">
-                                <div>
-                                    <h4 class="font-semibold text-gray-900 mb-2">📋 Règles d'utilisation</h4>
-                                    <ul class="text-gray-600 space-y-1 text-sm list-disc list-inside">
-                                        <li>Respectez les autres utilisateurs en toutes circonstances</li>
-                                        <li>Ne partagez aucun contenu inapproprié, offensant ou illégal</li>
-                                        <li>N'utilisez pas la plateforme à des fins commerciales non autorisées</li>
-                                        <li>Ne tentez pas de pirater ou compromettre la sécurité</li>
-                                        <li>Signalez tout comportement suspect à l'équipe de modération</li>
-                                    </ul>
-                                </div>
-                                
-                                <div>
-                                    <h4 class="font-semibold text-gray-900 mb-2">🚫 Contenu interdit</h4>
-                                    <ul class="text-gray-600 space-y-1 text-sm list-disc list-inside">
-                                        <li>Messages à caractère haineux ou discriminatoire</li>
-                                        <li>Contenu violent ou menaçant</li>
-                                        <li>Spam ou publicité non sollicitée</li>
-                                        <li>Informations personnelles d'autres utilisateurs</li>
-                                        <li>Contenu protégé par des droits d'auteur</li>
-                                    </ul>
-                                </div>
-                                
-                                <div>
-                                    <h4 class="font-semibold text-gray-900 mb-2">⚠️ Sanctions</h4>
-                                    <p class="text-gray-600 text-sm mb-2">En cas de non-respect des règles :</p>
-                                    <ul class="text-gray-600 space-y-1 text-sm list-disc list-inside">
-                                        <li>Avertissement formel</li>
-                                        <li>Suspension temporaire du compte</li>
-                                        <li>Bannissement définitif en cas de récidive</li>
-                                        <li>Signalement aux autorités si nécessaire</li>
-                                    </ul>
-                                </div>
-                                
-                                <div>
-                                    <h4 class="font-semibold text-gray-900 mb-2">🛡️ Responsabilités</h4>
-                                    <ul class="text-gray-600 space-y-1 text-sm list-disc list-inside">
-                                        <li>H7 Social s'efforce de maintenir un service fiable</li>
-                                        <li>Nous ne sommes pas responsables du contenu généré par les utilisateurs</li>
-                                        <li>L'utilisateur est responsable de ses propres communications</li>
-                                        <li>Nous nous réservons le droit de modifier le service</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            
-                            <div class="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
-                                <p class="text-yellow-800 text-sm">
-                                    <strong>Modification :</strong> Ces conditions peuvent être mises à jour. 
-                                    Les utilisateurs seront informés des changements significatifs.
-                                </p>
-                            </div>
-                        </div>
-                    `
-                },
-                cookies: {
-                    title: 'Politique des cookies',
-                    content: `
-                        <div class="space-y-6">
-                            <div class="bg-orange-50 border border-orange-200 p-4 rounded-lg">
-                                <h4 class="font-semibold text-orange-900 mb-2">🍪 Utilisation des cookies</h4>
-                                <p class="text-orange-800 text-sm">
-                                    H7 Social utilise des cookies et technologies similaires pour améliorer votre expérience utilisateur.
-                                </p>
-                            </div>
-                            
-                            <div class="space-y-4">
-                                <div>
-                                    <h4 class="font-semibold text-gray-900 mb-2">📱 Types de cookies utilisés</h4>
-                                    
-                                    <div class="space-y-3">
-                                        <div class="bg-blue-50 p-3 rounded">
-                                            <h5 class="font-medium text-blue-900 mb-1">Cookies essentiels</h5>
-                                            <p class="text-blue-800 text-sm">Nécessaires au fonctionnement de base de la plateforme (authentification, session utilisateur).</p>
-                                        </div>
-                                        
-                                        <div class="bg-green-50 p-3 rounded">
-                                            <h5 class="font-medium text-green-900 mb-1">Cookies de préférences</h5>
-                                            <p class="text-green-800 text-sm">Stockent vos préférences (langue, thème, configuration Firebase).</p>
-                                        </div>
-                                        
-                                        <div class="bg-purple-50 p-3 rounded">
-                                            <h5 class="font-medium text-purple-900 mb-1">Cookies de performance</h5>
-                                            <p class="text-purple-800 text-sm">Nous aident à comprendre comment vous utilisez le site pour l'améliorer.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div>
-                                    <h4 class="font-semibold text-gray-900 mb-2">⚙️ Gestion des cookies</h4>
-                                    <ul class="text-gray-600 space-y-1 text-sm list-disc list-inside">
-                                        <li>Vous pouvez désactiver les cookies dans votre navigateur</li>
-                                        <li>Certaines fonctionnalités peuvent être limitées sans cookies</li>
-                                        <li>Les cookies de session sont supprimés à la fermeture du navigateur</li>
-                                        <li>Les cookies de préférences peuvent être conservés plus longtemps</li>
-                                    </ul>
-                                </div>
-                                
-                                <div>
-                                    <h4 class="font-semibold text-gray-900 mb-2">🔧 Comment gérer vos cookies</h4>
-                                    <div class="bg-gray-50 p-3 rounded text-sm text-gray-600 space-y-2">
-                                        <p><strong>Chrome :</strong> Paramètres > Confidentialité et sécurité > Cookies</p>
-                                        <p><strong>Firefox :</strong> Paramètres > Vie privée et sécurité > Cookies</p>
-                                        <p><strong>Safari :</strong> Préférences > Confidentialité > Cookies</p>
-                                        <p><strong>Edge :</strong> Paramètres > Confidentialité et services > Cookies</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg">
-                                <p class="text-blue-800 text-sm">
-                                    <strong>Note :</strong> En continuant à utiliser H7 Social, vous consentez à l'utilisation des cookies 
-                                    conformément à cette politique.
-                                </p>
-                            </div>
-                        </div>
-                    `
-                },
-                contact: {
-                    title: 'Nous contacter',
-                    content: `
-                        <div class="space-y-6">
-                            <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg">
-                                <h4 class="font-semibold text-blue-900 mb-2">💬 Restez en contact</h4>
-                                <p class="text-blue-800 text-sm">
-                                    Notre équipe est là pour vous aider ! N'hésitez pas à nous contacter pour toute question ou suggestion.
-                                </p>
-                            </div>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="bg-white border border-gray-200 rounded-lg p-4">
-                                    <h4 class="font-semibold text-gray-900 mb-3 flex items-center">
-                                        <i class="fas fa-envelope text-blue-500 mr-2"></i>Email
-                                    </h4>
-                                    <div class="space-y-2 text-sm">
-                                        <p><strong>Support général :</strong><br><a href="mailto:contact@h7social.com" class="text-blue-600 hover:underline">contact@h7social.com</a></p>
-                                        <p><strong>Support technique :</strong><br><a href="mailto:support@h7social.com" class="text-blue-600 hover:underline">support@h7social.com</a></p>
-                                        <p><strong>Sécurité :</strong><br><a href="mailto:security@h7social.com" class="text-blue-600 hover:underline">security@h7social.com</a></p>
-                                    </div>
-                                </div>
-                                
-                                <div class="bg-white border border-gray-200 rounded-lg p-4">
-                                    <h4 class="font-semibold text-gray-900 mb-3 flex items-center">
-                                        <i class="fab fa-snapchat-ghost text-yellow-500 mr-2"></i>Réseaux sociaux
-                                    </h4>
-                                    <div class="space-y-2 text-sm">
-                                        <p><a href="https://t.snapchat.com/XuhVH62f" target="_blank" class="text-yellow-600 hover:underline flex items-center">
-                                            <i class="fab fa-snapchat-ghost mr-1"></i>Snapchat
-                                        </a></p>
-                                        <p><a href="#" class="text-blue-600 hover:underline flex items-center">
-                                            <i class="fab fa-twitter mr-1"></i>Twitter
-                                        </a></p>
-                                        <p><a href="#" class="text-blue-700 hover:underline flex items-center">
-                                            <i class="fab fa-facebook mr-1"></i>Facebook
-                                        </a></p>
-                                        <p><a href="#" class="text-pink-600 hover:underline flex items-center">
-                                            <i class="fab fa-instagram mr-1"></i>Instagram
-                                        </a></p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="space-y-4">
-                                <h4 class="font-semibold text-gray-900">❓ Questions fréquentes avant de nous contacter</h4>
-                                
-                                <div class="space-y-3">
-                                    <div class="bg-gray-50 p-3 rounded">
-                                        <h5 class="font-medium text-gray-800 mb-1">Problème de connexion Firebase ?</h5>
-                                        <p class="text-gray-600 text-sm">Vérifiez votre configuration dans les paramètres et assurez-vous que vos clés Firebase sont correctes.</p>
-                                    </div>
-                                    
-                                    <div class="bg-gray-50 p-3 rounded">
-                                        <h5 class="font-medium text-gray-800 mb-1">Messages qui ne s'affichent pas ?</h5>
-                                        <p class="text-gray-600 text-sm">Actualisez la page ou vérifiez votre connexion internet. Les messages sont synchronisés en temps réel.</p>
-                                    </div>
-                                    
-                                    <div class="bg-gray-50 p-3 rounded">
-                                        <h5 class="font-medium text-gray-800 mb-1">Signaler un utilisateur ?</h5>
-                                        <p class="text-gray-600 text-sm">Contactez-nous immédiatement à security@h7social.com avec les détails de l'incident.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="bg-green-50 border border-green-200 p-4 rounded-lg">
-                                <h4 class="font-semibold text-green-900 mb-2">⏰ Temps de réponse</h4>
-                                <ul class="text-green-800 text-sm space-y-1">
-                                    <li>• <strong>Urgences de sécurité :</strong> Dans les 2 heures</li>
-                                    <li>• <strong>Support technique :</strong> 24-48 heures</li>
-                                    <li>• <strong>Questions générales :</strong> 2-5 jours ouvrés</li>
-                                    <li>• <strong>Suggestions :</strong> Nous lisons tout, même si nous ne répondons pas toujours individuellement</li>
-                                </ul>
-                            </div>
-                        </div>
-                    `
-                }
-            };
-
-            if (modalContent[type]) {
-                title.textContent = modalContent[type].title;
-                content.innerHTML = modalContent[type].content;
-                modal.classList.remove('hidden');
+            if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                showToast('L\'image ne doit pas dépasser 5MB', 'error');
+                return;
             }
-        };
-
-        window.closeModal = function() {
-            document.getElementById('general-modal').classList.add('hidden');
-        };
-
-        // Fonctions utilitaires
-        function getDefaultAvatar(username) {
-            const colors = ['FF6B6B', '4ECDC4', '45B7D1', '96CEB4', 'FECA57', 'FF9FF3', 'B8860B', '98D8C8'];
-            const color = colors[username.length % colors.length];
-            const initial = username.charAt(0).toUpperCase();
-            return `https://ui-avatars.com/api/?name=${initial}&background=${color}&color=ffffff&size=100&bold=true`;
+            
+            try {
+                const avatarRef = storageRef(storage, `avatars/${currentUser.id}`);
+                const snapshot = await uploadBytes(avatarRef, file);
+                const downloadURL = await getDownloadURL(snapshot.ref);
+                
+                // Update user avatar in database
+                await set(ref(database, `users/${currentUser.id}/avatar`), downloadURL);
+                
+                // Update current user object
+                currentUser.avatar = downloadURL;
+                localStorage.setItem('h7social_current_user', JSON.stringify(currentUser));
+                
+                // Update UI
+                updateUserAvatar();
+                
+                showToast('Avatar mis à jour avec succès!', 'success');
+                
+            } catch (error) {
+                console.error('Avatar upload error:', error);
+                showToast('Erreur lors du téléchargement de l\'avatar', 'error');
+            }
         }
 
-        function generateTestUsers() {
-            const users = [
-                { id: 'test1', username: 'Alice', isOnline: true, isAdmin: false },
-                { id: 'test2', username: 'Bob', isOnline: false, isAdmin: false },
-                { id: 'test3', username: 'Charlie', isOnline: true, isAdmin: false }
-            ];
-
-            return users.map(user => ({
-                ...user,
-                profileImage: getDefaultAvatar(user.username)
-            }));
-        }
-
+        // Utility functions
         function showToast(message, type = 'info') {
-            const toastContainer = document.createElement('div');
-            
-            const bgColor = {
-                info: 'bg-blue-500',
-                success: 'bg-green-500',
-                error: 'bg-red-500'
-            }[type] || 'bg-blue-500';
-
-            const icon = {
-                info: 'fa-info-circle',
-                success: 'fa-check-circle',
-                error: 'fa-exclamation-circle'
-            }[type] || 'fa-info-circle';
-
-            toastContainer.className = 'toast fixed top-4 right-4 z-50 max-w-sm';
-            toastContainer.innerHTML = `
-                <div class="${bgColor} text-white px-6 py-4 rounded-lg shadow-lg">
-                    <div class="flex items-center">
-                        <i class="fas ${icon} mr-3"></i>
-                        <span class="text-sm font-medium">${message}</span>
-                        <button onclick="this.parentElement.parentElement.parentElement.remove()" 
-                                class="ml-4 text-white hover:text-gray-200">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-${type === 'error' ? 'exclamation-circle' : type === 'success' ? 'check-circle' : 'info-circle'}"></i>
+                    <span>${message}</span>
                 </div>
             `;
-
-            document.body.appendChild(toastContainer);
-
+            
+            document.body.appendChild(toast);
+            
             setTimeout(() => {
-                if (toastContainer.parentElement) {
-                    toastContainer.remove();
-                }
+                toast.remove();
             }, 5000);
         }
 
-        // Fonction admin pour vider le chat (H7 uniquement)
-        window.adminClearAllMessages = function() {
-            if (!currentUser || !currentUser.isAdmin || currentUser.username !== 'H7') {
-                showToast('Action non autorisée', 'error');
-                return;
-            }
+        // Make functions globally available
+        window.saveFirebaseConfig = saveFirebaseConfig;
+        window.toggleConfigPanel = toggleConfigPanel;
+        window.handleAuth = handleAuth;
+        window.logoutUser = logoutUser;
+        window.forceDisconnectUser = forceDisconnectUser;
+        window.showAuthModal = showAuthModal;
+        window.closeAuthModal = closeAuthModal;
+        window.switchAuthTab = switchAuthTab;
+        window.showPublicChat = showPublicChat;
+        window.showPrivateChats = showPrivateChats;
+        window.startPrivateChat = startPrivateChat;
+        window.sendMessage = sendMessage;
+        window.handleMessageKeyPress = handleMessageKeyPress;
+        window.triggerAvatarUpload = triggerAvatarUpload;
+        window.uploadAvatar = uploadAvatar;
 
-            if (confirm('Êtes-vous sûr de vouloir vider tous les messages du chat public ? Cette action est irréversible.')) {
-                messages = [];
-                
-                if (isFirebaseConnected && database) {
-                    // Vider les messages dans Firebase
-                    const messagesRef = window.firebaseRefs.ref(database, 'messages');
-                    window.firebaseRefs.set(messagesRef, null);
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load saved Firebase config
+            const savedConfig = loadFirebaseConfig();
+            if (savedConfig) {
+                initFirebase(savedConfig);
+            }
+            
+            // Check for existing user session
+            const savedUser = localStorage.getItem('h7social_current_user');
+            if (savedUser) {
+                try {
+                    currentUser = JSON.parse(savedUser);
+                    if (database) {
+                        showMainApp();
+                    }
+                } catch (error) {
+                    console.error('Error loading saved user:', error);
+                    localStorage.removeItem('h7social_current_user');
                 }
-
-                updateMessages();
-                showToast('Tous les messages ont été supprimés', 'success');
             }
-        };
+        });
 
-        function loadUsersFromFirebase() {
-            if (!isFirebaseConnected || !database) return;
-
-            const usersRef = window.firebaseRefs.ref(database, 'users');
-            window.firebaseRefs.onValue(usersRef, (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    const firebaseUsers = Object.keys(data).map(key => ({
-                        id: key,
-                        ...data[key]
-                    }));
-                    
-                    // Merger avec les utilisateurs locaux
-                    allUsers = [...generateTestUsers(), ...firebaseUsers];
-                } else {
-                    allUsers = generateTestUsers();
-                }
-                updateUsersList();
-            });
-        }
-
-        // Fonctions de gestion des messages (pour les fonctionnalités admin)
-        window.editMessage = function(messageId) {
-            const message = messages.find(m => m.id === messageId);
-            if (!message) return;
-
-            const newText = prompt('Modifier le message:', message.text);
-            if (newText !== null && newText.trim()) {
-                message.text = newText.trim();
-                
-                if (isFirebaseConnected && database) {
-                    const messageRef = window.firebaseRefs.ref(database, `messages/${messageId}`);
-                    window.firebaseRefs.set(messageRef, message);
-                } else {
-                    updateMessages();
-                }
-                
-                showToast('Message modifié', 'success');
-            }
-        };
-
-        window.deleteMessage = function(messageId) {
-            if (!currentUser || !currentUser.isAdmin || currentUser.username !== 'H7') {
-                showToast('Action non autorisée', 'error');
-                return;
-            }
-
-            if (confirm('Supprimer ce message ?')) {
-                messages = messages.filter(m => m.id !== messageId);
-                
-                if (isFirebaseConnected && database) {
-                    const messageRef = window.firebaseRefs.ref(database, `messages/${messageId}`);
-                    window.firebaseRefs.set(messageRef, null);
-                } else {
-                    updateMessages();
-                }
-                
-                showToast('Message supprimé', 'success');
-            }
-        };
-
-        window.downloadAttachment = function(url, filename) {
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        };
     </script>
 </body>
 </html>
