@@ -10,7 +10,7 @@
     <meta property="og:title" content="H7 Social - Communication en Temps Réel">
     <meta property="og:description" content="Rejoignez H7 Social pour discuter avec la communauté en temps réel, envoyer des messages privés et rester connecté avec vos amis.">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630">
+    <meta property="og:image" content="https://h-7.eu/wp-content/uploads/2023/06/cropped-favicon.jpg">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -152,6 +152,13 @@
             background: #9ca3af;
             cursor: not-allowed;
         }
+
+        .h7-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -199,7 +206,7 @@
                 <div class="absolute inset-0 bg-black bg-opacity-40"></div>
                 <div class="relative z-10 text-center text-white max-w-4xl px-6">
                     <div class="w-20 h-20 gradient-bg rounded-full flex items-center justify-center mx-auto mb-8">
-                        <i class="fas fa-comments text-white text-3xl"></i>
+                        <img src="https://h-7.eu/wp-content/uploads/2023/06/cropped-favicon.jpg" alt="H7 Logo" class="w-12 h-12 rounded-full object-cover">
                     </div>
                     <h1 class="text-5xl md:text-6xl font-bold mb-6">H7 Social</h1>
                     <p class="text-xl md:text-2xl mb-8 opacity-90">
@@ -256,7 +263,7 @@
                         <div class="col-span-1 lg:col-span-2">
                             <div class="flex items-center space-x-3 mb-4">
                                 <div class="w-12 h-12 gradient-bg rounded-xl flex items-center justify-center">
-                                    <i class="fas fa-comments text-white text-xl"></i>
+                                    <img src="https://h-7.eu/wp-content/uploads/2023/06/cropped-favicon.jpg" alt="H7 Logo" class="w-8 h-8 rounded-lg object-cover">
                                 </div>
                                 <h3 class="text-2xl font-bold">H7 Social</h3>
                             </div>
@@ -325,41 +332,27 @@
                                 <li>
                                     <button onclick="showModal('terms')" 
                                             class="text-gray-300 hover:text-white transition-colors flex items-center">
-                                        <i class="fas fa-file-contract mr-2"></i>CGV
+                                        <i class="fas fa-file-contract mr-2"></i>Conditions d'utilisation
                                     </button>
                                 </li>
                                 <li>
                                     <button onclick="showModal('cookies')" 
                                             class="text-gray-300 hover:text-white transition-colors flex items-center">
-                                        <i class="fas fa-cookie-bite mr-2"></i>Cookies
+                                        <i class="fas fa-cookie-bite mr-2"></i>Politique des cookies
                                     </button>
                                 </li>
                                 <li>
                                     <button onclick="showModal('contact')" 
                                             class="text-gray-300 hover:text-white transition-colors flex items-center">
-                                        <i class="fas fa-envelope mr-2"></i>Nous contacter
+                                        <i class="fas fa-envelope mr-2"></i>Contact
                                     </button>
                                 </li>
                             </ul>
                         </div>
                     </div>
-                </div>
 
-                <!-- Bottom Bar -->
-                <div class="border-t border-gray-800">
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                        <div class="flex flex-col md:flex-row justify-between items-center">
-                            <p class="text-gray-400 text-sm">
-                                © 2025 H7 Social. Tous droits réservés.
-                            </p>
-                            <div class="flex items-center space-x-6 mt-4 md:mt-0">
-                                <span class="text-gray-400 text-sm">Développé avec ❤️ par l'équipe H7</span>
-                                <div class="flex items-center space-x-2">
-                                    <span id="server-status" class="w-2 h-2 bg-gray-500 rounded-full"></span>
-                                    <span id="server-status-text" class="text-sm text-gray-400">Connexion en cours...</span>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
+                        <p>&copy; 2024 H7 Social. Tous droits réservés. | Développé avec ❤️ par l'équipe H7</p>
                     </div>
                 </div>
             </footer>
@@ -368,42 +361,52 @@
         <!-- Chat Application -->
         <div id="chat-app" class="hidden min-h-screen bg-gray-50">
             <!-- Header -->
-            <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40">
+            <header class="bg-white border-b border-gray-200 sticky top-0 z-40">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between items-center h-16">
-                        <!-- Logo and Brand -->
-                        <div class="flex items-center space-x-4">
-                            <div class="w-10 h-10 gradient-bg rounded-full flex items-center justify-center">
-                                <i class="fas fa-comments text-white text-lg"></i>
+                        <!-- Logo et titre -->
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 gradient-bg rounded-lg flex items-center justify-center">
+                                <img src="https://h-7.eu/wp-content/uploads/2023/06/cropped-favicon.jpg" alt="H7 Logo" class="w-6 h-6 rounded-md object-cover">
                             </div>
-                            <h1 class="text-xl font-bold text-gray-900">H7 Social</h1>
-                            <div class="hidden md:flex items-center space-x-2 ml-8">
-                                <span id="connection-status" class="w-3 h-3 rounded-full bg-gray-500"></span>
-                                <span id="connection-text" class="text-sm text-gray-600">Connexion...</span>
+                            <div>
+                                <h1 class="text-xl font-bold text-gray-900">H7 Social</h1>
+                                <div class="flex items-center space-x-2">
+                                    <div id="connection-status" class="w-2 h-2 bg-gray-400 rounded-full"></div>
+                                    <span id="server-status-text" class="text-xs text-gray-500">Déconnecté</span>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- User Profile and Controls -->
+                        <!-- Actions utilisateur -->
                         <div class="flex items-center space-x-4">
-                            <!-- User Profile -->
-                            <div class="flex items-center space-x-3">
-                                <div class="avatar-upload-container">
-                                    <img id="current-user-avatar" src="" alt="Avatar" 
-                                         class="w-10 h-10 rounded-full object-cover border-2 border-gray-200">
-                                    <button onclick="openAvatarUpload()" class="avatar-upload-button" title="Changer l'avatar">
-                                        <i class="fas fa-camera"></i>
-                                    </button>
-                                    <input type="file" id="avatar-upload" class="hidden" accept="image/*" onchange="handleAvatarUpload(event)">
-                                </div>
-                                <div class="hidden md:block">
-                                    <p class="text-sm font-medium text-gray-900" id="current-username">Utilisateur</p>
-                                    <p class="text-xs text-gray-500" id="user-role">Membre</p>
-                                </div>
+                            <!-- État du serveur -->
+                            <div id="server-status" class="hidden sm:flex items-center space-x-2 px-3 py-1 rounded-full text-sm font-medium">
+                                <div class="w-2 h-2 rounded-full"></div>
+                                <span>Serveur</span>
                             </div>
-                            
-                            <!-- Logout Button -->
+
+                            <!-- Profil utilisateur -->
+                            <div id="user-info" class="flex items-center space-x-3">
+                                <div class="avatar-upload-container">
+                                    <img id="user-avatar" src="" alt="Avatar" 
+                                         class="w-10 h-10 rounded-full object-cover border-2 border-gray-200 cursor-pointer"
+                                         onclick="openAvatarUpload()">
+                                    <button onclick="openAvatarUpload()" class="avatar-upload-button" title="Changer l'avatar">
+                                        <i class="fas fa-camera text-xs"></i>
+                                    </button>
+                                </div>
+                                <div class="hidden sm:block">
+                                    <p id="user-name" class="text-sm font-medium text-gray-900"></p>
+                                    <p class="text-xs text-gray-500">En ligne</p>
+                                </div>
+                                <input type="file" id="avatar-upload" class="hidden" accept="image/*" onchange="handleAvatarUpload(event)">
+                            </div>
+
+                            <!-- Bouton de déconnexion -->
                             <button onclick="logout()" 
-                                    class="text-gray-500 hover:text-red-500 transition-colors">
+                                    class="text-gray-500 hover:text-gray-700 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                                    title="Se déconnecter">
                                 <i class="fas fa-sign-out-alt"></i>
                             </button>
                         </div>
@@ -411,67 +414,73 @@
                 </div>
             </header>
 
+            <!-- Main Content -->
             <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
                 <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                    <!-- Sidebar -->
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-semibold text-lg text-gray-900">Utilisateurs Connectés</h3>
-                            <button onclick="refreshUsersList()" class="text-gray-500 hover:text-blue-500 transition-colors" title="Actualiser">
-                                <i class="fas fa-sync-alt text-sm"></i>
-                            </button>
-                        </div>
-                        <div id="online-users" class="space-y-3">
-                            <!-- Les utilisateurs connectés seront affichés ici -->
-                        </div>
-                        
-                        <div id="offline-users-section" class="mt-6 pt-4 border-t border-gray-200">
-                            <h4 class="text-sm font-medium text-gray-700 mb-3">Utilisateurs Hors Ligne</h4>
-                            <div id="offline-users" class="space-y-2">
-                                <!-- Les utilisateurs hors ligne seront affichés ici -->
+                    <!-- Sidebar gauche - Utilisateurs -->
+                    <div class="lg:col-span-1">
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sticky top-24">
+                            <!-- Statistiques rapides -->
+                            <div class="grid grid-cols-3 gap-4 mb-6">
+                                <div class="text-center">
+                                    <div class="text-2xl font-bold text-blue-600" id="active-users-count">0</div>
+                                    <div class="text-xs text-gray-500">Connectés</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-2xl font-bold text-green-600" id="daily-messages">0</div>
+                                    <div class="text-xs text-gray-500">Messages</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-2xl font-bold text-purple-600" id="shared-files">0</div>
+                                    <div class="text-xs text-gray-500">Fichiers</div>
+                                </div>
                             </div>
-                        </div>
-                        
-                        <!-- Quick Stats -->
-                        <div class="mt-6 gradient-bg rounded-xl p-6 text-white">
-                            <h4 class="font-semibold mb-3">Statistiques</h4>
-                            <div class="space-y-2 text-sm">
-                                <div class="flex justify-between">
-                                    <span>Utilisateurs actifs:</span>
-                                    <span id="active-users-count">0</span>
+
+                            <!-- Liste des utilisateurs en ligne -->
+                            <div class="space-y-4">
+                                <div>
+                                    <h3 class="text-sm font-semibold text-gray-900 mb-3 flex items-center">
+                                        <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                                        En ligne
+                                    </h3>
+                                    <div id="online-users" class="space-y-2 max-h-64 overflow-y-auto">
+                                        <!-- Les utilisateurs en ligne seront affichés ici -->
+                                    </div>
                                 </div>
-                                <div class="flex justify-between">
-                                    <span>Messages aujourd'hui:</span>
-                                    <span id="daily-messages">0</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span>Fichiers partagés:</span>
-                                    <span id="shared-files">0</span>
+
+                                <!-- Section utilisateurs hors ligne (cachée par défaut) -->
+                                <div id="offline-users-section" class="hidden">
+                                    <h3 class="text-sm font-semibold text-gray-900 mb-3 flex items-center">
+                                        <span class="w-2 h-2 bg-gray-400 rounded-full mr-2"></span>
+                                        Hors ligne
+                                    </h3>
+                                    <div id="offline-users" class="space-y-2 max-h-32 overflow-y-auto">
+                                        <!-- Les utilisateurs hors ligne seront affichés ici -->
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Chat Area -->
-                    <div class="lg:col-span-3 space-y-6">
-                        <!-- Chat Tabs -->
+                    <!-- Zone principale de chat -->
+                    <div class="lg:col-span-3">
                         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                            <div class="flex border-b border-gray-200 mb-6">
-                                <button onclick="switchChat('public')" 
-                                        class="chat-tab px-6 py-3 border-b-2 border-blue-500 text-blue-600 font-medium">
-                                    Chat Public
+                            <!-- Onglets de navigation -->
+                            <div class="flex space-x-1 mb-6 bg-gray-100 rounded-lg p-1">
+                                <button onclick="switchView('public')" 
+                                        class="view-tab flex-1 py-2 px-4 rounded-md text-sm font-medium text-gray-900 bg-white shadow-sm border border-blue-500">
+                                    <i class="fas fa-users mr-2"></i>Chat Public
                                 </button>
-                                <button onclick="switchChat('private')" 
-                                        class="chat-tab px-6 py-3 border-b-2 border-transparent text-gray-500 hover:text-gray-700">
-                                    Messages Privés
+                                <button onclick="switchView('private')" 
+                                        class="view-tab flex-1 py-2 px-4 rounded-md text-sm font-medium text-gray-500 hover:text-gray-700 border border-transparent">
+                                    <i class="fas fa-comment-dots mr-2"></i>Messages Privés
                                 </button>
                             </div>
 
                             <!-- Public Chat -->
                             <div id="public-chat" class="space-y-6">
-                                <div class="flex items-center justify-between mb-2">
-                                    <h3 class="text-lg font-semibold text-gray-800">Discussion Publique</h3>
-                                    <!-- Bouton admin H7 pour vider tout le chat -->
+                                <div class="flex justify-between items-center">
+                                    <h2 class="text-lg font-semibold text-gray-900">Discussion Publique</h2>
                                     <button id="admin-clear-chat" onclick="adminClearAllMessages()" 
                                             class="bg-red-600 text-white px-3 py-1.5 rounded-lg hover:bg-red-700 text-sm hidden" 
                                             title="Vider tous les messages (Admin uniquement)">
@@ -542,7 +551,7 @@
         <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl">
             <div class="text-center mb-6">
                 <div class="w-16 h-16 gradient-bg rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-user text-white text-2xl"></i>
+                    <img src="https://h-7.eu/wp-content/uploads/2023/06/cropped-favicon.jpg" alt="H7 Logo" class="w-10 h-10 rounded-full object-cover">
                 </div>
                 <h2 class="text-2xl font-bold text-gray-900 mb-2">Rejoindre H7 Social</h2>
                 <p class="text-gray-600">Connectez-vous ou créez un compte pour commencer à discuter</p>
@@ -579,7 +588,7 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">Photo de profil (optionnelle)</label>
                         <div class="flex justify-center mb-4">
                             <div class="avatar-upload-container">
-                                <img id="preview-avatar" src="" alt="Aperçu" 
+                                <img id="preview-avatar" src="https://h-7.eu/wp-content/uploads/2023/06/cropped-favicon.jpg" alt="Aperçu" 
                                      class="w-20 h-20 rounded-full object-cover border-4 border-gray-200 bg-gray-100">
                                 <button type="button" onclick="openRegistrationAvatarUpload()" class="avatar-upload-button" title="Choisir une photo">
                                     <i class="fas fa-camera"></i>
@@ -721,8 +730,9 @@
                 showToast('Configuration Firebase requise', 'error');
             }
 
-            // Ajouter les utilisateurs de test
-            allUsers = generateTestUsers();
+            // MODIFICATION 2: Supprimer les utilisateurs de démonstration
+            // Les utilisateurs seront maintenant chargés uniquement depuis Firebase
+            allUsers = [];
             updateUsersList();
         }
 
@@ -751,6 +761,22 @@
                 updateServerStatus('connected');
                 showToast('Firebase connecté avec succès!', 'success');
 
+                // MODIFICATION 1: Corriger l'erreur sur la liste des utilisateurs connectés
+                // Écouter les utilisateurs connectés en temps réel
+                const usersRef = window.firebaseRefs.ref(database, 'users');
+                window.firebaseRefs.onValue(usersRef, (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        allUsers = Object.keys(data).map(key => ({
+                            id: key,
+                            ...data[key]
+                        }));
+                    } else {
+                        allUsers = [];
+                    }
+                    updateUsersList();
+                });
+
                 // Activer le bouton Google
                 const googleBtn = document.querySelector('button[onclick="loginWithGoogle()"]');
                 if (googleBtn) {
@@ -778,49 +804,56 @@
             const indicator = document.getElementById('server-status');
             const text = document.getElementById('server-status-text');
             const connectionIndicator = document.getElementById('connection-status');
-            const connectionText = document.getElementById('connection-text');
-
-            const statusConfig = {
-                connecting: { color: 'bg-yellow-500', text: 'Connexion...' },
-                connected: { color: 'bg-green-500', text: 'En ligne' },
-                error: { color: 'bg-red-500', text: 'Hors ligne' }
-            };
-
-            const config = statusConfig[status];
             
-            if (indicator && text) {
-                indicator.className = `w-2 h-2 rounded-full ${config.color}`;
-                text.textContent = config.text;
-            }
-            
-            if (connectionIndicator && connectionText) {
-                connectionIndicator.className = `w-3 h-3 rounded-full ${config.color}`;
-                connectionText.textContent = config.text;
+            switch (status) {
+                case 'connected':
+                    indicator.className = 'hidden sm:flex items-center space-x-2 px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800';
+                    indicator.querySelector('.w-2').className = 'w-2 h-2 rounded-full bg-green-500';
+                    text.textContent = 'Connecté';
+                    text.className = 'text-xs text-green-600';
+                    connectionIndicator.className = 'w-2 h-2 bg-green-500 rounded-full';
+                    break;
+                case 'connecting':
+                    indicator.className = 'hidden sm:flex items-center space-x-2 px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800';
+                    indicator.querySelector('.w-2').className = 'w-2 h-2 rounded-full bg-yellow-500';
+                    text.textContent = 'Connexion...';
+                    text.className = 'text-xs text-yellow-600';
+                    connectionIndicator.className = 'w-2 h-2 bg-yellow-500 rounded-full';
+                    break;
+                case 'error':
+                    indicator.className = 'hidden sm:flex items-center space-x-2 px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800';
+                    indicator.querySelector('.w-2').className = 'w-2 h-2 rounded-full bg-red-500';
+                    text.textContent = 'Déconnecté';
+                    text.className = 'text-xs text-red-600';
+                    connectionIndicator.className = 'w-2 h-2 bg-red-500 rounded-full';
+                    break;
             }
         }
 
-        // Gestion de l'authentification
+        // Gestion des modales d'authentification
         window.showAuthModal = function() {
             document.getElementById('auth-modal').classList.remove('hidden');
-            document.getElementById('auth-username').focus();
+            document.getElementById('landing-page').classList.add('blur-sm');
         };
 
         window.closeAuthModal = function() {
             document.getElementById('auth-modal').classList.add('hidden');
+            document.getElementById('landing-page').classList.remove('blur-sm');
         };
 
-        window.switchAuthTab = function(tab) {
+        window.switchAuthTab = function(type) {
             const tabs = document.querySelectorAll('.auth-tab');
             const passwordField = document.getElementById('password-field');
             const avatarSelection = document.getElementById('avatar-selection');
             const submitBtn = document.getElementById('auth-submit');
             
-            tabs.forEach(t => {
-                t.classList.remove('bg-white', 'text-gray-900', 'shadow-sm');
-                t.classList.add('text-gray-500', 'hover:text-gray-700');
+            isLogin = type === 'login';
+            
+            // Mettre à jour les onglets
+            tabs.forEach(tab => {
+                tab.classList.remove('bg-white', 'text-gray-900', 'shadow-sm');
+                tab.classList.add('text-gray-500', 'hover:text-gray-700');
             });
-
-            isLogin = tab === 'login';
             
             if (isLogin) {
                 tabs[0].classList.add('bg-white', 'text-gray-900', 'shadow-sm');
@@ -834,143 +867,59 @@
                 passwordField.classList.remove('hidden');
                 avatarSelection.classList.remove('hidden');
                 submitBtn.textContent = 'Créer un compte';
+                // MODIFICATION 3: Mettre l'avatar H7 par défaut
+                document.getElementById('preview-avatar').src = 'https://h-7.eu/wp-content/uploads/2023/06/cropped-favicon.jpg';
             }
         };
 
+        // Gestion de l'authentification
         window.handleAuth = function(event) {
             event.preventDefault();
             
             const username = document.getElementById('auth-username').value.trim();
-            const password = document.getElementById('auth-password').value;
+            const password = document.getElementById('auth-password').value.trim();
             
             if (!username) {
-                showToast('Le nom d\'utilisateur est requis', 'error');
+                showToast('Veuillez entrer un nom d\'utilisateur', 'error');
+                return;
+            }
+            
+            if (!isLogin && !password) {
+                showToast('Veuillez entrer un mot de passe', 'error');
                 return;
             }
 
-            if (!isLogin && (!password || password.length < 4)) {
-                showToast('Le mot de passe doit contenir au moins 4 caractères', 'error');
-                return;
-            }
-
-            // Simuler l'authentification
-            const avatarPreview = document.getElementById('preview-avatar');
-            const userAvatar = avatarPreview && avatarPreview.src && !avatarPreview.src.includes('data:image') ? 
-                avatarPreview.src : getDefaultAvatar(username);
-
+            // MODIFICATION 3: Utiliser l'avatar H7 par défaut
+            const avatarUrl = document.getElementById('preview-avatar').src || 'https://h-7.eu/wp-content/uploads/2023/06/cropped-favicon.jpg';
+            
             currentUser = {
-                id: 'user_' + Date.now(),
+                id: 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
                 username: username,
                 isAdmin: username.toLowerCase() === 'h7',
-                isOnline: true,
-                profileImage: userAvatar
+                profileImage: avatarUrl,
+                isOnline: true
             };
 
-            // Si Firebase est connecté, sauvegarder l'utilisateur
-            if (isFirebaseConnected && database) {
-                const userRef = window.firebaseRefs.ref(database, `users/${currentUser.id}`);
-                window.firebaseRefs.set(userRef, {
-                    username: currentUser.username,
-                    isOnline: true,
-                    isAdmin: currentUser.isAdmin,
-                    profileImage: currentUser.profileImage,
-                    lastSeen: new Date().toISOString()
-                });
-            }
+            // Sauvegarder dans localStorage
+            localStorage.setItem('h7_current_user', JSON.stringify(currentUser));
 
-            // Mettre à jour l'interface
-            document.getElementById('current-username').textContent = username;
-            document.getElementById('current-user-avatar').src = userAvatar;
-            document.getElementById('user-role').textContent = currentUser.isAdmin ? 'Administrateur 👑' : 'Membre';
-
-            // Afficher/masquer les fonctions admin
-            if (currentUser.isAdmin && currentUser.username.toLowerCase() === 'h7') {
-                document.getElementById('admin-clear-chat').classList.remove('hidden');
-            }
-
-            // Ajouter à la liste locale
-            const existingUserIndex = allUsers.findIndex(u => u.username === username);
-            if (existingUserIndex >= 0) {
-                allUsers[existingUserIndex] = currentUser;
-            } else {
-                allUsers.push(currentUser);
-            }
-
-            updateUsersList();
-            closeAuthModal();
             showChatApp();
+            closeAuthModal();
             
-            showToast(`Bienvenue ${username}!`, 'success');
-        };
-
-        // Gestion de l'avatar de création de compte
-        window.openRegistrationAvatarUpload = function() {
-            document.getElementById('registration-avatar-upload').click();
-        };
-
-        window.handleRegistrationAvatarUpload = function(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            if (file.size > 5 * 1024 * 1024) {
-                showToast('L\'image doit faire moins de 5MB', 'error');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const preview = document.getElementById('preview-avatar');
-                preview.src = e.target.result;
-                preview.style.display = 'block';
-            };
-            reader.readAsDataURL(file);
-        };
-
-        // Avatar de l'utilisateur connecté
-        window.openAvatarUpload = function() {
-            document.getElementById('avatar-upload').click();
-        };
-
-        window.handleAvatarUpload = function(event) {
-            const file = event.target.files[0];
-            if (!file || !currentUser) return;
-
-            if (file.size > 5 * 1024 * 1024) {
-                showToast('L\'image doit faire moins de 5MB', 'error');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                currentUser.profileImage = e.target.result;
-                document.getElementById('current-user-avatar').src = e.target.result;
-                
-                // Mettre à jour dans la liste des utilisateurs
-                const userIndex = allUsers.findIndex(u => u.id === currentUser.id);
-                if (userIndex >= 0) {
-                    allUsers[userIndex].profileImage = e.target.result;
-                }
-                
-                updateUsersList();
-                
-                // Sauvegarder dans Firebase si connecté
-                if (isFirebaseConnected && database) {
-                    const userRef = window.firebaseRefs.ref(database, `users/${currentUser.id}`);
-                    window.firebaseRefs.set(userRef, {
-                        username: currentUser.username,
-                        isOnline: true,
-                        isAdmin: currentUser.isAdmin,
-                        profileImage: currentUser.profileImage,
-                        lastSeen: new Date().toISOString()
-                    });
-                }
-                
-                showToast('Avatar mis à jour avec succès', 'success');
-            };
-            reader.readAsDataURL(file);
+            showToast(`Bienvenue ${currentUser.username}!`, 'success');
         };
 
         function showChatApp() {
+            // Mettre à jour l'interface utilisateur
+            document.getElementById('user-name').textContent = currentUser.username;
+            document.getElementById('user-avatar').src = currentUser.profileImage;
+            
+            // Afficher les boutons admin si nécessaire
+            if (currentUser.isAdmin && currentUser.username === 'H7') {
+                document.getElementById('admin-clear-chat').classList.remove('hidden');
+            }
+
+            // Masquer la page d'accueil et afficher le chat
             document.getElementById('landing-page').classList.add('hidden');
             document.getElementById('chat-app').classList.remove('hidden');
             
@@ -1222,7 +1171,7 @@
             // Mettre à jour les utilisateurs en ligne
             if (onlineUsers.length > 0) {
                 onlineContainer.innerHTML = onlineUsers.map(user => {
-                    const avatarUrl = user.profileImage || getDefaultAvatar(user.username);
+                    const avatarUrl = user.profileImage || 'https://h-7.eu/wp-content/uploads/2023/06/cropped-favicon.jpg';
                     const isAdminH7 = currentUser && currentUser.isAdmin && currentUser.username === 'H7';
                     const disconnectButton = isAdminH7 && user.id !== currentUser.id ? 
                         `<button onclick="forceDisconnectUser('${user.id}')" 
@@ -1237,7 +1186,7 @@
                             <div class="flex items-center space-x-3">
                                 <img src="${avatarUrl}" alt="Profil ${user.username}" 
                                      class="w-10 h-10 rounded-full object-cover ${user.isAdmin ? 'border-2 border-yellow-400' : ''}"
-                                     onerror="this.src='${getDefaultAvatar(user.username)}'">
+                                     onerror="this.src='https://h-7.eu/wp-content/uploads/2023/06/cropped-favicon.jpg'">
                                 <div class="flex-1 min-w-0">
                                     <p class="text-sm font-medium text-gray-900 truncate">
                                         ${user.username} ${user.isAdmin ? '(Admin) 👑' : ''}
@@ -1303,13 +1252,7 @@
             }
 
             if (confirm(`Êtes-vous sûr de vouloir déconnecter ${user.username} ?`)) {
-                // Marquer l'utilisateur comme hors ligne
-                const userIndex = allUsers.findIndex(u => u.id === userId);
-                if (userIndex >= 0) {
-                    allUsers[userIndex].isOnline = false;
-                }
-
-                // Si Firebase est connecté, mettre à jour dans la base
+                // Marquer l'utilisateur comme hors ligne dans Firebase
                 if (isFirebaseConnected && database) {
                     const userRef = window.firebaseRefs.ref(database, `users/${userId}`);
                     window.firebaseRefs.set(userRef, {
@@ -1318,128 +1261,116 @@
                         isAdmin: user.isAdmin,
                         profileImage: user.profileImage,
                         lastSeen: new Date().toISOString(),
-                        forcedDisconnect: true,
-                        disconnectedBy: currentUser.username
+                        forcedDisconnect: true
                     });
                 }
-
-                updateUsersList();
+                
                 showToast(`${user.username} a été déconnecté`, 'success');
             }
         };
 
-        window.refreshUsersList = function() {
-            if (isFirebaseConnected) {
-                loadUsersFromFirebase();
-                showToast('Liste des utilisateurs actualisée', 'success');
-            } else {
-                showToast('Veuillez configurer Firebase pour voir les utilisateurs réels', 'error');
+        // Avatar et profil utilisateur
+        window.openAvatarUpload = function() {
+            document.getElementById('avatar-upload').click();
+        };
+
+        window.openRegistrationAvatarUpload = function() {
+            document.getElementById('registration-avatar-upload').click();
+        };
+
+        window.handleAvatarUpload = function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const avatarUrl = e.target.result;
+                    document.getElementById('user-avatar').src = avatarUrl;
+                    
+                    if (currentUser) {
+                        currentUser.profileImage = avatarUrl;
+                        localStorage.setItem('h7_current_user', JSON.stringify(currentUser));
+                        
+                        // Mettre à jour dans Firebase
+                        if (isFirebaseConnected && database) {
+                            const userRef = window.firebaseRefs.ref(database, `users/${currentUser.id}`);
+                            window.firebaseRefs.set(userRef, {
+                                username: currentUser.username,
+                                isOnline: true,
+                                isAdmin: currentUser.isAdmin,
+                                profileImage: avatarUrl,
+                                lastSeen: new Date().toISOString()
+                            });
+                        }
+                        
+                        showToast('Avatar mis à jour', 'success');
+                    }
+                };
+                reader.readAsDataURL(file);
             }
         };
 
-        window.selectUser = function(userId) {
-            const user = allUsers.find(u => u.id === userId);
-            if (user) {
-                // Basculer vers l'onglet messages privés
-                switchChat('private');
-                
-                // Afficher l'interface de chat privé avec cet utilisateur
-                const privateChat = document.getElementById('private-chat');
-                const avatarUrl = user.profileImage || getDefaultAvatar(user.username);
-                
-                privateChat.innerHTML = `
-                    <div class="flex items-center space-x-3 mb-4 p-4 bg-gray-50 rounded-lg">
-                        <img src="${avatarUrl}" alt="${user.username}" 
-                             class="w-12 h-12 rounded-full object-cover ${user.isAdmin ? 'border-2 border-yellow-400' : ''}"
-                             onerror="this.src='${getDefaultAvatar(user.username)}'">
-                        <div>
-                            <h3 class="font-semibold text-gray-900">${user.username} ${user.isAdmin ? '👑' : ''}</h3>
-                            <p class="text-sm text-gray-500">${user.isOnline ? 'En ligne' : 'Hors ligne'}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-gray-50 rounded-lg p-4 h-80 overflow-y-auto mb-4" id="private-messages-${userId}">
-                        <div class="text-center text-gray-500 py-8">
-                            <i class="fas fa-comment-dots text-4xl mb-4 opacity-50"></i>
-                            <p>Début de votre conversation avec ${user.username}</p>
-                            <p class="text-sm mt-2">Les messages privés apparaîtront ici</p>
-                        </div>
-                    </div>
-                    
-                    <div class="border-t border-gray-200 pt-4">
-                        <div class="flex space-x-4">
-                            <div class="flex-1">
-                                <textarea id="private-message-input-${userId}" placeholder="Message privé à ${user.username}..." 
-                                          class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                                          rows="2" onkeypress="handlePrivateKeyPress(event, '${userId}')"></textarea>
-                            </div>
-                            <div class="flex flex-col space-y-2">
-                                <button onclick="sendPrivateMessage('${userId}')" 
-                                        class="gradient-bg text-white p-3 rounded-lg hover-scale" title="Envoyer le message privé">
-                                    <i class="fas fa-paper-plane"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-                showToast(`Conversation privée avec ${user.username} ouverte`, 'success');
+        window.handleRegistrationAvatarUpload = function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('preview-avatar').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
             }
         };
 
-        // Gestion des fichiers
+        // Gestion des fichiers joints
         window.handleFileSelect = function(event) {
-            const files = Array.from(event.target.files || []);
-            if (files.length === 0) return;
-
-            const fileIcon = document.getElementById('file-icon');
-            fileIcon.className = 'fas fa-spinner fa-spin text-lg';
-
+            const files = Array.from(event.target.files);
+            
             files.forEach(file => {
-                // Simuler l'upload de fichier
-                const fileData = {
+                if (file.size > 10 * 1024 * 1024) { // 10MB limit
+                    showToast(`Le fichier ${file.name} est trop volumineux (max 10MB)`, 'error');
+                    return;
+                }
+                
+                const attachment = {
+                    id: 'file_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
                     name: file.name,
-                    type: file.type,
                     size: file.size,
+                    type: file.type,
                     url: URL.createObjectURL(file)
                 };
-                attachments.push(fileData);
+                
+                attachments.push(attachment);
             });
-
+            
             updateAttachmentsPreview();
-            showToast(`${files.length} fichier${files.length > 1 ? 's' : ''} ajouté${files.length > 1 ? 's' : ''}`, 'success');
-
-            setTimeout(() => {
-                fileIcon.className = 'fas fa-paperclip text-lg';
-            }, 1000);
+            event.target.value = ''; // Reset input
         };
 
         function updateAttachmentsPreview() {
             const preview = document.getElementById('attachments-preview');
             const list = document.getElementById('attachments-list');
-
+            
             if (attachments.length === 0) {
                 preview.classList.add('hidden');
                 return;
             }
-
+            
             preview.classList.remove('hidden');
-            list.innerHTML = attachments.map((file, index) => `
-                <div class="flex items-center justify-between bg-white p-2 rounded border">
-                    <div class="flex items-center space-x-2">
-                        <i class="fas fa-file text-blue-500"></i>
-                        <span class="text-sm text-gray-700">${file.name}</span>
-                        <span class="text-xs text-gray-500">(${formatFileSize(file.size)})</span>
+            list.innerHTML = attachments.map(att => `
+                <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <div class="flex items-center">
+                        <i class="fas fa-paperclip mr-2 text-blue-500"></i>
+                        <span class="text-sm text-gray-900">${att.name}</span>
+                        <span class="text-xs text-gray-500 ml-2">(${formatFileSize(att.size)})</span>
                     </div>
-                    <button onclick="removeAttachment(${index})" class="text-red-500 hover:text-red-700">
-                        <i class="fas fa-times text-xs"></i>
+                    <button onclick="removeAttachment('${att.id}')" class="text-red-500 hover:text-red-700" title="Supprimer">
+                        <i class="fas fa-times"></i>
                     </button>
                 </div>
             `).join('');
         }
 
-        window.removeAttachment = function(index) {
-            attachments.splice(index, 1);
+        window.removeAttachment = function(attachmentId) {
+            attachments = attachments.filter(att => att.id !== attachmentId);
             updateAttachmentsPreview();
         };
 
@@ -1449,27 +1380,28 @@
         };
 
         function formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
+            if (bytes === 0) return '0 B';
             const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const sizes = ['B', 'KB', 'MB', 'GB'];
             const i = Math.floor(Math.log(bytes) / Math.log(k));
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
 
-        // Gestion des onglets de chat
-        window.switchChat = function(type) {
-            const tabs = document.querySelectorAll('.chat-tab');
+        // Navigation entre les vues
+        window.switchView = function(view) {
+            const tabs = document.querySelectorAll('.view-tab');
             const publicChat = document.getElementById('public-chat');
             const privateChat = document.getElementById('private-chat');
-
+            
+            // Mettre à jour les onglets
             tabs.forEach(tab => {
-                tab.classList.remove('border-blue-500', 'text-blue-600');
-                tab.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700');
+                tab.classList.remove('bg-white', 'text-gray-900', 'shadow-sm', 'border-blue-500');
+                tab.classList.add('text-gray-500', 'hover:text-gray-700', 'border-transparent');
             });
-
-            if (type === 'public') {
-                tabs[0].classList.add('border-blue-500', 'text-blue-600');
-                tabs[0].classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700');
+            
+            if (view === 'public') {
+                tabs[0].classList.add('bg-white', 'text-gray-900', 'shadow-sm', 'border-blue-500');
+                tabs[0].classList.remove('text-gray-500', 'hover:text-gray-700', 'border-transparent');
                 publicChat.classList.remove('hidden');
                 privateChat.classList.add('hidden');
                 currentView = 'public';
@@ -1722,93 +1654,59 @@
                                     <h4 class="font-semibold text-gray-900 mb-2">🛡️ Protection des données</h4>
                                     <ul class="text-gray-600 space-y-1 text-sm list-disc list-inside">
                                         <li>Chiffrement des données en transit</li>
-                                        <li>Stockage sécurisé via Firebase</li>
-                                        <li>Accès restreint aux données personnelles</li>
-                                        <li>Aucune vente de données à des tiers</li>
+                                        <li>Stockage sécurisé sur Firebase</li>
+                                        <li>Accès limité aux données personnelles</li>
+                                        <li>Suppression automatique des données inactives</li>
                                     </ul>
                                 </div>
-                                
-                                <div>
-                                    <h4 class="font-semibold text-gray-900 mb-2">⚖️ Vos droits</h4>
-                                    <ul class="text-gray-600 space-y-1 text-sm list-disc list-inside">
-                                        <li>Droit d'accès à vos données</li>
-                                        <li>Droit de rectification</li>
-                                        <li>Droit à l'effacement</li>
-                                        <li>Droit à la portabilité</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            
-                            <div class="bg-gray-50 p-4 rounded-lg">
-                                <p class="text-gray-600 text-sm">
-                                    <strong>Contact :</strong> Pour toute question concernant vos données personnelles, 
-                                    contactez-nous à <a href="mailto:privacy@h7social.com" class="text-blue-600 hover:underline">privacy@h7social.com</a>
-                                </p>
                             </div>
                         </div>
                     `
                 },
                 terms: {
-                    title: 'Conditions générales d\'utilisation',
+                    title: 'Conditions d\'utilisation',
                     content: `
                         <div class="space-y-6">
-                            <div class="bg-green-50 border border-green-200 p-4 rounded-lg">
-                                <h4 class="font-semibold text-green-900 mb-2">✅ Acceptation des conditions</h4>
-                                <p class="text-green-800 text-sm">
-                                    En utilisant H7 Social, vous acceptez ces conditions d'utilisation dans leur intégralité.
+                            <div class="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
+                                <h4 class="font-semibold text-yellow-900 mb-2">📋 Règles de la communauté</h4>
+                                <p class="text-yellow-800 text-sm">
+                                    En utilisant H7 Social, vous acceptez de respecter ces règles pour maintenir un environnement sain et accueillant.
                                 </p>
                             </div>
                             
                             <div class="space-y-4">
                                 <div>
-                                    <h4 class="font-semibold text-gray-900 mb-2">📋 Règles d'utilisation</h4>
+                                    <h4 class="font-semibold text-gray-900 mb-2">✅ Comportements encouragés</h4>
                                     <ul class="text-gray-600 space-y-1 text-sm list-disc list-inside">
-                                        <li>Respectez les autres utilisateurs en toutes circonstances</li>
-                                        <li>Ne partagez aucun contenu inapproprié, offensant ou illégal</li>
-                                        <li>N'utilisez pas la plateforme à des fins commerciales non autorisées</li>
-                                        <li>Ne tentez pas de pirater ou compromettre la sécurité</li>
-                                        <li>Signalez tout comportement suspect à l'équipe de modération</li>
+                                        <li>Respecter tous les membres de la communauté</li>
+                                        <li>Partager du contenu constructif et pertinent</li>
+                                        <li>Aider les nouveaux utilisateurs</li>
+                                        <li>Signaler les comportements inappropriés</li>
                                     </ul>
                                 </div>
                                 
                                 <div>
-                                    <h4 class="font-semibold text-gray-900 mb-2">🚫 Contenu interdit</h4>
+                                    <h4 class="font-semibold text-gray-900 mb-2">❌ Comportements interdits</h4>
                                     <ul class="text-gray-600 space-y-1 text-sm list-disc list-inside">
-                                        <li>Messages à caractère haineux ou discriminatoire</li>
-                                        <li>Contenu violent ou menaçant</li>
-                                        <li>Spam ou publicité non sollicitée</li>
-                                        <li>Informations personnelles d'autres utilisateurs</li>
-                                        <li>Contenu protégé par des droits d'auteur</li>
+                                        <li>Harcèlement ou intimidation</li>
+                                        <li>Contenu offensant, discriminatoire ou haineux</li>
+                                        <li>Spam ou publicité non autorisée</li>
+                                        <li>Partage d'informations privées sans consentement</li>
+                                        <li>Tentatives de piratage ou d'exploitation</li>
                                     </ul>
                                 </div>
                                 
                                 <div>
-                                    <h4 class="font-semibold text-gray-900 mb-2">⚠️ Sanctions</h4>
-                                    <p class="text-gray-600 text-sm mb-2">En cas de non-respect des règles :</p>
+                                    <h4 class="font-semibold text-gray-900 mb-2">⚖️ Sanctions</h4>
+                                    <p class="text-gray-600 text-sm mb-2">
+                                        Le non-respect de ces règles peut entraîner :
+                                    </p>
                                     <ul class="text-gray-600 space-y-1 text-sm list-disc list-inside">
-                                        <li>Avertissement formel</li>
-                                        <li>Suspension temporaire du compte</li>
-                                        <li>Bannissement définitif en cas de récidive</li>
-                                        <li>Signalement aux autorités si nécessaire</li>
+                                        <li>Avertissement</li>
+                                        <li>Restriction temporaire</li>
+                                        <li>Bannissement définitif</li>
                                     </ul>
                                 </div>
-                                
-                                <div>
-                                    <h4 class="font-semibold text-gray-900 mb-2">🛡️ Responsabilités</h4>
-                                    <ul class="text-gray-600 space-y-1 text-sm list-disc list-inside">
-                                        <li>H7 Social s'efforce de maintenir un service fiable</li>
-                                        <li>Nous ne sommes pas responsables du contenu généré par les utilisateurs</li>
-                                        <li>L'utilisateur est responsable de ses propres communications</li>
-                                        <li>Nous nous réservons le droit de modifier le service</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            
-                            <div class="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
-                                <p class="text-yellow-800 text-sm">
-                                    <strong>Modification :</strong> Ces conditions peuvent être mises à jour. 
-                                    Les utilisateurs seront informés des changements significatifs.
-                                </p>
                             </div>
                         </div>
                     `
@@ -1820,134 +1718,104 @@
                             <div class="bg-orange-50 border border-orange-200 p-4 rounded-lg">
                                 <h4 class="font-semibold text-orange-900 mb-2">🍪 Utilisation des cookies</h4>
                                 <p class="text-orange-800 text-sm">
-                                    H7 Social utilise des cookies et technologies similaires pour améliorer votre expérience utilisateur.
+                                    H7 Social utilise des cookies et des technologies similaires pour améliorer votre expérience utilisateur.
                                 </p>
                             </div>
                             
                             <div class="space-y-4">
                                 <div>
-                                    <h4 class="font-semibold text-gray-900 mb-2">📱 Types de cookies utilisés</h4>
-                                    
+                                    <h4 class="font-semibold text-gray-900 mb-2">🔧 Types de cookies utilisés</h4>
                                     <div class="space-y-3">
-                                        <div class="bg-blue-50 p-3 rounded">
-                                            <h5 class="font-medium text-blue-900 mb-1">Cookies essentiels</h5>
-                                            <p class="text-blue-800 text-sm">Nécessaires au fonctionnement de base de la plateforme (authentification, session utilisateur).</p>
+                                        <div class="bg-gray-50 p-3 rounded">
+                                            <h5 class="font-medium text-gray-800 mb-1">Cookies essentiels</h5>
+                                            <p class="text-gray-600 text-sm">Nécessaires au fonctionnement de base de la plateforme (authentification, préférences).</p>
                                         </div>
-                                        
-                                        <div class="bg-green-50 p-3 rounded">
-                                            <h5 class="font-medium text-green-900 mb-1">Cookies de préférences</h5>
-                                            <p class="text-green-800 text-sm">Stockent vos préférences (langue, thème, configuration Firebase).</p>
+                                        <div class="bg-gray-50 p-3 rounded">
+                                            <h5 class="font-medium text-gray-800 mb-1">Cookies de performance</h5>
+                                            <p class="text-gray-600 text-sm">Collectent des informations anonymes sur l'utilisation pour améliorer nos services.</p>
                                         </div>
-                                        
-                                        <div class="bg-purple-50 p-3 rounded">
-                                            <h5 class="font-medium text-purple-900 mb-1">Cookies de performance</h5>
-                                            <p class="text-purple-800 text-sm">Nous aident à comprendre comment vous utilisez le site pour l'améliorer.</p>
+                                        <div class="bg-gray-50 p-3 rounded">
+                                            <h5 class="font-medium text-gray-800 mb-1">Cookies de personnalisation</h5>
+                                            <p class="text-gray-600 text-sm">Stockent vos préférences pour personnaliser votre expérience.</p>
                                         </div>
                                     </div>
                                 </div>
                                 
                                 <div>
                                     <h4 class="font-semibold text-gray-900 mb-2">⚙️ Gestion des cookies</h4>
+                                    <p class="text-gray-600 text-sm mb-2">
+                                        Vous pouvez contrôler l'utilisation des cookies via :
+                                    </p>
                                     <ul class="text-gray-600 space-y-1 text-sm list-disc list-inside">
-                                        <li>Vous pouvez désactiver les cookies dans votre navigateur</li>
-                                        <li>Certaines fonctionnalités peuvent être limitées sans cookies</li>
-                                        <li>Les cookies de session sont supprimés à la fermeture du navigateur</li>
-                                        <li>Les cookies de préférences peuvent être conservés plus longtemps</li>
+                                        <li>Les paramètres de votre navigateur</li>
+                                        <li>Les préférences de votre compte H7 Social</li>
+                                        <li>Les outils de gestion des cookies tiers</li>
                                     </ul>
                                 </div>
-                                
-                                <div>
-                                    <h4 class="font-semibold text-gray-900 mb-2">🔧 Comment gérer vos cookies</h4>
-                                    <div class="bg-gray-50 p-3 rounded text-sm text-gray-600 space-y-2">
-                                        <p><strong>Chrome :</strong> Paramètres > Confidentialité et sécurité > Cookies</p>
-                                        <p><strong>Firefox :</strong> Paramètres > Vie privée et sécurité > Cookies</p>
-                                        <p><strong>Safari :</strong> Préférences > Confidentialité > Cookies</p>
-                                        <p><strong>Edge :</strong> Paramètres > Confidentialité et services > Cookies</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg">
-                                <p class="text-blue-800 text-sm">
-                                    <strong>Note :</strong> En continuant à utiliser H7 Social, vous consentez à l'utilisation des cookies 
-                                    conformément à cette politique.
-                                </p>
                             </div>
                         </div>
                     `
                 },
                 contact: {
-                    title: 'Nous contacter',
+                    title: 'Contact',
                     content: `
                         <div class="space-y-6">
-                            <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg">
-                                <h4 class="font-semibold text-blue-900 mb-2">💬 Restez en contact</h4>
-                                <p class="text-blue-800 text-sm">
-                                    Notre équipe est là pour vous aider ! N'hésitez pas à nous contacter pour toute question ou suggestion.
+                            <div class="bg-green-50 border border-green-200 p-4 rounded-lg">
+                                <h4 class="font-semibold text-green-900 mb-2">📧 Nous contacter</h4>
+                                <p class="text-green-800 text-sm">
+                                    L'équipe H7 Social est à votre disposition pour toute question, suggestion ou problème technique.
                                 </p>
                             </div>
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="bg-white border border-gray-200 rounded-lg p-4">
-                                    <h4 class="font-semibold text-gray-900 mb-3 flex items-center">
-                                        <i class="fas fa-envelope text-blue-500 mr-2"></i>Email
-                                    </h4>
-                                    <div class="space-y-2 text-sm">
-                                        <p><strong>Support général :</strong><br><a href="mailto:contact@h7social.com" class="text-blue-600 hover:underline">contact@h7social.com</a></p>
-                                        <p><strong>Support technique :</strong><br><a href="mailto:support@h7social.com" class="text-blue-600 hover:underline">support@h7social.com</a></p>
-                                        <p><strong>Sécurité :</strong><br><a href="mailto:security@h7social.com" class="text-blue-600 hover:underline">security@h7social.com</a></p>
-                                    </div>
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h5 class="font-semibold text-gray-900 mb-2 flex items-center">
+                                        <i class="fas fa-life-ring mr-2 text-blue-500"></i>Support technique
+                                    </h5>
+                                    <p class="text-gray-600 text-sm mb-2">Pour les problèmes techniques et bugs</p>
+                                    <a href="mailto:support@h7social.com" class="text-blue-600 hover:text-blue-800 text-sm">
+                                        support@h7social.com
+                                    </a>
                                 </div>
                                 
-                                <div class="bg-white border border-gray-200 rounded-lg p-4">
-                                    <h4 class="font-semibold text-gray-900 mb-3 flex items-center">
-                                        <i class="fab fa-snapchat-ghost text-yellow-500 mr-2"></i>Réseaux sociaux
-                                    </h4>
-                                    <div class="space-y-2 text-sm">
-                                        <p><a href="https://t.snapchat.com/XuhVH62f" target="_blank" class="text-yellow-600 hover:underline flex items-center">
-                                            <i class="fab fa-snapchat-ghost mr-1"></i>Snapchat
-                                        </a></p>
-                                        <p><a href="#" class="text-blue-600 hover:underline flex items-center">
-                                            <i class="fab fa-twitter mr-1"></i>Twitter
-                                        </a></p>
-                                        <p><a href="#" class="text-blue-700 hover:underline flex items-center">
-                                            <i class="fab fa-facebook mr-1"></i>Facebook
-                                        </a></p>
-                                        <p><a href="#" class="text-pink-600 hover:underline flex items-center">
-                                            <i class="fab fa-instagram mr-1"></i>Instagram
-                                        </a></p>
-                                    </div>
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h5 class="font-semibold text-gray-900 mb-2 flex items-center">
+                                        <i class="fas fa-lightbulb mr-2 text-yellow-500"></i>Suggestions
+                                    </h5>
+                                    <p class="text-gray-600 text-sm mb-2">Pour vos idées d'amélioration</p>
+                                    <a href="mailto:ideas@h7social.com" class="text-blue-600 hover:text-blue-800 text-sm">
+                                        ideas@h7social.com
+                                    </a>
+                                </div>
+                                
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h5 class="font-semibold text-gray-900 mb-2 flex items-center">
+                                        <i class="fas fa-shield-alt mr-2 text-red-500"></i>Signalement
+                                    </h5>
+                                    <p class="text-gray-600 text-sm mb-2">Pour signaler un contenu inapproprié</p>
+                                    <a href="mailto:report@h7social.com" class="text-blue-600 hover:text-blue-800 text-sm">
+                                        report@h7social.com
+                                    </a>
+                                </div>
+                                
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h5 class="font-semibold text-gray-900 mb-2 flex items-center">
+                                        <i class="fas fa-handshake mr-2 text-green-500"></i>Partenariats
+                                    </h5>
+                                    <p class="text-gray-600 text-sm mb-2">Pour les collaborations</p>
+                                    <a href="mailto:partners@h7social.com" class="text-blue-600 hover:text-blue-800 text-sm">
+                                        partners@h7social.com
+                                    </a>
                                 </div>
                             </div>
                             
-                            <div class="space-y-4">
-                                <h4 class="font-semibold text-gray-900">❓ Questions fréquentes avant de nous contacter</h4>
-                                
-                                <div class="space-y-3">
-                                    <div class="bg-gray-50 p-3 rounded">
-                                        <h5 class="font-medium text-gray-800 mb-1">Problème de connexion Firebase ?</h5>
-                                        <p class="text-gray-600 text-sm">Vérifiez votre configuration dans les paramètres et assurez-vous que vos clés Firebase sont correctes.</p>
-                                    </div>
-                                    
-                                    <div class="bg-gray-50 p-3 rounded">
-                                        <h5 class="font-medium text-gray-800 mb-1">Messages qui ne s'affichent pas ?</h5>
-                                        <p class="text-gray-600 text-sm">Actualisez la page ou vérifiez votre connexion internet. Les messages sont synchronisés en temps réel.</p>
-                                    </div>
-                                    
-                                    <div class="bg-gray-50 p-3 rounded">
-                                        <h5 class="font-medium text-gray-800 mb-1">Signaler un utilisateur ?</h5>
-                                        <p class="text-gray-600 text-sm">Contactez-nous immédiatement à security@h7social.com avec les détails de l'incident.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="bg-green-50 border border-green-200 p-4 rounded-lg">
-                                <h4 class="font-semibold text-green-900 mb-2">⏰ Temps de réponse</h4>
-                                <ul class="text-green-800 text-sm space-y-1">
-                                    <li>• <strong>Urgences de sécurité :</strong> Dans les 2 heures</li>
-                                    <li>• <strong>Support technique :</strong> 24-48 heures</li>
-                                    <li>• <strong>Questions générales :</strong> 2-5 jours ouvrés</li>
-                                    <li>• <strong>Suggestions :</strong> Nous lisons tout, même si nous ne répondons pas toujours individuellement</li>
+                            <div class="bg-blue-50 p-4 rounded-lg">
+                                <h4 class="font-semibold text-blue-900 mb-2">⏰ Temps de réponse</h4>
+                                <ul class="text-blue-800 space-y-1 text-sm">
+                                    <li>• Support technique : sous 24h</li>
+                                    <li>• Suggestions : sous 48h</li>
+                                    <li>• Signalements : sous 2h</li>
+                                    <li>• Partenariats : sous 1 semaine</li>
                                 </ul>
                             </div>
                         </div>
@@ -1966,124 +1834,55 @@
             document.getElementById('general-modal').classList.add('hidden');
         };
 
-        // Fonctions utilitaires
+        // Utilitaires
         function getDefaultAvatar(username) {
-            const colors = ['FF6B6B', '4ECDC4', '45B7D1', '96CEB4', 'FECA57', 'FF9FF3', 'B8860B', '98D8C8'];
-            const color = colors[username.length % colors.length];
-            const initial = username.charAt(0).toUpperCase();
-            return `https://ui-avatars.com/api/?name=${initial}&background=${color}&color=ffffff&size=100&bold=true`;
-        }
-
-        function generateTestUsers() {
-            const users = [
-                { id: 'test1', username: 'Alice', isOnline: true, isAdmin: false },
-                { id: 'test2', username: 'Bob', isOnline: false, isAdmin: false },
-                { id: 'test3', username: 'Charlie', isOnline: true, isAdmin: false }
-            ];
-
-            return users.map(user => ({
-                ...user,
-                profileImage: getDefaultAvatar(user.username)
-            }));
+            // MODIFICATION 3: Retourner toujours l'avatar H7 par défaut
+            return 'https://h-7.eu/wp-content/uploads/2023/06/cropped-favicon.jpg';
         }
 
         function showToast(message, type = 'info') {
-            const toastContainer = document.createElement('div');
-            
-            const bgColor = {
-                info: 'bg-blue-500',
-                success: 'bg-green-500',
-                error: 'bg-red-500'
-            }[type] || 'bg-blue-500';
-
-            const icon = {
-                info: 'fa-info-circle',
-                success: 'fa-check-circle',
-                error: 'fa-exclamation-circle'
-            }[type] || 'fa-info-circle';
-
-            toastContainer.className = 'toast fixed top-4 right-4 z-50 max-w-sm';
-            toastContainer.innerHTML = `
-                <div class="${bgColor} text-white px-6 py-4 rounded-lg shadow-lg">
-                    <div class="flex items-center">
-                        <i class="fas ${icon} mr-3"></i>
-                        <span class="text-sm font-medium">${message}</span>
-                        <button onclick="this.parentElement.parentElement.parentElement.remove()" 
-                                class="ml-4 text-white hover:text-gray-200">
-                            <i class="fas fa-times"></i>
-                        </button>
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <div class="flex items-center">
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-900">${message}</p>
                     </div>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
             `;
-
-            document.body.appendChild(toastContainer);
-
+            
+            document.body.appendChild(toast);
+            
+            // Auto-remove after 5 seconds
             setTimeout(() => {
-                if (toastContainer.parentElement) {
-                    toastContainer.remove();
+                if (toast.parentElement) {
+                    toast.remove();
                 }
             }, 5000);
         }
 
-        // Fonction admin pour vider le chat (H7 uniquement)
+        // Fonctions d'administration
         window.adminClearAllMessages = function() {
             if (!currentUser || !currentUser.isAdmin || currentUser.username !== 'H7') {
                 showToast('Action non autorisée', 'error');
                 return;
             }
 
-            if (confirm('Êtes-vous sûr de vouloir vider tous les messages du chat public ? Cette action est irréversible.')) {
-                messages = [];
-                
+            if (confirm('Êtes-vous sûr de vouloir supprimer tous les messages ? Cette action est irréversible.')) {
                 if (isFirebaseConnected && database) {
-                    // Vider les messages dans Firebase
+                    // Supprimer tous les messages dans Firebase
                     const messagesRef = window.firebaseRefs.ref(database, 'messages');
                     window.firebaseRefs.set(messagesRef, null);
-                }
-
-                updateMessages();
-                showToast('Tous les messages ont été supprimés', 'success');
-            }
-        };
-
-        function loadUsersFromFirebase() {
-            if (!isFirebaseConnected || !database) return;
-
-            const usersRef = window.firebaseRefs.ref(database, 'users');
-            window.firebaseRefs.onValue(usersRef, (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    const firebaseUsers = Object.keys(data).map(key => ({
-                        id: key,
-                        ...data[key]
-                    }));
-                    
-                    // Merger avec les utilisateurs locaux
-                    allUsers = [...generateTestUsers(), ...firebaseUsers];
                 } else {
-                    allUsers = generateTestUsers();
-                }
-                updateUsersList();
-            });
-        }
-
-        // Fonctions de gestion des messages (pour les fonctionnalités admin)
-        window.editMessage = function(messageId) {
-            const message = messages.find(m => m.id === messageId);
-            if (!message) return;
-
-            const newText = prompt('Modifier le message:', message.text);
-            if (newText !== null && newText.trim()) {
-                message.text = newText.trim();
-                
-                if (isFirebaseConnected && database) {
-                    const messageRef = window.firebaseRefs.ref(database, `messages/${messageId}`);
-                    window.firebaseRefs.set(messageRef, message);
-                } else {
+                    // Mode local
+                    messages = [];
                     updateMessages();
                 }
                 
-                showToast('Message modifié', 'success');
+                showToast('Tous les messages ont été supprimés', 'success');
             }
         };
 
@@ -2093,13 +1892,12 @@
                 return;
             }
 
-            if (confirm('Supprimer ce message ?')) {
-                messages = messages.filter(m => m.id !== messageId);
-                
+            if (confirm('Êtes-vous sûr de vouloir supprimer ce message ?')) {
                 if (isFirebaseConnected && database) {
                     const messageRef = window.firebaseRefs.ref(database, `messages/${messageId}`);
                     window.firebaseRefs.set(messageRef, null);
                 } else {
+                    messages = messages.filter(msg => msg.id !== messageId);
                     updateMessages();
                 }
                 
@@ -2107,14 +1905,90 @@
             }
         };
 
-        window.downloadAttachment = function(url, filename) {
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+        window.editMessage = function(messageId) {
+            const message = messages.find(msg => msg.id === messageId);
+            if (!message) return;
+
+            if (!currentUser || message.userId !== currentUser.id) {
+                showToast('Vous ne pouvez éditer que vos propres messages', 'error');
+                return;
+            }
+
+            const newText = prompt('Modifier le message:', message.text);
+            if (newText !== null && newText.trim() !== '') {
+                if (isFirebaseConnected && database) {
+                    const messageRef = window.firebaseRefs.ref(database, `messages/${messageId}/text`);
+                    window.firebaseRefs.set(messageRef, newText.trim());
+                } else {
+                    message.text = newText.trim();
+                    updateMessages();
+                }
+                
+                showToast('Message modifié', 'success');
+            }
         };
+
+        // Fonctions pour les utilisateurs sélectionnés
+        window.selectUser = function(userId) {
+            if (currentView !== 'private') {
+                switchView('private');
+            }
+            
+            const user = allUsers.find(u => u.id === userId);
+            if (!user) return;
+
+            const privateChat = document.getElementById('private-chat');
+            privateChat.innerHTML = `
+                <div class="flex items-center space-x-3 mb-6 pb-4 border-b border-gray-200">
+                    <img src="${user.profileImage || 'https://h-7.eu/wp-content/uploads/2023/06/cropped-favicon.jpg'}" 
+                         alt="${user.username}" 
+                         class="w-12 h-12 rounded-full object-cover ${user.isAdmin ? 'border-2 border-yellow-400' : ''}"
+                         onerror="this.src='https://h-7.eu/wp-content/uploads/2023/06/cropped-favicon.jpg'">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900">
+                            ${user.username} ${user.isAdmin ? '👑' : ''}
+                        </h3>
+                        <div class="flex items-center space-x-1">
+                            <span class="w-2 h-2 ${user.isOnline ? 'bg-green-500' : 'bg-gray-400'} rounded-full"></span>
+                            <span class="text-sm text-gray-500">${user.isOnline ? 'En ligne' : 'Hors ligne'}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 rounded-lg p-4 h-64 overflow-y-auto border border-gray-200 mb-4" id="private-messages-${userId}">
+                    <div class="text-center text-gray-500 py-8">
+                        <i class="fas fa-comment text-3xl mb-3 opacity-50"></i>
+                        <p class="text-sm">Début de votre conversation avec ${user.username}</p>
+                        <p class="text-xs mt-1">Les messages privés sont chiffrés de bout en bout</p>
+                    </div>
+                </div>
+
+                <div class="flex space-x-3">
+                    <input type="text" id="private-message-input-${userId}" 
+                           placeholder="Tapez votre message privé..." 
+                           class="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                           onkeypress="handlePrivateKeyPress(event, '${userId}')">
+                    <button onclick="sendPrivateMessage('${userId}')" 
+                            class="gradient-bg text-white px-6 py-3 rounded-lg hover-scale">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            `;
+        };
+
+        // Gestionnaires d'événements pour fermer les modales en cliquant à l'extérieur
+        document.addEventListener('click', function(event) {
+            const authModal = document.getElementById('auth-modal');
+            const generalModal = document.getElementById('general-modal');
+            
+            if (event.target === authModal) {
+                closeAuthModal();
+            }
+            
+            if (event.target === generalModal) {
+                closeModal();
+            }
+        });
     </script>
 </body>
 </html>
