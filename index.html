@@ -521,6 +521,9 @@
 
                             <!-- Message Input Area -->
                             <div class="border-t border-gray-200 pt-4">
+                                <div id="message-input-info" class="mb-2 text-sm text-gray-600 hidden">
+                                    <!-- Info sur la conversation privée -->
+                                </div>
                                 <div class="flex space-x-4 items-end">
                                     <div class="flex-1">
                                         <textarea id="message-input" placeholder="Tapez votre message..." 
@@ -656,6 +659,8 @@
         let currentView = 'public';
         let attachments = [];
         let isLogin = true;
+        let privateMessages = {}; // Stockage des messages privés par conversation
+        let selectedPrivateUser = null; // Utilisateur sélectionné pour les messages privés
 
         // État de l'application
         let isFirebaseConnected = false;
@@ -982,6 +987,8 @@
             const privateMessagesRef = window.firebaseRefs.ref(database, 'privateMessages');
             window.firebaseRefs.onValue(privateMessagesRef, (snapshot) => {
                 const data = snapshot.val();
+                privateMessages = {}; // Reset des messages privés
+                
                 if (data) {
                     // Parcourir toutes les conversations privées
                     Object.keys(data).forEach(conversationId => {
@@ -994,38 +1001,46 @@
                                     ...conversationMessages[key]
                                 })).sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
                                 
-                                // Mettre à jour l'affichage pour cette conversation
-                                updatePrivateMessagesDisplay(conversationId, messagesList);
+                                // Stocker les messages pour cette conversation
+                                privateMessages[conversationId] = messagesList;
                             }
                         }
                     });
                 }
+                
+                // Si un utilisateur privé est sélectionné, mettre à jour l'affichage
+                if (selectedPrivateUser) {
+                    updatePrivateMessagesView();
+                }
             });
         }
 
-        // Fonction pour mettre à jour l'affichage des messages privés
-        function updatePrivateMessagesDisplay(conversationId, messagesList) {
-            // Extraire l'ID de l'autre utilisateur depuis l'ID de conversation
-            const [userId1, userId2] = conversationId.split('_');
-            const otherUserId = userId1 === currentUser.id ? userId2 : userId1;
+        // Fonction pour mettre à jour l'affichage des messages privés (similaire aux messages publics)
+        function updatePrivateMessagesView() {
+            if (!selectedPrivateUser) return;
             
-            const messagesContainer = document.getElementById(`private-messages-${otherUserId}`);
-            if (!messagesContainer) return; // L'interface de chat privé n'est pas encore ouverte
+            const container = document.getElementById(`private-messages-${selectedPrivateUser.id}`);
+            if (!container) return;
             
-            if (messagesList.length === 0) {
-                const otherUser = allUsers.find(u => u.id === otherUserId);
-                const otherUsername = otherUser ? otherUser.username : 'Utilisateur';
-                messagesContainer.innerHTML = `
+            // Créer un ID de conversation cohérent
+            const conversationId = currentUser.id < selectedPrivateUser.id ? 
+                `${currentUser.id}_${selectedPrivateUser.id}` : 
+                `${selectedPrivateUser.id}_${currentUser.id}`;
+            
+            const conversationMessages = privateMessages[conversationId] || [];
+            
+            if (conversationMessages.length === 0) {
+                container.innerHTML = `
                     <div class="text-center text-gray-500 py-8">
                         <i class="fas fa-comment text-3xl mb-3 opacity-50"></i>
-                        <p class="text-sm">Début de votre conversation avec ${otherUsername}</p>
+                        <p class="text-sm">Début de votre conversation avec ${selectedPrivateUser.username}</p>
                         <p class="text-xs mt-1">Les messages privés sont chiffrés de bout en bout</p>
                     </div>
                 `;
                 return;
             }
-
-            messagesContainer.innerHTML = messagesList.map(msg => {
+            
+            container.innerHTML = conversationMessages.map(msg => {
                 const messageTime = new Date(msg.timestamp);
                 const timeString = messageTime.toLocaleTimeString('fr-FR', { 
                     hour: '2-digit', 
@@ -1034,38 +1049,59 @@
 
                 const isFromCurrentUser = msg.fromId === currentUser.id;
                 
+                // Utiliser le même style que les messages publics mais adapté pour privé
                 if (isFromCurrentUser) {
-                    // Message envoyé par l'utilisateur actuel
                     return `
-                        <div class="chat-message flex justify-end mb-4">
-                            <div class="bg-blue-500 text-white px-4 py-2 rounded-lg max-w-xs">
-                                <div class="text-sm">${msg.text}</div>
-                                <div class="text-xs opacity-75 mt-1">${timeString}</div>
+                        <div class="chat-message group flex space-x-3 mb-4 hover:bg-gray-50 p-2 rounded-lg transition-colors justify-end">
+                            <div class="flex-1 text-right">
+                                <div class="flex items-center justify-end space-x-2 mb-1">
+                                    <span class="text-xs text-gray-500">${timeString}</span>
+                                    <span class="font-medium text-gray-900">Vous</span>
+                                </div>
+                                <div class="inline-block bg-blue-500 text-white px-4 py-2 rounded-lg max-w-xs text-left">
+                                    ${msg.text}
+                                </div>
                             </div>
+                            <img src="${currentUser.profileImage || 'https://h-7.eu/wp-content/uploads/2023/06/cropped-favicon.jpg'}" 
+                                 alt="Vous" 
+                                 class="w-10 h-10 rounded-full object-cover"
+                                 onerror="this.src='https://h-7.eu/wp-content/uploads/2023/06/cropped-favicon.jpg'">
                         </div>
                     `;
                 } else {
-                    // Message reçu
                     return `
-                        <div class="chat-message flex justify-start mb-4">
-                            <div class="bg-gray-200 text-gray-900 px-4 py-2 rounded-lg max-w-xs">
-                                <div class="text-sm font-medium mb-1">${msg.from}</div>
-                                <div class="text-sm">${msg.text}</div>
-                                <div class="text-xs text-gray-500 mt-1">${timeString}</div>
+                        <div class="chat-message group flex space-x-3 mb-4 hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                            <img src="${selectedPrivateUser.profileImage || 'https://h-7.eu/wp-content/uploads/2023/06/cropped-favicon.jpg'}" 
+                                 alt="${selectedPrivateUser.username}" 
+                                 class="w-10 h-10 rounded-full object-cover ${selectedPrivateUser.isAdmin ? 'border-2 border-yellow-400' : ''}"
+                                 onerror="this.src='https://h-7.eu/wp-content/uploads/2023/06/cropped-favicon.jpg'">
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-2 mb-1">
+                                    <span class="font-medium text-gray-900">${msg.from}</span>
+                                    ${selectedPrivateUser.isAdmin ? '<i class="fas fa-crown text-yellow-500 text-sm" title="Administrateur"></i>' : ''}
+                                    <span class="text-xs text-gray-500">${timeString}</span>
+                                </div>
+                                <div class="bg-gray-100 text-gray-900 px-4 py-2 rounded-lg inline-block max-w-xs">
+                                    ${msg.text}
+                                </div>
                             </div>
                         </div>
                     `;
                 }
             }).join('');
 
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            container.scrollTop = container.scrollHeight;
         }
 
         // Gestion des messages
         window.handleKeyPress = function(event) {
             if (event.key === 'Enter' && !event.shiftKey) {
                 event.preventDefault();
-                sendMessage();
+                if (currentView === 'public') {
+                    sendMessage();
+                } else if (currentView === 'private' && selectedPrivateUser) {
+                    sendPrivateMessage(selectedPrivateUser.id);
+                }
             }
         };
 
@@ -1130,25 +1166,32 @@
                 return;
             }
 
-            const message = {
-                id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-                text: messageText,
-                username: currentUser.username,
-                userId: currentUser.id,
-                timestamp: new Date().toISOString(),
-                isAdmin: currentUser.isAdmin,
-                profileImage: currentUser.profileImage,
-                attachments: attachments.length > 0 ? [...attachments] : null
-            };
+            if (currentView === 'public') {
+                // Envoyer message public
+                const message = {
+                    id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                    text: messageText,
+                    username: currentUser.username,
+                    userId: currentUser.id,
+                    timestamp: new Date().toISOString(),
+                    isAdmin: currentUser.isAdmin,
+                    profileImage: currentUser.profileImage,
+                    attachments: attachments.length > 0 ? [...attachments] : null
+                };
 
-            if (isFirebaseConnected && database) {
-                // Envoyer via Firebase
-                const messagesRef = window.firebaseRefs.ref(database, 'messages');
-                window.firebaseRefs.push(messagesRef, message);
-            } else {
-                // Mode local
-                messages.push(message);
-                updateMessages();
+                if (isFirebaseConnected && database) {
+                    // Envoyer via Firebase
+                    const messagesRef = window.firebaseRefs.ref(database, 'messages');
+                    window.firebaseRefs.push(messagesRef, message);
+                } else {
+                    // Mode local
+                    messages.push(message);
+                    updateMessages();
+                }
+            } else if (currentView === 'private' && selectedPrivateUser) {
+                // Envoyer message privé
+                sendPrivateMessage(selectedPrivateUser.id);
+                return; // Pas besoin de nettoyer ici, c'est fait dans sendPrivateMessage
             }
 
             // Nettoyer le formulaire
@@ -1464,6 +1507,8 @@
             const tabs = document.querySelectorAll('.view-tab');
             const publicChat = document.getElementById('public-chat');
             const privateChat = document.getElementById('private-chat');
+            const messageInput = document.getElementById('message-input');
+            const inputInfo = document.getElementById('message-input-info');
             
             // Mettre à jour les onglets
             tabs.forEach(tab => {
@@ -1477,12 +1522,27 @@
                 publicChat.classList.remove('hidden');
                 privateChat.classList.add('hidden');
                 currentView = 'public';
+                
+                // Mettre à jour le placeholder et cacher l'info
+                messageInput.placeholder = 'Tapez votre message...';
+                inputInfo.classList.add('hidden');
+                selectedPrivateUser = null;
             } else {
                 tabs[1].classList.add('border-blue-500', 'text-blue-600');
                 tabs[1].classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700');
                 publicChat.classList.add('hidden');
                 privateChat.classList.remove('hidden');
                 currentView = 'private';
+                
+                // Mettre à jour le placeholder et l'info
+                if (selectedPrivateUser) {
+                    messageInput.placeholder = `Message privé à ${selectedPrivateUser.username}...`;
+                    inputInfo.innerHTML = `<i class="fas fa-lock mr-1"></i>Conversation privée avec <strong>${selectedPrivateUser.username}</strong>`;
+                    inputInfo.classList.remove('hidden');
+                } else {
+                    messageInput.placeholder = 'Sélectionnez un utilisateur pour commencer...';
+                    inputInfo.classList.add('hidden');
+                }
             }
         };
 
@@ -2014,12 +2074,16 @@
 
         // Fonctions pour les utilisateurs sélectionnés
         window.selectUser = function(userId) {
+            const user = allUsers.find(u => u.id === userId);
+            if (!user) return;
+
+            // Sauvegarder l'utilisateur sélectionné
+            selectedPrivateUser = user;
+
+            // Passer en mode privé si pas déjà fait
             if (currentView !== 'private') {
                 switchView('private');
             }
-            
-            const user = allUsers.find(u => u.id === userId);
-            if (!user) return;
 
             const privateChat = document.getElementById('private-chat');
             privateChat.innerHTML = `
@@ -2039,25 +2103,20 @@
                     </div>
                 </div>
 
-                <div class="bg-gray-50 rounded-lg p-4 h-64 overflow-y-auto border border-gray-200 mb-4" id="private-messages-${userId}">
-                    <div class="text-center text-gray-500 py-8">
-                        <i class="fas fa-comment text-3xl mb-3 opacity-50"></i>
-                        <p class="text-sm">Début de votre conversation avec ${user.username}</p>
-                        <p class="text-xs mt-1">Les messages privés sont chiffrés de bout en bout</p>
-                    </div>
-                </div>
-
-                <div class="flex space-x-3">
-                    <input type="text" id="private-message-input-${userId}" 
-                           placeholder="Tapez votre message privé..." 
-                           class="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                           onkeypress="handlePrivateKeyPress(event, '${userId}')">
-                    <button onclick="sendPrivateMessage('${userId}')" 
-                            class="gradient-bg text-white px-6 py-3 rounded-lg hover-scale">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
+                <div class="bg-gray-50 rounded-lg p-4 h-80 overflow-y-auto border border-gray-200" id="private-messages-${userId}">
+                    <!-- Les messages privés seront affichés ici -->
                 </div>
             `;
+
+            // Mettre à jour l'interface d'entrée de message
+            const messageInput = document.getElementById('message-input');
+            const inputInfo = document.getElementById('message-input-info');
+            messageInput.placeholder = `Message privé à ${user.username}...`;
+            inputInfo.innerHTML = `<i class="fas fa-lock mr-1"></i>Conversation privée avec <strong>${user.username}</strong>`;
+            inputInfo.classList.remove('hidden');
+            
+            // Charger immédiatement les messages pour cette conversation
+            updatePrivateMessagesView();
         };
 
         // Gestionnaires d'événements pour fermer les modales en cliquant à l'extérieur
