@@ -512,10 +512,46 @@
 
                             <!-- Private Chat -->
                             <div id="private-chat" class="hidden space-y-6">
-                                <div class="text-center text-gray-500 py-12">
-                                    <i class="fas fa-user-friends text-4xl mb-4 opacity-50"></i>
-                                    <h3 class="text-lg font-medium mb-2">Messages Privés</h3>
-                                    <p>Cliquez sur un utilisateur dans la liste pour démarrer une conversation privée</p>
+                                <!-- Sélecteur d'utilisateur -->
+                                <div id="private-user-selector" class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center space-x-3">
+                                            <i class="fas fa-user-friends text-blue-600"></i>
+                                            <span class="text-sm font-medium text-blue-900">Conversation privée avec :</span>
+                                        </div>
+                                        <select id="private-user-select" onchange="selectPrivateUser(this.value)" class="bg-white border border-blue-300 rounded-lg px-3 py-1 text-sm">
+                                            <option value="">Choisissez un utilisateur...</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Zone de chat privé (copie exacte du public) -->
+                                <div class="flex justify-between items-center">
+                                    <h2 class="text-lg font-semibold text-gray-900">Discussion Privée</h2>
+                                    <div id="private-chat-info" class="text-sm text-gray-500 hidden">
+                                        Conversation avec <span id="selected-user-name"></span>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-gray-50 rounded-lg p-4 h-80 overflow-y-auto border border-gray-200" id="private-chat-messages">
+                                    <!-- Les messages du chat privé seront affichés ici -->
+                                    <div class="text-center text-gray-500 py-8">
+                                        <i class="fas fa-user-friends text-4xl mb-4 opacity-50"></i>
+                                        <p>Sélectionnez un utilisateur pour commencer une conversation privée</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Zone de fichiers joints (copie exacte du public) -->
+                                <div id="private-attachments-preview" class="hidden bg-blue-50 border border-blue-200 rounded-lg p-3">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-sm font-medium text-blue-700">Fichiers attachés :</span>
+                                        <button onclick="clearPrivateAttachments()" class="text-blue-600 hover:text-blue-800 text-sm">
+                                            <i class="fas fa-times"></i> Tout supprimer
+                                        </button>
+                                    </div>
+                                    <div id="private-attachments-list" class="space-y-2">
+                                        <!-- Liste des fichiers attachés -->
+                                    </div>
                                 </div>
                             </div>
 
@@ -659,8 +695,9 @@
         let currentView = 'public';
         let attachments = [];
         let isLogin = true;
-        let privateMessages = {}; // Stockage des messages privés par conversation
+        let privateMessages = []; // Messages privés pour la conversation sélectionnée
         let selectedPrivateUser = null; // Utilisateur sélectionné pour les messages privés
+        let privateAttachments = []; // Fichiers joints pour messages privés
 
         // État de l'application
         let isFirebaseConnected = false;
@@ -987,107 +1024,97 @@
             const privateMessagesRef = window.firebaseRefs.ref(database, 'privateMessages');
             window.firebaseRefs.onValue(privateMessagesRef, (snapshot) => {
                 const data = snapshot.val();
-                privateMessages = {}; // Reset des messages privés
                 
-                if (data) {
-                    // Parcourir toutes les conversations privées
-                    Object.keys(data).forEach(conversationId => {
-                        // Vérifier si cette conversation implique l'utilisateur actuel
-                        if (conversationId.includes(currentUser.id)) {
-                            const conversationMessages = data[conversationId];
-                            if (conversationMessages) {
-                                const messagesList = Object.keys(conversationMessages).map(key => ({
-                                    id: key,
-                                    ...conversationMessages[key]
-                                })).sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-                                
-                                // Stocker les messages pour cette conversation
-                                privateMessages[conversationId] = messagesList;
-                            }
-                        }
-                    });
-                }
-                
-                // Si un utilisateur privé est sélectionné, mettre à jour l'affichage
-                if (selectedPrivateUser) {
-                    updatePrivateMessagesView();
+                if (data && selectedPrivateUser) {
+                    // Créer un ID de conversation cohérent
+                    const conversationId = currentUser.id < selectedPrivateUser.id ? 
+                        `${currentUser.id}_${selectedPrivateUser.id}` : 
+                        `${selectedPrivateUser.id}_${currentUser.id}`;
+                    
+                    const conversationData = data[conversationId];
+                    if (conversationData) {
+                        privateMessages = Object.keys(conversationData).map(key => ({
+                            id: key,
+                            ...conversationData[key]
+                        })).sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+                    } else {
+                        privateMessages = [];
+                    }
+                    
+                    updatePrivateMessages();
                 }
             });
         }
 
-        // Fonction pour mettre à jour l'affichage des messages privés (similaire aux messages publics)
-        function updatePrivateMessagesView() {
-            if (!selectedPrivateUser) return;
+        // Fonction pour mettre à jour l'affichage des messages privés (copie exacte du public)
+        function updatePrivateMessages() {
+            const container = document.getElementById('private-chat-messages');
             
-            const container = document.getElementById(`private-messages-${selectedPrivateUser.id}`);
-            if (!container) return;
-            
-            // Créer un ID de conversation cohérent
-            const conversationId = currentUser.id < selectedPrivateUser.id ? 
-                `${currentUser.id}_${selectedPrivateUser.id}` : 
-                `${selectedPrivateUser.id}_${currentUser.id}`;
-            
-            const conversationMessages = privateMessages[conversationId] || [];
-            
-            if (conversationMessages.length === 0) {
+            if (privateMessages.length === 0) {
                 container.innerHTML = `
                     <div class="text-center text-gray-500 py-8">
-                        <i class="fas fa-comment text-3xl mb-3 opacity-50"></i>
-                        <p class="text-sm">Début de votre conversation avec ${selectedPrivateUser.username}</p>
-                        <p class="text-xs mt-1">Les messages privés sont chiffrés de bout en bout</p>
+                        <i class="fas fa-comment text-4xl mb-4 opacity-50"></i>
+                        <p>Aucun message pour le moment. Commencez la conversation !</p>
                     </div>
                 `;
                 return;
             }
-            
-            container.innerHTML = conversationMessages.map(msg => {
+
+            container.innerHTML = privateMessages.map(msg => {
                 const messageTime = new Date(msg.timestamp);
                 const timeString = messageTime.toLocaleTimeString('fr-FR', { 
                     hour: '2-digit', 
                     minute: '2-digit' 
                 });
 
-                const isFromCurrentUser = msg.fromId === currentUser.id;
-                
-                // Utiliser le même style que les messages publics mais adapté pour privé
-                if (isFromCurrentUser) {
-                    return `
-                        <div class="chat-message group flex space-x-3 mb-4 hover:bg-gray-50 p-2 rounded-lg transition-colors justify-end">
-                            <div class="flex-1 text-right">
-                                <div class="flex items-center justify-end space-x-2 mb-1">
-                                    <span class="text-xs text-gray-500">${timeString}</span>
-                                    <span class="font-medium text-gray-900">Vous</span>
-                                </div>
-                                <div class="inline-block bg-blue-500 text-white px-4 py-2 rounded-lg max-w-xs text-left">
-                                    ${msg.text}
-                                </div>
+                const attachmentsHtml = msg.attachments ? 
+                    msg.attachments.map(att => `
+                        <div class="mt-2 p-2 bg-blue-50 rounded border border-blue-200 text-sm flex items-center justify-between">
+                            <div class="flex items-center">
+                                <i class="fas fa-paperclip mr-2"></i>
+                                <span class="text-blue-700">${att.name}</span>
+                                <span class="text-gray-500 ml-2">(${formatFileSize(att.size)})</span>
                             </div>
-                            <img src="${currentUser.profileImage || 'https://h-7.eu/wp-content/uploads/2023/06/cropped-favicon.jpg'}" 
-                                 alt="Vous" 
-                                 class="w-10 h-10 rounded-full object-cover"
-                                 onerror="this.src='https://h-7.eu/wp-content/uploads/2023/06/cropped-favicon.jpg'">
+                            <button onclick="downloadAttachment('${att.url}', '${att.name}')" 
+                                    class="text-blue-600 hover:text-blue-800 ml-2" title="Télécharger">
+                                <i class="fas fa-download"></i>
+                            </button>
                         </div>
-                    `;
-                } else {
-                    return `
-                        <div class="chat-message group flex space-x-3 mb-4 hover:bg-gray-50 p-2 rounded-lg transition-colors">
-                            <img src="${selectedPrivateUser.profileImage || 'https://h-7.eu/wp-content/uploads/2023/06/cropped-favicon.jpg'}" 
-                                 alt="${selectedPrivateUser.username}" 
-                                 class="w-10 h-10 rounded-full object-cover ${selectedPrivateUser.isAdmin ? 'border-2 border-yellow-400' : ''}"
-                                 onerror="this.src='https://h-7.eu/wp-content/uploads/2023/06/cropped-favicon.jpg'">
-                            <div class="flex-1">
-                                <div class="flex items-center space-x-2 mb-1">
-                                    <span class="font-medium text-gray-900">${msg.from}</span>
-                                    ${selectedPrivateUser.isAdmin ? '<i class="fas fa-crown text-yellow-500 text-sm" title="Administrateur"></i>' : ''}
-                                    <span class="text-xs text-gray-500">${timeString}</span>
-                                </div>
-                                <div class="bg-gray-100 text-gray-900 px-4 py-2 rounded-lg inline-block max-w-xs">
-                                    ${msg.text}
-                                </div>
+                    `).join('') : '';
+
+                const isOwner = currentUser && msg.userId === currentUser.id;
+                const canEdit = isOwner;
+                const canDelete = currentUser && currentUser.isAdmin && currentUser.username === 'H7';
+
+                const actionsHtml = (canEdit || canDelete) ? `
+                    <div class="opacity-0 group-hover:opacity-100 transition-opacity flex space-x-2 ml-2">
+                        ${canEdit ? `<button onclick="editPrivateMessage('${msg.id}')" class="text-gray-400 hover:text-blue-500" title="Éditer">
+                            <i class="fas fa-edit text-sm"></i>
+                        </button>` : ''}
+                        ${canDelete ? `<button onclick="deletePrivateMessage('${msg.id}')" class="text-red-500 hover:text-red-700" title="Supprimer (Admin uniquement)">
+                            <i class="fas fa-trash text-sm"></i>
+                        </button>` : ''}
+                    </div>
+                ` : '';
+
+                return `
+                    <div class="chat-message group flex space-x-3 mb-4 hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                        <img src="${msg.profileImage || getDefaultAvatar(msg.username)}" 
+                             alt="${msg.username}" 
+                             class="w-10 h-10 rounded-full object-cover ${msg.isAdmin ? 'border-2 border-yellow-400' : ''}"
+                             onerror="this.src='${getDefaultAvatar(msg.username)}'">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-2 mb-1">
+                                <span class="font-medium text-gray-900">${msg.username}</span>
+                                ${msg.isAdmin ? '<i class="fas fa-crown text-yellow-500 text-sm" title="Administrateur"></i>' : ''}
+                                <span class="text-xs text-gray-500">${timeString}</span>
+                                ${actionsHtml}
                             </div>
+                            <div class="text-gray-700 break-words" id="private-message-content-${msg.id}">${msg.text}</div>
+                            ${attachmentsHtml}
                         </div>
-                    `;
-                }
+                    </div>
+                `;
             }).join('');
 
             container.scrollTop = container.scrollHeight;
@@ -1160,14 +1187,14 @@
             const messageInput = document.getElementById('message-input');
             const messageText = messageInput.value.trim();
 
-            if (!messageText && attachments.length === 0) return;
-            if (!currentUser) {
-                showToast('Vous devez être connecté pour envoyer un message', 'error');
-                return;
-            }
-
             if (currentView === 'public') {
                 // Envoyer message public
+                if (!messageText && attachments.length === 0) return;
+                if (!currentUser) {
+                    showToast('Vous devez être connecté pour envoyer un message', 'error');
+                    return;
+                }
+
                 const message = {
                     id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
                     text: messageText,
@@ -1180,24 +1207,56 @@
                 };
 
                 if (isFirebaseConnected && database) {
-                    // Envoyer via Firebase
                     const messagesRef = window.firebaseRefs.ref(database, 'messages');
                     window.firebaseRefs.push(messagesRef, message);
                 } else {
-                    // Mode local
                     messages.push(message);
                     updateMessages();
                 }
-            } else if (currentView === 'private' && selectedPrivateUser) {
-                // Envoyer message privé
-                sendPrivateMessage(selectedPrivateUser.id);
-                return; // Pas besoin de nettoyer ici, c'est fait dans sendPrivateMessage
-            }
 
-            // Nettoyer le formulaire
-            messageInput.value = '';
-            clearAttachments();
-            messageInput.focus();
+                messageInput.value = '';
+                clearAttachments();
+                messageInput.focus();
+
+            } else if (currentView === 'private') {
+                // Envoyer message privé
+                if (!messageText && privateAttachments.length === 0) return;
+                if (!currentUser) {
+                    showToast('Vous devez être connecté pour envoyer un message', 'error');
+                    return;
+                }
+                if (!selectedPrivateUser) {
+                    showToast('Sélectionnez un utilisateur pour envoyer un message privé', 'error');
+                    return;
+                }
+
+                const message = {
+                    text: messageText,
+                    username: currentUser.username,
+                    userId: currentUser.id,
+                    timestamp: new Date().toISOString(),
+                    isAdmin: currentUser.isAdmin,
+                    profileImage: currentUser.profileImage,
+                    attachments: privateAttachments.length > 0 ? [...privateAttachments] : null
+                };
+
+                // Créer un ID de conversation cohérent
+                const conversationId = currentUser.id < selectedPrivateUser.id ? 
+                    `${currentUser.id}_${selectedPrivateUser.id}` : 
+                    `${selectedPrivateUser.id}_${currentUser.id}`;
+
+                if (isFirebaseConnected && database) {
+                    const privateMessagesRef = window.firebaseRefs.ref(database, `privateMessages/${conversationId}`);
+                    window.firebaseRefs.push(privateMessagesRef, message);
+                } else {
+                    privateMessages.push(message);
+                    updatePrivateMessages();
+                }
+
+                messageInput.value = '';
+                clearPrivateAttachments();
+                messageInput.focus();
+            }
         };
 
         function updateMessages() {
@@ -1273,12 +1332,39 @@
             container.scrollTop = container.scrollHeight;
         }
 
+        // Sélection d'utilisateur privé
+        window.selectPrivateUser = function(userId) {
+            if (!userId) {
+                selectedPrivateUser = null;
+                privateMessages = [];
+                updatePrivateMessages();
+                document.getElementById('private-chat-info').classList.add('hidden');
+                return;
+            }
+
+            const user = allUsers.find(u => u.id === userId);
+            if (!user) return;
+
+            selectedPrivateUser = user;
+            privateMessages = [];
+            
+            // Mettre à jour l'interface
+            document.getElementById('selected-user-name').textContent = user.username;
+            document.getElementById('private-chat-info').classList.remove('hidden');
+            
+            // Recharger l'écoute pour cette conversation
+            initializePrivateMessagesListener();
+            
+            showToast(`Conversation privée avec ${user.username}`, 'info');
+        };
+
         // Gestion des utilisateurs
         function updateUsersList() {
             const onlineContainer = document.getElementById('online-users');
             const offlineContainer = document.getElementById('offline-users');
             const offlineSection = document.getElementById('offline-users-section');
             const activeCount = document.getElementById('active-users-count');
+            const privateUserSelect = document.getElementById('private-user-select');
 
             const onlineUsers = allUsers.filter(u => u.isOnline);
             const offlineUsers = allUsers.filter(u => !u.isOnline);
@@ -1344,8 +1430,15 @@
             }
 
             // Cacher complètement la section des utilisateurs hors ligne
-            // Les utilisateurs déconnectés ne doivent plus apparaître dans la liste
             offlineSection.classList.add('hidden');
+
+            // Mettre à jour le sélecteur d'utilisateurs privés
+            if (privateUserSelect) {
+                privateUserSelect.innerHTML = '<option value="">Choisissez un utilisateur...</option>' +
+                    onlineUsers.filter(u => u.id !== (currentUser ? currentUser.id : '')).map(user => `
+                        <option value="${user.id}">${user.username} ${user.isAdmin ? '👑' : ''}</option>
+                    `).join('');
+            }
 
             // Mettre à jour les statistiques
             activeCount.textContent = onlineUsers.length;
@@ -1453,10 +1546,16 @@
                     url: URL.createObjectURL(file)
                 };
                 
-                attachments.push(attachment);
+                // Ajouter à la bonne liste selon la vue actuelle
+                if (currentView === 'public') {
+                    attachments.push(attachment);
+                    updateAttachmentsPreview();
+                } else {
+                    privateAttachments.push(attachment);
+                    updatePrivateAttachmentsPreview();
+                }
             });
             
-            updateAttachmentsPreview();
             event.target.value = ''; // Reset input
         };
 
@@ -1492,6 +1591,41 @@
         window.clearAttachments = function() {
             attachments = [];
             updateAttachmentsPreview();
+        };
+
+        // Fonctions pour les pièces jointes privées
+        window.clearPrivateAttachments = function() {
+            privateAttachments = [];
+            updatePrivateAttachmentsPreview();
+        };
+
+        function updatePrivateAttachmentsPreview() {
+            const preview = document.getElementById('private-attachments-preview');
+            const list = document.getElementById('private-attachments-list');
+            
+            if (privateAttachments.length === 0) {
+                preview.classList.add('hidden');
+                return;
+            }
+            
+            preview.classList.remove('hidden');
+            list.innerHTML = privateAttachments.map(att => `
+                <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <div class="flex items-center">
+                        <i class="fas fa-paperclip mr-2 text-blue-500"></i>
+                        <span class="text-sm text-gray-900">${att.name}</span>
+                        <span class="text-xs text-gray-500 ml-2">(${formatFileSize(att.size)})</span>
+                    </div>
+                    <button onclick="removePrivateAttachment('${att.id}')" class="text-red-500 hover:text-red-700" title="Supprimer">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        window.removePrivateAttachment = function(attachmentId) {
+            privateAttachments = privateAttachments.filter(att => att.id !== attachmentId);
+            updatePrivateAttachmentsPreview();
         };
 
         function formatFileSize(bytes) {
@@ -2072,51 +2206,68 @@
             }
         };
 
-        // Fonctions pour les utilisateurs sélectionnés
+        // Fonctions pour les utilisateurs sélectionnés (simplifiée pour utiliser le nouveau système)
         window.selectUser = function(userId) {
-            const user = allUsers.find(u => u.id === userId);
-            if (!user) return;
-
-            // Sauvegarder l'utilisateur sélectionné
-            selectedPrivateUser = user;
-
-            // Passer en mode privé si pas déjà fait
+            // Passer en mode privé et sélectionner l'utilisateur
             if (currentView !== 'private') {
                 switchView('private');
             }
-
-            const privateChat = document.getElementById('private-chat');
-            privateChat.innerHTML = `
-                <div class="flex items-center space-x-3 mb-6 pb-4 border-b border-gray-200">
-                    <img src="${user.profileImage || 'https://h-7.eu/wp-content/uploads/2023/06/cropped-favicon.jpg'}" 
-                         alt="${user.username}" 
-                         class="w-12 h-12 rounded-full object-cover ${user.isAdmin ? 'border-2 border-yellow-400' : ''}"
-                         onerror="this.src='https://h-7.eu/wp-content/uploads/2023/06/cropped-favicon.jpg'">
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-900">
-                            ${user.username} ${user.isAdmin ? '👑' : ''}
-                        </h3>
-                        <div class="flex items-center space-x-1">
-                            <span class="w-2 h-2 ${user.isOnline ? 'bg-green-500' : 'bg-gray-400'} rounded-full"></span>
-                            <span class="text-sm text-gray-500">${user.isOnline ? 'En ligne' : 'Hors ligne'}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-gray-50 rounded-lg p-4 h-80 overflow-y-auto border border-gray-200" id="private-messages-${userId}">
-                    <!-- Les messages privés seront affichés ici -->
-                </div>
-            `;
-
-            // Mettre à jour l'interface d'entrée de message
-            const messageInput = document.getElementById('message-input');
-            const inputInfo = document.getElementById('message-input-info');
-            messageInput.placeholder = `Message privé à ${user.username}...`;
-            inputInfo.innerHTML = `<i class="fas fa-lock mr-1"></i>Conversation privée avec <strong>${user.username}</strong>`;
-            inputInfo.classList.remove('hidden');
             
-            // Charger immédiatement les messages pour cette conversation
-            updatePrivateMessagesView();
+            // Mettre à jour le sélecteur
+            const privateUserSelect = document.getElementById('private-user-select');
+            if (privateUserSelect) {
+                privateUserSelect.value = userId;
+                selectPrivateUser(userId);
+            }
+        };
+
+        // Fonctions d'édition et suppression pour messages privés
+        window.editPrivateMessage = function(messageId) {
+            const message = privateMessages.find(msg => msg.id === messageId);
+            if (!message) return;
+
+            if (!currentUser || message.userId !== currentUser.id) {
+                showToast('Vous ne pouvez éditer que vos propres messages', 'error');
+                return;
+            }
+
+            const newText = prompt('Modifier le message:', message.text);
+            if (newText !== null && newText.trim() !== '') {
+                if (isFirebaseConnected && database && selectedPrivateUser) {
+                    const conversationId = currentUser.id < selectedPrivateUser.id ? 
+                        `${currentUser.id}_${selectedPrivateUser.id}` : 
+                        `${selectedPrivateUser.id}_${currentUser.id}`;
+                    const messageRef = window.firebaseRefs.ref(database, `privateMessages/${conversationId}/${messageId}/text`);
+                    window.firebaseRefs.set(messageRef, newText.trim());
+                } else {
+                    message.text = newText.trim();
+                    updatePrivateMessages();
+                }
+                
+                showToast('Message privé modifié', 'success');
+            }
+        };
+
+        window.deletePrivateMessage = function(messageId) {
+            if (!currentUser || !currentUser.isAdmin || currentUser.username !== 'H7') {
+                showToast('Action non autorisée', 'error');
+                return;
+            }
+
+            if (confirm('Êtes-vous sûr de vouloir supprimer ce message privé ?')) {
+                if (isFirebaseConnected && database && selectedPrivateUser) {
+                    const conversationId = currentUser.id < selectedPrivateUser.id ? 
+                        `${currentUser.id}_${selectedPrivateUser.id}` : 
+                        `${selectedPrivateUser.id}_${currentUser.id}`;
+                    const messageRef = window.firebaseRefs.ref(database, `privateMessages/${conversationId}/${messageId}`);
+                    window.firebaseRefs.set(messageRef, null);
+                } else {
+                    privateMessages = privateMessages.filter(msg => msg.id !== messageId);
+                    updatePrivateMessages();
+                }
+                
+                showToast('Message privé supprimé', 'success');
+            }
         };
 
         // Gestionnaires d'événements pour fermer les modales en cliquant à l'extérieur
