@@ -704,67 +704,10 @@
         let connectionAttempts = 0;
         const MAX_CONNECTION_ATTEMPTS = 3;
 
-        // Fonctions de persistance de l'état
-        function saveAppState() {
-            if (currentUser) {
-                const state = {
-                    isLoggedIn: true,
-                    currentUser: currentUser,
-                    currentView: currentView,
-                    selectedPrivateUser: selectedPrivateUser
-                };
-                localStorage.setItem('h7social_app_state', JSON.stringify(state));
-                console.log('État de l\'application sauvegardé');
-            }
-        }
-
-        function loadAppState() {
-            try {
-                const savedState = localStorage.getItem('h7social_app_state');
-                if (savedState) {
-                    return JSON.parse(savedState);
-                }
-            } catch (error) {
-                console.error('Erreur lors du chargement de l\'état:', error);
-            }
-            return null;
-        }
-
-        function clearAppState() {
-            localStorage.removeItem('h7social_app_state');
-            console.log('État de l\'application effacé');
-        }
-
         // Initialisation de l'application
         window.addEventListener('DOMContentLoaded', function() {
             loadFirebaseConfig();
             initializeApp();
-            
-            // Restaurer l'état de l'application si l'utilisateur était connecté
-            setTimeout(() => {
-                const savedState = loadAppState();
-                if (savedState && savedState.isLoggedIn && savedState.currentUser) {
-                    currentUser = savedState.currentUser;
-                    currentView = savedState.currentView || 'public';
-                    selectedPrivateUser = savedState.selectedPrivateUser || null;
-                    
-                    // Masquer la page d'accueil et afficher l'interface de chat
-                    document.getElementById('landing-page').classList.add('hidden');
-                    document.getElementById('chat-app').classList.remove('hidden');
-                    
-                    // Mettre à jour l'interface utilisateur
-                    updateUserInfo();
-                    switchView(currentView);
-                    
-                    // Si un utilisateur privé était sélectionné, le restaurer
-                    if (selectedPrivateUser) {
-                        selectPrivateUser(selectedPrivateUser.id);
-                    }
-                    
-                    console.log('État de l\'application restauré pour:', currentUser.username);
-                    showToast('Session restaurée - Bienvenue ' + currentUser.username + ' !', 'success');
-                }
-            }, 500);
         });
 
         // Gestion de la configuration Firebase
@@ -1004,9 +947,6 @@
 
             showChatApp();
             closeAuthModal();
-            
-            // Sauvegarder l'état lors de la connexion
-            saveAppState();
             
             showToast(`Bienvenue ${currentUser.username}!`, 'success');
         };
@@ -1415,9 +1355,6 @@
             // Recharger l'écoute pour cette conversation
             initializePrivateMessagesListener();
             
-            // Sauvegarder l'état quand on sélectionne un utilisateur privé
-            saveAppState();
-            
             showToast(`Conversation privée avec ${user.username}`, 'info');
         };
 
@@ -1741,9 +1678,6 @@
                     inputInfo.classList.add('hidden');
                 }
             }
-            
-            // Sauvegarder l'état quand on change de vue
-            saveAppState();
         };
 
         // Gestion de la déconnexion
@@ -1758,9 +1692,6 @@
                     lastSeen: new Date().toISOString()
                 });
             }
-
-            // Effacer l'état sauvegardé
-            clearAppState();
 
             currentUser = null;
             messages = [];
