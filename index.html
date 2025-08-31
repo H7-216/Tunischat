@@ -159,6 +159,51 @@
             border-radius: 50%;
             object-fit: cover;
         }
+
+        .notification-popup {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            padding: 16px;
+            max-width: 320px;
+            border-left: 4px solid #3B82F6;
+            animation: slideInNotification 0.4s ease-out;
+            transform: translateX(0);
+        }
+
+        .notification-popup.user-join {
+            border-left-color: #10B981;
+        }
+
+        .notification-popup.user-leave {
+            border-left-color: #EF4444;
+        }
+
+        @keyframes slideInNotification {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutNotification {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -698,6 +743,12 @@
         let privateMessages = []; // Messages privés pour la conversation sélectionnée
         let selectedPrivateUser = null; // Utilisateur sélectionné pour les messages privés
         let privateAttachments = []; // Fichiers joints pour messages privés
+        
+        // Variables pour les notifications
+        let isPageVisible = true;
+        let notificationSound = null;
+        let lastMessageCount = 0;
+        let notificationPermission = 'default';
 
         // État de l'application
         let isFirebaseConnected = false;
@@ -708,7 +759,152 @@
         window.addEventListener('DOMContentLoaded', function() {
             loadFirebaseConfig();
             initializeApp();
+            initializeNotifications();
         });
+
+        // Initialisation du système de notifications
+        function initializeNotifications() {
+            // Demander la permission pour les notifications
+            if ('Notification' in window) {
+                Notification.requestPermission().then(permission => {
+                    notificationPermission = permission;
+                });
+            }
+
+            // Créer le son de notification (son discret de type iPhone)
+            initializeNotificationSound();
+
+            // Écouter les changements de visibilité de la page
+            document.addEventListener('visibilitychange', function() {
+                isPageVisible = !document.hidden;
+            });
+
+            // Écouter les changements de focus de la fenêtre
+            window.addEventListener('focus', function() {
+                isPageVisible = true;
+            });
+
+            window.addEventListener('blur', function() {
+                isPageVisible = false;
+            });
+        }
+
+        // Créer le son de notification
+        function initializeNotificationSound() {
+            // Créer un AudioContext pour générer un son de notification iOS-like
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                
+                function createNotificationSound() {
+                    const duration = 0.5;
+                    const sampleRate = audioContext.sampleRate;
+                    const buffer = audioContext.createBuffer(1, duration * sampleRate, sampleRate);
+                    const data = buffer.getChannelData(0);
+
+                    // Créer un son de notification iOS-like (deux tons)
+                    for (let i = 0; i < buffer.length; i++) {
+                        const t = i / sampleRate;
+                        if (t < 0.15) {
+                            // Premier ton (1000 Hz)
+                            data[i] = Math.sin(2 * Math.PI * 1000 * t) * Math.exp(-t * 8) * 0.3;
+                        } else if (t < 0.3) {
+                            // Pause
+                            data[i] = 0;
+                        } else if (t < 0.45) {
+                            // Deuxième ton (800 Hz)
+                            data[i] = Math.sin(2 * Math.PI * 800 * (t - 0.3)) * Math.exp(-(t - 0.3) * 8) * 0.3;
+                        } else {
+                            data[i] = 0;
+                        }
+                    }
+
+                    return buffer;
+                }
+
+                notificationSound = createNotificationSound();
+            } catch (error) {
+                console.log('Audio non disponible:', error);
+            }
+        }
+
+        // Jouer le son de notification
+        function playNotificationSound() {
+            if (!notificationSound) return;
+            
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const source = audioContext.createBufferSource();
+                const gainNode = audioContext.createGain();
+                
+                source.buffer = notificationSound;
+                gainNode.gain.value = 0.4; // Volume modéré
+                
+                source.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                source.start();
+            } catch (error) {
+                console.log('Impossible de jouer le son:', error);
+            }
+        }
+
+        // Afficher une notification popup dans l'application
+        function showNotificationPopup(title, message, type = 'message', avatar = null) {
+            const notification = document.createElement('div');
+            notification.className = `notification-popup ${type === 'join' ? 'user-join' : type === 'leave' ? 'user-leave' : ''}`;
+            
+            const iconClass = type === 'join' ? 'fa-user-plus text-green-600' : 
+                            type === 'leave' ? 'fa-user-minus text-red-600' : 
+                            'fa-comment text-blue-600';
+            
+            notification.innerHTML = `
+                <div class="flex items-start space-x-3">
+                    ${avatar ? `<img src="${avatar}" class="w-10 h-10 rounded-full object-cover" onerror="this.src='https://h-7.eu/wp-content/uploads/2023/06/cropped-favicon.jpg'">` : `<i class="fas ${iconClass} text-xl mt-1"></i>`}
+                    <div class="flex-1">
+                        <h4 class="font-semibold text-gray-900 text-sm">${title}</h4>
+                        <p class="text-gray-600 text-sm">${message}</p>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" class="text-gray-400 hover:text-gray-600 ml-2">
+                        <i class="fas fa-times text-sm"></i>
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto-remove après 4 secondes
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.style.animation = 'slideOutNotification 0.3s ease-in forwards';
+                    setTimeout(() => notification.remove(), 300);
+                }
+            }, 4000);
+        }
+
+        // Afficher notification système du navigateur
+        function showBrowserNotification(title, message, avatar = null) {
+            if (notificationPermission === 'granted' && !isPageVisible) {
+                try {
+                    const notification = new Notification(title, {
+                        body: message,
+                        icon: avatar || 'https://h-7.eu/wp-content/uploads/2023/06/cropped-favicon.jpg',
+                        badge: 'https://h-7.eu/wp-content/uploads/2023/06/cropped-favicon.jpg',
+                        tag: 'h7-social-message',
+                        requireInteraction: false
+                    });
+
+                    // Auto-close après 5 secondes
+                    setTimeout(() => notification.close(), 5000);
+
+                    // Focus sur l'onglet quand on clique sur la notification
+                    notification.onclick = function() {
+                        window.focus();
+                        notification.close();
+                    };
+                } catch (error) {
+                    console.log('Erreur notification navigateur:', error);
+                }
+            }
+        }
 
         // Gestion de la configuration Firebase
         window.toggleConfigPanel = function() {
@@ -808,6 +1004,8 @@
                 const usersRef = window.firebaseRefs.ref(database, 'users');
                 window.firebaseRefs.onValue(usersRef, (snapshot) => {
                     const data = snapshot.val();
+                    const previousUsers = [...allUsers];
+                    
                     if (data) {
                         allUsers = Object.keys(data).map(key => ({
                             id: key,
@@ -816,6 +1014,12 @@
                     } else {
                         allUsers = [];
                     }
+                    
+                    // Détecter les nouveaux utilisateurs connectés et déconnectés
+                    if (previousUsers.length > 0) {
+                        detectUserPresenceChanges(previousUsers, allUsers);
+                    }
+                    
                     updateUsersList();
                 });
 
@@ -978,6 +1182,8 @@
             // Écouter les nouveaux messages publics
             window.firebaseRefs.onValue(messagesRef, (snapshot) => {
                 const data = snapshot.val();
+                const previousCount = messages.length;
+                
                 if (data) {
                     messages = Object.keys(data).map(key => ({
                         id: key,
@@ -986,6 +1192,16 @@
                 } else {
                     messages = [];
                 }
+                
+                // Détecter nouveau message et notifier si nécessaire
+                if (messages.length > previousCount && previousCount > 0) {
+                    const latestMessage = messages[messages.length - 1];
+                    // Ne pas notifier si c'est notre propre message
+                    if (currentUser && latestMessage.userId !== currentUser.id) {
+                        handleNewMessageNotification(latestMessage, 'public');
+                    }
+                }
+                
                 updateMessages();
             });
 
@@ -1016,6 +1232,83 @@
             });
         }
 
+        // Fonction pour gérer les notifications de nouveaux messages
+        function handleNewMessageNotification(message, messageType = 'public') {
+            if (!isPageVisible) {
+                // Jouer le son de notification
+                playNotificationSound();
+                
+                // Notification système du navigateur
+                const title = messageType === 'public' ? 
+                    `💬 Nouveau message de ${message.username}` : 
+                    `🔒 Message privé de ${message.username}`;
+                
+                const body = message.text.length > 50 ? 
+                    message.text.substring(0, 50) + '...' : 
+                    message.text;
+                
+                showBrowserNotification(title, body, message.profileImage);
+            }
+            
+            // Notification popup dans l'app (toujours visible)
+            const title = messageType === 'public' ? 
+                `${message.username} (Chat public)` : 
+                `${message.username} (Message privé)`;
+            
+            const messagePreview = message.text.length > 30 ? 
+                message.text.substring(0, 30) + '...' : 
+                message.text;
+            
+            showNotificationPopup(title, messagePreview, 'message', message.profileImage);
+        }
+
+        // Fonction pour détecter les changements de présence des utilisateurs
+        function detectUserPresenceChanges(previousUsers, currentUsers) {
+            if (!currentUser) return;
+            
+            // Créer des maps pour faciliter la comparaison
+            const prevUserMap = new Map(previousUsers.map(u => [u.id, u]));
+            const currUserMap = new Map(currentUsers.map(u => [u.id, u]));
+            
+            // Détecter les nouvelles connexions
+            currentUsers.forEach(user => {
+                if (user.id === currentUser.id) return; // Ignorer soi-même
+                
+                const wasOnline = prevUserMap.has(user.id) && prevUserMap.get(user.id).isOnline;
+                const isNowOnline = user.isOnline;
+                
+                // Utilisateur vient de se connecter
+                if (!wasOnline && isNowOnline) {
+                    const title = `${user.username} vient de se connecter`;
+                    const message = `${user.username} a rejoint la conversation`;
+                    
+                    showNotificationPopup(title, message, 'join', user.profileImage);
+                    
+                    // Son et notification navigateur si on n'est pas sur la page
+                    if (!isPageVisible) {
+                        playNotificationSound();
+                        showBrowserNotification(`✅ ${user.username} connecté`, message, user.profileImage);
+                    }
+                }
+            });
+            
+            // Détecter les déconnexions
+            previousUsers.forEach(user => {
+                if (user.id === currentUser.id) return; // Ignorer soi-même
+                
+                const wasOnline = user.isOnline;
+                const isNowOnline = currUserMap.has(user.id) && currUserMap.get(user.id).isOnline;
+                
+                // Utilisateur vient de se déconnecter
+                if (wasOnline && !isNowOnline) {
+                    const title = `${user.username} s'est déconnecté`;
+                    const message = `${user.username} a quitté la conversation`;
+                    
+                    showNotificationPopup(title, message, 'leave', user.profileImage);
+                }
+            });
+        }
+
         // Fonction pour initialiser l'écoute des messages privés
         function initializePrivateMessagesListener() {
             if (!database || !currentUser) return;
@@ -1032,6 +1325,8 @@
                         `${selectedPrivateUser.id}_${currentUser.id}`;
                     
                     const conversationData = data[conversationId];
+                    const previousCount = privateMessages.length;
+                    
                     if (conversationData) {
                         privateMessages = Object.keys(conversationData).map(key => ({
                             id: key,
@@ -1039,6 +1334,15 @@
                         })).sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
                     } else {
                         privateMessages = [];
+                    }
+                    
+                    // Détecter nouveau message privé et notifier
+                    if (privateMessages.length > previousCount && previousCount > 0) {
+                        const latestMessage = privateMessages[privateMessages.length - 1];
+                        // Ne pas notifier si c'est notre propre message
+                        if (currentUser && latestMessage.userId !== currentUser.id) {
+                            handleNewMessageNotification(latestMessage, 'private');
+                        }
                     }
                     
                     updatePrivateMessages();
